@@ -1,5 +1,7 @@
 # idea editing tools
 
+#public Interface interface
+/bin/data/interfaceData
 
 # osx directory files
 .DS_Store
