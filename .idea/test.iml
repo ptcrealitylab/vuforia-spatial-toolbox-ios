@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CIDR_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$/../../../addons/ofxAccelerometer">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxAccelerometer" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxJSON">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxJSON" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxMultiTouch">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxMultiTouch" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxNetwork">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxNetwork" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxQCAR">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxQCAR" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxiOS">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxiOS" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworksCompiled/project/ios">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworksCompiled/project/ios" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
