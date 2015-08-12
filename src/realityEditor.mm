@@ -1,6 +1,8 @@
 #include "realityEditor.h"
 
 
+static const string kLicenseKey = "AfJ6d4//////AAAAAck2JyVaKEJarsb9283lT4EiMz7jNMKKEPuFlDhX9shBx1A41N05tPNEMHb4IMvsx3DNpjbyXLrUQJdJcwS2IzV4NdmwY7R8CkxZFeVKEotcSjh296otcRMmZPAYWRQAFL7f4ljQLMSVjvDFZRLf9/X5uIR+wNNTqK47d1NpPhDBv2usiT0Z8SxSej5Dn919ue2p8o8QGk/KThAFPVCwIQxigXauDlECHFB0EHvoNNatMVsjyMC3hKU/btXbCFMa2wL5ZM/nQgVeqveMv5eOygzCCLkDIMC2R8QRQzqAvH4h2I0YBJ0CMxD98AP45wEwxLOOLMRFdIOi2THxpVhWHSHiU/b6XSX96FHY/0eM3aul";
+
 //--------------------------------------------------------------
 void realityEditor::setup() {
     
@@ -23,13 +25,14 @@ void realityEditor::setup() {
     }
 
     // initialize vuforia
-    ofxQCAR *qcar = ofxQCAR::getInstance();
-    qcar->addTarget("target.xml", "target.xml");
-    qcar->autoFocusOn();
-    qcar->setOrientation(OFX_QCAR_ORIENTATION_LANDSCAPE);
-  qcar->setCameraPixelsFlag(true);
-    qcar->setMaxNumOfMarkers(5);
-    qcar->setup();
+    ofxQCAR & QCAR = *ofxQCAR::getInstance();
+    QCAR.setLicenseKey(kLicenseKey); // ADD YOUR APPLICATION LICENSE KEY HERE.
+    QCAR.addMarkerDataPath("target.xml");
+    QCAR.autoFocusOn();
+    QCAR.setOrientation(OFX_QCAR_ORIENTATION_LANDSCAPE);
+    QCAR.setCameraPixelsFlag(true);
+    QCAR.setMaxNumOfMarkers(5);
+    QCAR.setup();
 
 
     /**********************************************
@@ -90,10 +93,22 @@ void realityEditor::handleCustomRequest(NSString *request) {
     if (reqstring == "unfreeze") {
         freeze = false;
         frozeCameraImage = false;
-        ofxQCAR *qcar = ofxQCAR::getInstance();
-        qcar->resume();
+      ofxQCAR & QCAR = *ofxQCAR::getInstance();
+        QCAR.resume();
     }
 
+    
+    if (reqstring == "extendedTrackingOn") {
+         ofxQCAR & QCAR = *ofxQCAR::getInstance();
+        QCAR.startExtendedTracking();
+    }
+    
+    if (reqstring == "extendedTrackingOff") {
+        freeze = true;
+        ofxQCAR & QCAR = *ofxQCAR::getInstance();
+        QCAR.stopExtendedTracking();
+    }
+    
 
 }
 
@@ -122,11 +137,7 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
                             nameCount[i][w] = "t";
                             NSLog(@">>copy dat");
                             cons();
-                            if (nameCount[i][w + 1] == "t") {
-                                nameCount[i][4] = "a";
-                                NSLog(@">>activate target");
-                                cons();
-                            }
+                           
                         }
                         break;
                     }
@@ -135,11 +146,7 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
                             nameCount[i][w] = "t";
                             NSLog(@">>copy xml");
                             cons();
-                            if (nameCount[i][w - 1] == "t") {
-                                nameCount[i][4] = "a";
-                                NSLog(@">>activate target");
-                                cons();
-                            }
+                            
                         }
                         break;
                     }
@@ -148,17 +155,22 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
                             nameCount[i][w] = "t";
                             NSLog(@">>copy jpg");
                             cons();
-                          /*  if (nameCount[i][w - 1] == "t") {
-                                nameCount[i][4] = "a";
-                                NSLog(@">>activate target");
-                                cons();
-                            }*/
+                            
                         }
                       //    nameCount[i][w] = "t";
                         break;
                     }
                 }
             }
+            
+           
+            if (nameCount[i][1] == "t" && nameCount[i][2] == "t" && nameCount[i][3] == "t") {
+                nameCount[i][4] = "a";
+                NSLog(@">>status at this point");
+                cons();
+               
+            }
+        
         }
     } else {
 
@@ -179,6 +191,8 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
         cout << response.status << " " << response.error << endl;
         cons();
     }
+    
+    
 }
 
 
@@ -211,44 +225,48 @@ void realityEditor::update() {
     }
     
  
-
-    ofxQCAR *qcar = ofxQCAR::getInstance();
-    qcar->mutex.lock();
-    qcar->update();
+     ofxQCAR & QCAR = *ofxQCAR::getInstance();
+    
+    //
+    QCAR.update();
+   //qcar->mutex.lock();
+  
     matrixTemp.clear();
     nameTemp.clear();
     //qcar->mutex.lock();
     // tempMarker = qcar->markersFound;
-    for (int i = 0; i < qcar->markersFound.size(); i++) {
-        matrixTemp.push_back(qcar->markersFound[i].modelViewMatrix);
-        nameTemp.push_back(qcar->markersFound[i].markerName);
+    
+    for (int i = 0; i < QCAR.numOfMarkersFound(); i++) {
+        matrixTemp.push_back(QCAR.getMarker(i).modelViewMatrix);
+        nameTemp.push_back(QCAR.getMarker(i).markerName);
     }
     
     
     if (!frozeCameraImage && freeze == true) {
         
-        
-        int cameraW = qcar->getCameraWidth();
-        int cameraH = qcar->getCameraHeight();
-        unsigned char * cameraPixels = qcar->getCameraPixels();
+    /*    int cameraW = QCAR.getCameraWidth();
+        int cameraH = QCAR.getCameraHeight();
+        unsigned char * cameraPixels = QCAR.getCameraPixels();
         if(cameraW > 0 && cameraH > 0 && cameraPixels != NULL) {
             if(cameraImage.isAllocated() == false ) {
                 cameraImage.allocate(cameraW, cameraH, OF_IMAGE_GRAYSCALE);
             }
             cameraImage.setFromPixels(cameraPixels, cameraW, cameraH, OF_IMAGE_GRAYSCALE);
-            if(qcar->getOrientation() == OFX_QCAR_ORIENTATION_PORTRAIT) {
+            if(QCAR.getOrientation() == OFX_QCAR_ORIENTATION_PORTRAIT) {
                 cameraImage.rotate90(1);
-            } else if(qcar->getOrientation() == OFX_QCAR_ORIENTATION_LANDSCAPE) {
+            } else if(QCAR.getOrientation() == OFX_QCAR_ORIENTATION_LANDSCAPE) {
                 cameraImage.mirror(true, true);
             }
         }
         // todo, once OF 0.9 is final we have to add the color image again
-        // cameraImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
+        // cameraImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());*/
+         QCAR.pause();
         frozeCameraImage = true;
         ofLog() << "+++++++ i get it";
+        
     }
     
-    qcar->mutex.unlock();
+    //qcar->mutex.unlock();
 
 
     if (waitUntil) {
@@ -275,7 +293,7 @@ void realityEditor::update() {
 //--------------------------------------------------------------
 void realityEditor::draw() {
     
-    ofxQCAR *qcar = ofxQCAR::getInstance();
+ ofxQCAR & QCAR = *ofxQCAR::getInstance();
     
 
     if (waitUntil) {
@@ -284,12 +302,13 @@ void realityEditor::draw() {
         // render the interface
              //  ofLog() << frozeCameraImage << " ++ " << freeze;
    
-        if (freeze && frozeCameraImage) {
+  /* if (freeze && frozeCameraImage) {
             cameraImage.draw(0, 0, ofGetWidth(), ofGetHeight());
         }else{
-            qcar->draw();
-        }
-
+            QCAR.drawBackground();
+        }*/
+        
+        QCAR.drawBackground();
 
         //ofLog() << frozeCameraImage << " ++ " << freeze;
     }
@@ -425,7 +444,8 @@ void realityEditor::downloadTargets() {
                 // process the dictonary addon
             else if (loadrunner == "a") {
                 string tmpDir([NSTemporaryDirectory() UTF8String]);
-                ofxQCAR::getInstance()->addExtraTarget(tmpDir + json["id"].asString() + ".xml");
+                ofxQCAR & QCAR = *ofxQCAR::getInstance();
+                QCAR.addExtraTarget(tmpDir + json["id"].asString() + ".xml");
                 nameCount[i][w] = "t";
 
                 NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject(%s)", nameCount[i][0].c_str()];
@@ -445,14 +465,14 @@ void realityEditor::downloadTargets() {
 
 // generate the javascript messages
 void realityEditor::renderJavascript() {
-    ofxQCAR *qcar = ofxQCAR::getInstance();
+ ofxQCAR & QCAR = *ofxQCAR::getInstance();
 
     if (nameTemp.size() > 0) {
 
         if (projectionMatrixSend == false) {
-               qcar->mutex.lock();
-            tempMatrix = qcar->getProjectionMatrix();
-               qcar->mutex.unlock();
+               //qcar->mutex.lock();
+            tempMatrix = QCAR.getProjectionMatrix();
+              // qcar->mutex.unlock();
             pMatrix = [NSString stringWithFormat:@"setProjectionMatrix([[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf]])",
                                                  tempMatrix._mat[0][0],
                                                  tempMatrix._mat[0][1],
@@ -536,7 +556,8 @@ void realityEditor::cons() {
 
 //--------------------------------------------------------------
 void realityEditor::exit() {
-    ofxQCAR::getInstance()->exit();
+    ofxQCAR & QCAR = *ofxQCAR::getInstance();
+    QCAR.exit();
 }
 
 
