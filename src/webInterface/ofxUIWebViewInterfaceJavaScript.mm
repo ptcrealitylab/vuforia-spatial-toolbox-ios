@@ -33,9 +33,19 @@ void ofxUIWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxUIWebViewD
     [uiWebViewInstance setBackgroundColor:[UIColor clearColor]];
     [uiWebViewInstance.window makeKeyAndVisible];
 
-    // make it NOT scrollable
+ /*   // make it NOT scrollable
     [[uiWebViewInstance scrollView] setScrollEnabled:NO];
     [[uiWebViewInstance scrollView] setBounces:NO];
+    */
+    
+    // make it NOT scrollable
+    [[uiWebViewInstance scrollView] setScrollEnabled:YES];
+    [[uiWebViewInstance scrollView] setBounces:NO];
+    
+    
+    //  [uiWebViewInstance scalesPageToFit];
+    
+   // uiWebViewInstance.scalesPageToFit = YES;
 
     // set delegate to handle events
     ofxUIWebViewDelegateObjC *delegateObjC = [[ofxUIWebViewDelegateObjC alloc] init];

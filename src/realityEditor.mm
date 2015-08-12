@@ -56,8 +56,11 @@ HANDLING REQUESTS FROM JS/HTML (JS->C++)
 **********************************************/
 void realityEditor::handleCustomRequest(NSString *request) {
     NSLog(@"------------------------------------------------------------%@", request);
-    string reqstring([request UTF8String]);
+    string reqstring([request UTF8String]); 
 
+    
+    ofLog() << reqstring;
+    
     // if the html interface is loaded kickoff will be send to the c++ code.
     if (reqstring == "kickoff") {
         waitUntil = true;
@@ -101,14 +104,59 @@ void realityEditor::handleCustomRequest(NSString *request) {
     if (reqstring == "extendedTrackingOn") {
          ofxQCAR & QCAR = *ofxQCAR::getInstance();
         QCAR.startExtendedTracking();
+        extendedTracking = true;
     }
     
     if (reqstring == "extendedTrackingOff") {
-        freeze = true;
         ofxQCAR & QCAR = *ofxQCAR::getInstance();
         QCAR.stopExtendedTracking();
+        extendedTracking = false;
     }
     
+    
+    
+    string str2 ("loadNewUI");
+   
+    size_t found1 = reqstring.find(str2);
+
+    
+    if(found1 == 0){
+  
+        
+          long endBlock = reqstring.find_first_of("loadNewUI");
+    
+     ofLog() << endBlock;
+    
+            if(endBlock ==0){
+                
+                
+                
+              string reloadURL = reqstring.substr (endBlock+9, reqstring.size());
+                
+                ofLog() << "this is the new URL:" << reloadURL <<":";
+            
+                if(reloadURL !=""){
+                
+                interface.deactivateView();
+                 // interface.loadLocalFile("setup","page");
+                 
+                 interface.loadURL(reloadURL.c_str());
+                NSLog(@"%s", reloadURL.c_str());
+                
+                //    interface.loadURL("http://html5test.com");
+                
+                interface.activateView();
+             
+            
+                }
+                
+                
+            }
+    
+   
+    
+    
+    }
 
 }
 
@@ -453,10 +501,13 @@ void realityEditor::downloadTargets() {
 
                 loadrunner = "w";
                 NSLog(@">>adding target");
-                //  ofxQCAR * qcar = ofxQCAR::getInstance();
-                // qcar->startExtendedTracking();
+                if(extendedTracking){
+                    ofxQCAR & QCAR = *ofxQCAR::getInstance();
+                    QCAR.startExtendedTracking();
+                }
                 cons();
                 loadrunner = "w";
+                
                 break;
             }
         }

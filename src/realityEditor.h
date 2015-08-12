@@ -54,6 +54,7 @@ public:
     int foundMarker;
     bool reloader = false;
     bool freeze = false;
+        bool extendedTracking = false;
     bool frozeCameraImage = false;
     float cameraRatio = 1;
     
