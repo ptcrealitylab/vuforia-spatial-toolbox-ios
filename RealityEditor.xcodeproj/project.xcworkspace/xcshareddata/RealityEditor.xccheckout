@@ -7,25 +7,29 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>CDBFE133-CD0F-4383-BE98-626A93665BA4</string>
 	<key>IDESourceControlProjectName</key>
-	<string>RealityEditor</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>699BEA2634E82CF4B34F491C571DB46B219DFD4B</key>
+		<string>https://github.com/vheun/RealityEditor.git</string>
 		<key>6B478701120EA7939C13DE74AC015889B3C905F3</key>
 		<string>https://github.com/vheun/node.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>of_0_9_64Bit/apps/myApp/HybridEditor/RealityEditor.xcodeproj</string>
+	<string>RealityEditor.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
+		<key>699BEA2634E82CF4B34F491C571DB46B219DFD4B</key>
+		<string>../..</string>
 		<key>6B478701120EA7939C13DE74AC015889B3C905F3</key>
 		<string>../../../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/vheun/node.git</string>
+	<string>https://github.com/vheun/RealityEditor.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>6B478701120EA7939C13DE74AC015889B3C905F3</string>
+	<string>699BEA2634E82CF4B34F491C571DB46B219DFD4B</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -34,7 +38,15 @@
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>6B478701120EA7939C13DE74AC015889B3C905F3</string>
 			<key>IDESourceControlWCCName</key>
-			<string>--git--node</string>
+			<string>..</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>699BEA2634E82CF4B34F491C571DB46B219DFD4B</string>
+			<key>IDESourceControlWCCName</key>
+			<string>HybridEditor</string>
 		</dict>
 	</array>
 </dict>
