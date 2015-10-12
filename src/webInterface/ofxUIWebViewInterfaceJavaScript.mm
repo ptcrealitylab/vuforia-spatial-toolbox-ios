@@ -20,12 +20,18 @@ void ofxUIWebViewInterfaceJavaScript::initialize() {
 void ofxUIWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxUIWebViewDelegateCpp *delegate) {
     // initialize the UIWebView instance
 
+    if(thisWindow.isRetinaEnabled()){
+        screenScale =2;
+    }
+    
     CGRect frame;
     if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1) {
-        frame = CGRectMake(0, 0, ofGetWindowHeight(), ofGetWindowWidth());
+        frame = CGRectMake(0, 0, ofGetWindowHeight()/screenScale, ofGetWindowWidth()/screenScale);
     } else {
-        frame = CGRectMake(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+        frame = CGRectMake(0, 0, ofGetWindowWidth()/screenScale, ofGetWindowHeight()/screenScale);
     }
+    
+
     uiWebViewInstance = [[UIWebView alloc] initWithFrame:frame];
 
     // make it transparent

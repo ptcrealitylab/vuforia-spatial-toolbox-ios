@@ -6,6 +6,22 @@ static const string kLicenseKey = "***REMOVED***";
 //--------------------------------------------------------------
 void realityEditor::setup() {
     
+    if( XML.loadFile(ofxiOSGetDocumentsDirectory() + "editor.xml") ){
+       cout<< "mySettings.xml loaded from documents folder!";
+    }else if( XML.loadFile("editor.xml") ){
+        cout << "mySettings.xml loaded from data folder!";
+    }else{
+        cout << "unable to load mySettings.xml check data/ folder";
+    }
+    
+    
+    developerState = XML.getValue("SETUP:DEVELOPER", 0);
+   extTrackingState = XML.getValue("SETUP:TRACKING", 0);
+      clearSkyState = XML.getValue("SETUP:CLEARSKY", 0);
+    externalState = XML.getValue("SETUP:EXTERNAL", "");
+  
+    
+    
     //  ofSetFrameRate(120);
     ofBackground(150);
 
@@ -33,21 +49,57 @@ void realityEditor::setup() {
     QCAR.setCameraPixelsFlag(true);
     QCAR.setMaxNumOfMarkers(5);
     QCAR.setup();
+    
+    
+    if(extTrackingState){
+        
+            ofxQCAR & QCAR = *ofxQCAR::getInstance();
+            QCAR.startExtendedTracking();
+            extendedTracking = true;
+    }else{
+        ofxQCAR & QCAR = *ofxQCAR::getInstance();
+        QCAR.stopExtendedTracking();
+        extendedTracking = false;
+
+    }
+        interface.initializeWithCustomDelegate(this);
+    
+    if(externalState !=""){
+        
+        cout << "loading interface from: " << externalState;
+      
+        interface.loadURL(externalState.c_str());
+        interface.activateView();
+        haveChangedUIwithURL = 500;
+    }else{
 
 
     /**********************************************
     INITIALIZING THE INTERFACE
     **********************************************/
-    interface.initializeWithCustomDelegate(this);
+
     interface.loadLocalFile("index");
   //   interface.loadURL("http://html5test.com");
    
     interface.activateView();
+        
+    }
     
-       cameraImage.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR);
-    fbo.allocate(ofGetWidth(), ofGetHeight());
+    ofLog()<<"**+++***++***+: "<< ofGetWindowSize() ;
     
-        fbo2.allocate(ofGetWidth(), ofGetHeight());
+      ofLog()<<"**+++***++***+: "<< ofGetWindowHeight() ;
+     ofLog()<<"**+++***++***+: "<< ofGetWindowWidth() ;
+    
+   
+ 
+    if(thisWindow.isRetinaEnabled()){
+        screenScale =2;
+    }
+    
+       cameraImage.allocate(ofGetWindowHeight()/screenScale, ofGetWindowHeight()/screenScale, OF_IMAGE_COLOR);
+    fbo.allocate(ofGetWindowHeight()/screenScale, ofGetWindowHeight()/screenScale);
+    
+        fbo2.allocate(ofGetWindowHeight()/screenScale, ofGetWindowHeight()/screenScale);
 }
 
 
@@ -61,10 +113,21 @@ void realityEditor::handleCustomRequest(NSString *request) {
     
     ofLog() << reqstring;
     
+    
+
+        
+    
     // if the html interface is loaded kickoff will be send to the c++ code.
     if (reqstring == "kickoff") {
         waitUntil = true;
         NSLog(@"kickoff");
+        
+        if(haveChangedUIwithURL > 0){
+              reloader = true;
+            changedURLOk = true;
+            // here is where we need to write the permanent link saving mechanism
+        }
+        
         projectionMatrixSend = false;
 
         // help to reestablish the arrays when reloaded the interface
@@ -72,6 +135,12 @@ void realityEditor::handleCustomRequest(NSString *request) {
 
 
         // if the message is reload then the interface reloads and all objects are resent to the editor
+        
+        NSString *stateSender = [NSString stringWithFormat:@"setStates(%d, %d, %d, \"%s\")", developerState, extTrackingState, clearSkyState, externalState.c_str()];
+         interface.runJavaScriptFromString(stateSender);
+        
+     NSLog(stateSender);
+
 
         if (reloader == true) {
 
@@ -86,8 +155,9 @@ void realityEditor::handleCustomRequest(NSString *request) {
 
     if (reqstring == "reload") {
         reloader = true;
-
-
+        NSString *stateSender = [NSString stringWithFormat:@"setStates(%d, %d, %d, \"%s\")", developerState, extTrackingState, clearSkyState, externalState.c_str()];
+        interface.runJavaScriptFromString(stateSender);
+     
     }
 
     if (reqstring == "freeze") {
@@ -99,18 +169,51 @@ void realityEditor::handleCustomRequest(NSString *request) {
       ofxQCAR & QCAR = *ofxQCAR::getInstance();
         QCAR.resume();
     }
+    
+    if (reqstring == "developerOn") {
+        XML.setValue("SETUP:DEVELOPER", 1);
+        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+        cout << "editor.xml saved to app documents folder";
+
+    }
+    if (reqstring == "developerOff") {
+        XML.setValue("SETUP:DEVELOPER", 0);
+        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+        cout << "editor.xml saved to app documents folder";
+    }
+    
+    if (reqstring == "clearSkyOn") {
+        XML.setValue("SETUP:CLEARSKY", 1);
+        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+        cout << "editor.xml saved to app documents folder";
+        
+    }
+    if (reqstring == "clearSkyOff") {
+        XML.setValue("SETUP:CLEARSKY", 0);
+        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+        cout << "editor.xml saved to app documents folder";
+    }
 
     
     if (reqstring == "extendedTrackingOn") {
          ofxQCAR & QCAR = *ofxQCAR::getInstance();
         QCAR.startExtendedTracking();
         extendedTracking = true;
+        
+        XML.setValue("SETUP:TRACKING", 1);
+        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+        cout << "editor.xml saved to app documents folder";
+        
     }
     
     if (reqstring == "extendedTrackingOff") {
         ofxQCAR & QCAR = *ofxQCAR::getInstance();
         QCAR.stopExtendedTracking();
         extendedTracking = false;
+        
+        XML.setValue("SETUP:TRACKING", 0);
+        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+        cout << "editor.xml saved to app documents folder";
     }
     
     
@@ -136,17 +239,30 @@ void realityEditor::handleCustomRequest(NSString *request) {
                 ofLog() << "this is the new URL:" << reloadURL <<":";
             
                 if(reloadURL !=""){
+                      haveChangedUIwithURL = 500;
+                            changedURLOk = false;
                 
                 interface.deactivateView();
                  // interface.loadLocalFile("setup","page");
                  
+                    cout << "this has been loaded from the webuI";
+                    cout << reloadURL.c_str();
+                    
                  interface.loadURL(reloadURL.c_str());
                 NSLog(@"%s", reloadURL.c_str());
+                    
+                    XML.setValue("SETUP:EXTERNAL", reloadURL);
+                    XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+                    cout << "editor.xml saved to app documents folder";
+                    
+                    externalState =reloadURL;
+                    
                 
                 //    interface.loadURL("http://html5test.com");
-                
+                    
                 interface.activateView();
-             
+                  
+                    
             
                 }
                 
@@ -246,6 +362,9 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
 
 //--------------------------------------------------------------
 void realityEditor::update() {
+    
+
+    
     if (onlyOnce) {
         NSLog(@">>once");
         // onece after the interface has been loaded, start the udp bindings.
@@ -369,6 +488,31 @@ void realityEditor::draw() {
         }
     }
 
+    
+    if(haveChangedUIwithURL > 0){
+        
+        if(haveChangedUIwithURL == 1){
+            if(changedURLOk == false){
+                
+                
+                XML.setValue("SETUP:EXTERNAL", "");
+                XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+                cout << "could not find UI at URL possition";
+                
+                interface.deactivateView();
+                interface.loadLocalFile("index");
+                interface.activateView();
+                
+            }
+        }
+        haveChangedUIwithURL--;
+        
+        if(changedURLOk == false){
+        string buf = "waiting for interface verification " + ofToString( haveChangedUIwithURL/60);
+        ofDrawBitmapString( buf, 10, 20 );
+                }
+     
+    }
   
     
 }

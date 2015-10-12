@@ -64,4 +64,7 @@ public:
 private:
     bool isShowingView;
     UIWebView *uiWebViewInstance;
+    
+    ofAppiOSWindow thisWindow =  *ofxiPhoneGetOFWindow();
+    int screenScale = 1;
 };
