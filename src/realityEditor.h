@@ -8,6 +8,7 @@
 #include "ofxJSON.h"
 #include "ofxNetwork.h"
 #include "ofxUIWebViewInterfaceJavaScript.h"
+#include "ofxXmlSettings.h"
 
 class realityEditor : public ofxQCAR_App, ofxUIWebViewDelegateCpp { // 
 
@@ -27,6 +28,7 @@ public:
     void cons();
 
     void urlResponse(ofHttpResponse &response);
+    
 
     ofxUDPManager udpConnection, udpConnection2;
     // HeartbeatListener* heartbeatListener;
@@ -42,6 +44,9 @@ public:
     bool waitGUI;
     char udpMessage[256];
     bool nameExists = false;
+    
+    ofxXmlSettings XML;
+    	string xmlStructure;
 
     ofHttpResponse ofSaveURLTo(string url, string path);
 
@@ -73,8 +78,17 @@ public:
 
     NSMutableString *stringforTransform = [NSMutableString stringWithCapacity:1000];
 
-
-
+    ofAppiOSWindow thisWindow =  *ofxiPhoneGetOFWindow();
+    int screenScale = 1;
+    
+    int haveChangedUIwithURL = 0;
+    bool changedURLOk = false;
+    
+    
+   int developerState = 0;
+   int extTrackingState = 0;
+   int clearSkyState = 0;
+   string externalState = "";
 
     /* void touchDown(ofTouchEventArgs & touch);
      void touchMoved(ofTouchEventArgs & touch);

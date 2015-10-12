@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "699BEA2634E82CF4B34F491C571DB46B219DFD4B",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "6B478701120EA7939C13DE74AC015889B3C905F3" : 0,
+    "699BEA2634E82CF4B34F491C571DB46B219DFD4B" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "CDBFE133-CD0F-4383-BE98-626A93665BA4",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "6B478701120EA7939C13DE74AC015889B3C905F3" : "..\/..\/..",
+    "699BEA2634E82CF4B34F491C571DB46B219DFD4B" : "HybridEditor\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "RealityEditor",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "RealityEditor.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/vheun\/RealityEditor.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "699BEA2634E82CF4B34F491C571DB46B219DFD4B"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/vheun\/node.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6B478701120EA7939C13DE74AC015889B3C905F3"
+    }
+  ]
+}

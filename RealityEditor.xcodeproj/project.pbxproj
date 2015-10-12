@@ -55,6 +55,10 @@
 		A7BC53361AFBC39E00B7D2C2 /* object.png in Resources */ = {isa = PBXBuildFile; fileRef = A7BC52D41AFBC39E00B7D2C2 /* object.png */; };
 		A7BC533D1AFBC39E00B7D2C2 /* verdana.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A7BC52DC1AFBC39E00B7D2C2 /* verdana.ttf */; };
 		A7BC537A1AFBC54C00B7D2C2 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7BC53791AFBC54C00B7D2C2 /* WebKit.framework */; };
+		A7DE8BC11BCB397B00CC1525 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DE8BBA1BCB397B00CC1525 /* tinyxml.cpp */; settings = {ASSET_TAGS = (); }; };
+		A7DE8BC21BCB397B00CC1525 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DE8BBC1BCB397B00CC1525 /* tinyxmlerror.cpp */; settings = {ASSET_TAGS = (); }; };
+		A7DE8BC31BCB397B00CC1525 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DE8BBD1BCB397B00CC1525 /* tinyxmlparser.cpp */; settings = {ASSET_TAGS = (); }; };
+		A7DE8BC41BCB397B00CC1525 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DE8BBF1BCB397B00CC1525 /* ofxXmlSettings.cpp */; settings = {ASSET_TAGS = (); }; };
 		A7F3601F1B0FC37E001E8241 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7F3601E1B0FC37E001E8241 /* Images.xcassets */; };
 		A7F3602C1B0FC3D7001E8241 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A7F360201B0FC3D7001E8241 /* Default-568h@2x.png */; };
 		A7F3602D1B0FC3D7001E8241 /* Default-568h@2x~iphone_potrait.png in Resources */ = {isa = PBXBuildFile; fileRef = A7F360211B0FC3D7001E8241 /* Default-568h@2x~iphone_potrait.png */; };
@@ -226,6 +230,12 @@
 		A7BC52D41AFBC39E00B7D2C2 /* object.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = object.png; sourceTree = "<group>"; };
 		A7BC52DC1AFBC39E00B7D2C2 /* verdana.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = verdana.ttf; sourceTree = "<group>"; };
 		A7BC53791AFBC54C00B7D2C2 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		A7DE8BBA1BCB397B00CC1525 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
+		A7DE8BBB1BCB397B00CC1525 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
+		A7DE8BBC1BCB397B00CC1525 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
+		A7DE8BBD1BCB397B00CC1525 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
+		A7DE8BBF1BCB397B00CC1525 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
+		A7DE8BC01BCB397B00CC1525 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 		A7F3601E1B0FC37E001E8241 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A7F360201B0FC3D7001E8241 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "bin/data/Default-568h@2x.png"; sourceTree = "<group>"; };
 		A7F360211B0FC3D7001E8241 /* Default-568h@2x~iphone_potrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x~iphone_potrait.png"; path = "bin/data/Default-568h@2x~iphone_potrait.png"; sourceTree = "<group>"; };
@@ -620,6 +630,36 @@
 			path = qcar_assets;
 			sourceTree = "<group>";
 		};
+		A7DE8BB81BCB397B00CC1525 /* ofxXmlSettings */ = {
+			isa = PBXGroup;
+			children = (
+				A7DE8BB91BCB397B00CC1525 /* libs */,
+				A7DE8BBE1BCB397B00CC1525 /* src */,
+			);
+			name = ofxXmlSettings;
+			path = ../../../addons/ofxXmlSettings;
+			sourceTree = "<group>";
+		};
+		A7DE8BB91BCB397B00CC1525 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				A7DE8BBA1BCB397B00CC1525 /* tinyxml.cpp */,
+				A7DE8BBB1BCB397B00CC1525 /* tinyxml.h */,
+				A7DE8BBC1BCB397B00CC1525 /* tinyxmlerror.cpp */,
+				A7DE8BBD1BCB397B00CC1525 /* tinyxmlparser.cpp */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		A7DE8BBE1BCB397B00CC1525 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				A7DE8BBF1BCB397B00CC1525 /* ofxXmlSettings.cpp */,
+				A7DE8BC01BCB397B00CC1525 /* ofxXmlSettings.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		BB16E9930F2B1E5900518274 /* libs */ = {
 			isa = PBXGroup;
 			children = (
@@ -631,6 +671,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				A7DE8BB81BCB397B00CC1525 /* ofxXmlSettings */,
 				A71F262F1B7B9BF80020DC61 /* ofxQCAR */,
 				A704BE531AFB442300E97FDC /* ofxJSON */,
 				A704BE9C1AFB442300E97FDC /* ofxNetwork */,
@@ -821,7 +862,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7DE8BC41BCB397B00CC1525 /* ofxXmlSettings.cpp in Sources */,
+				A7DE8BC31BCB397B00CC1525 /* tinyxmlparser.cpp in Sources */,
+				A7DE8BC21BCB397B00CC1525 /* tinyxmlerror.cpp in Sources */,
 				A704BEC91AFB442300E97FDC /* jsoncpp.cpp in Sources */,
+				A7DE8BC11BCB397B00CC1525 /* tinyxml.cpp in Sources */,
 				A71F27541B7B9BF80020DC61 /* ofxQCAR.mm in Sources */,
 				A71F27551B7B9BF80020DC61 /* ofxQCAR_EAGLView.mm in Sources */,
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
@@ -853,10 +898,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					arm64,
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ofxiOS_Prefix.pch;
@@ -880,17 +929,21 @@
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxQCAR/libs/qcar/include $(OF_CORE_HEADERS)";
-				VALID_ARCHS = "arm64 armv7";
+				VALID_ARCHS = arm64;
 			};
 			name = Debug;
 		};
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					arm64,
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ofxiOS_Prefix.pch;
@@ -914,7 +967,7 @@
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxQCAR/libs/qcar/include $(OF_CORE_HEADERS)";
-				VALID_ARCHS = "arm64 armv7";
+				VALID_ARCHS = arm64;
 			};
 			name = Release;
 		};
