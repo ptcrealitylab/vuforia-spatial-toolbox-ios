@@ -668,6 +668,29 @@ void realityEditor::renderJavascript() {
                //qcar->mutex.lock();
             tempMatrix = QCAR.getProjectionMatrix();
               // qcar->mutex.unlock();
+            
+         /*   cout << "-------start--------";
+            
+            cout << ":" <<  tempMatrix._mat[0][0];
+            cout << ":" <<   tempMatrix._mat[0][1];
+            cout << ":" <<   tempMatrix._mat[0][2];
+            cout << ":" <<   tempMatrix._mat[0][3];
+            cout << ":" <<   tempMatrix._mat[1][0];
+            cout << ":" <<   tempMatrix._mat[1][1];
+            cout << ":" <<   tempMatrix._mat[1][2];
+            cout << ":" <<  tempMatrix._mat[1][3];
+            cout << ":" <<  tempMatrix._mat[2][0];
+            cout << ":" <<  tempMatrix._mat[2][1];
+            cout << ":" <<  tempMatrix._mat[2][2];
+            cout << ":" <<  tempMatrix._mat[2][3];
+            cout << ":" <<  tempMatrix._mat[3][0];
+            cout << ":" <<  tempMatrix._mat[3][1];
+            cout << ":" <<  tempMatrix._mat[3][2];
+            cout << ":" <<  tempMatrix._mat[3][3];
+            
+            cout << "-------xxxx--------";*/
+      
+            
             pMatrix = [NSString stringWithFormat:@"setProjectionMatrix([[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf]])",
                                                  tempMatrix._mat[0][0],
                                                  tempMatrix._mat[0][1],
@@ -701,6 +724,8 @@ void realityEditor::renderJavascript() {
         for (int i = 0; i < nameTemp.size(); i++) {
 
             tempMatrix = matrixTemp[i];
+            
+   
 
             [stringforTransform appendFormat:@"'%s':[[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf]]",
                                              nameTemp[i].c_str(),
