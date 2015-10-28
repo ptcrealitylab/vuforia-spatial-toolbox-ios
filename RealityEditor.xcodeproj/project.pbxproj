@@ -55,10 +55,10 @@
 		A7BC53361AFBC39E00B7D2C2 /* object.png in Resources */ = {isa = PBXBuildFile; fileRef = A7BC52D41AFBC39E00B7D2C2 /* object.png */; };
 		A7BC533D1AFBC39E00B7D2C2 /* verdana.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A7BC52DC1AFBC39E00B7D2C2 /* verdana.ttf */; };
 		A7BC537A1AFBC54C00B7D2C2 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7BC53791AFBC54C00B7D2C2 /* WebKit.framework */; };
-		A7DE8BC11BCB397B00CC1525 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DE8BBA1BCB397B00CC1525 /* tinyxml.cpp */; settings = {ASSET_TAGS = (); }; };
-		A7DE8BC21BCB397B00CC1525 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DE8BBC1BCB397B00CC1525 /* tinyxmlerror.cpp */; settings = {ASSET_TAGS = (); }; };
-		A7DE8BC31BCB397B00CC1525 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DE8BBD1BCB397B00CC1525 /* tinyxmlparser.cpp */; settings = {ASSET_TAGS = (); }; };
-		A7DE8BC41BCB397B00CC1525 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DE8BBF1BCB397B00CC1525 /* ofxXmlSettings.cpp */; settings = {ASSET_TAGS = (); }; };
+		A7DE8BC11BCB397B00CC1525 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DE8BBA1BCB397B00CC1525 /* tinyxml.cpp */; };
+		A7DE8BC21BCB397B00CC1525 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DE8BBC1BCB397B00CC1525 /* tinyxmlerror.cpp */; };
+		A7DE8BC31BCB397B00CC1525 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DE8BBD1BCB397B00CC1525 /* tinyxmlparser.cpp */; };
+		A7DE8BC41BCB397B00CC1525 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7DE8BBF1BCB397B00CC1525 /* ofxXmlSettings.cpp */; };
 		A7F3601F1B0FC37E001E8241 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7F3601E1B0FC37E001E8241 /* Images.xcassets */; };
 		A7F3602C1B0FC3D7001E8241 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A7F360201B0FC3D7001E8241 /* Default-568h@2x.png */; };
 		A7F3602D1B0FC3D7001E8241 /* Default-568h@2x~iphone_potrait.png in Resources */ = {isa = PBXBuildFile; fileRef = A7F360211B0FC3D7001E8241 /* Default-568h@2x~iphone_potrait.png */; };
@@ -898,10 +898,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					arm64,
-				);
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -915,7 +912,7 @@
 					../../../addons/ofxQCAR/libs/qcar/include,
 				);
 				INFOPLIST_FILE = "ofxiOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/valentin/Downloads/openFrameworks-Apothecary-0.9.0-All/addons/ofxQCAR/libs/qcar/lib/arm",
@@ -929,17 +926,14 @@
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxQCAR/libs/qcar/include $(OF_CORE_HEADERS)";
-				VALID_ARCHS = arm64;
+				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Debug;
 		};
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					arm64,
-				);
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -953,7 +947,7 @@
 					../../../addons/ofxQCAR/libs/qcar/include,
 				);
 				INFOPLIST_FILE = "ofxiOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/valentin/Downloads/openFrameworks-Apothecary-0.9.0-All/addons/ofxQCAR/libs/qcar/lib/arm",
@@ -967,7 +961,7 @@
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxQCAR/libs/qcar/include $(OF_CORE_HEADERS)";
-				VALID_ARCHS = arm64;
+				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Release;
 		};
