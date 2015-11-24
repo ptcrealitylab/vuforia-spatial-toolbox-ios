@@ -24,12 +24,7 @@ void ofxUIWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxUIWebViewD
         screenScale =2;
     }
     
-    CGRect frame;
-    if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1) {
-        frame = CGRectMake(0, 0, ofGetWindowHeight()/screenScale, ofGetWindowWidth()/screenScale);
-    } else {
-        frame = CGRectMake(0, 0, ofGetWindowWidth()/screenScale, ofGetWindowHeight()/screenScale);
-    }
+    CGRect frame = CGRectMake(0, 0, ofGetWindowWidth()/screenScale, ofGetWindowHeight()/screenScale);
     
 
     uiWebViewInstance = [[UIWebView alloc] initWithFrame:frame];
