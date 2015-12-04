@@ -18,6 +18,8 @@ public:
     void update();
 
     void draw();
+    
+    void deviceOrientationChanged(int newOrientation);
 
     void exit();
 
