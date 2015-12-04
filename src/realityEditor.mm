@@ -50,7 +50,7 @@ void realityEditor::setup() {
     QCAR.setMaxNumOfMarkers(5);
     QCAR.setup();
     
-    
+        
     if(extTrackingState){
         
             ofxQCAR & QCAR = *ofxQCAR::getInstance();
@@ -771,6 +771,16 @@ void realityEditor::cons() {
         NSLog(@"%s %s %s %s,%s", nameCount[i][1].c_str(), nameCount[i][2].c_str(), nameCount[i][3].c_str(), nameCount[i][4].c_str(), nameCount[i][0].c_str());
     }
 
+}
+
+void realityEditor::deviceOrientationChanged(int newOrientation){
+
+
+    if(newOrientation == 4 || newOrientation == 3){
+        //ofSetOrientation((ofOrientation)newOrientation);
+        
+    }
+    
 }
 
 

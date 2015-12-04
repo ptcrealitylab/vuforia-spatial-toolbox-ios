@@ -21,7 +21,8 @@ void ofxUIWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxUIWebViewD
     // initialize the UIWebView instance
 
     if(thisWindow.isRetinaEnabled()){
-        screenScale =2;
+        cout << "xxxxxxxxxxxxxxx retina Enabled";
+        screenScale = 2;
     }
     
     CGRect frame = CGRectMake(0, 0, ofGetWindowWidth()/screenScale, ofGetWindowHeight()/screenScale);
