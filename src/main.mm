@@ -1,10 +1,9 @@
 #include "ofMain.h"
 #include "ofAppiOSWindow.h"
 #include "realityEditor.h"
-#define RETINA_STATUS ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale >= 2.0))
+#define RETINA_STATUS ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale > 1.0))
 
 int main() {
-
     //  here are the most commonly used iOS window settings.
     //------------------------------------------------------
     ofiOSWindowSettings settings;
