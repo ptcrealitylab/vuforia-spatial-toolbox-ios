@@ -91,6 +91,12 @@ public:
    int extTrackingState = 0;
    int clearSkyState = 0;
    string externalState = "";
+    
+    bool sendAccelerationData = false;
+    
+    ofVec3f accel;
+    ofVec2f orientation;
+
 
     /* void touchDown(ofTouchEventArgs & touch);
      void touchMoved(ofTouchEventArgs & touch);
