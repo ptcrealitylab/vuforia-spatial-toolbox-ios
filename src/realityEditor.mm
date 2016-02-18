@@ -6,6 +6,8 @@ static const string kLicenseKey = "***REMOVED***";
 //--------------------------------------------------------------
 void realityEditor::setup() {
     
+     ofxAccelerometer.setup();
+
     if( XML.loadFile(ofxiOSGetDocumentsDirectory() + "editor.xml") ){
        cout<< "mySettings.xml loaded from documents folder!";
     }else if( XML.loadFile("editor.xml") ){
@@ -169,7 +171,10 @@ void realityEditor::handleCustomRequest(NSString *request) {
       ofxQCAR & QCAR = *ofxQCAR::getInstance();
         QCAR.resume();
     }
-    
+    if (reqstring == "sendAccelerationData") {
+        sendAccelerationData = true;
+    }
+
     if (reqstring == "developerOn") {
         XML.setValue("SETUP:DEVELOPER", 1);
         XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
@@ -363,6 +368,8 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
 //--------------------------------------------------------------
 void realityEditor::update() {
     
+     accel = ofxAccelerometer.getForce();
+     orientation = ofxAccelerometer.getOrientation();
 
     
     if (onlyOnce) {
@@ -717,7 +724,7 @@ void realityEditor::renderJavascript() {
         // since all objects share the same projection matrix, we just take the matrix of the first object and aplly it only one time. We add it as an json object in to the javascropt call.
         //  tempMatrix= tempMarker[0].projectionMatrix;
 
-        stringforTransform = [NSMutableString stringWithFormat:@"update({"];
+        stringforTransform = [NSMutableString stringWithFormat:@"update({'obj':{"];
 
         // now for all objects we add json elements indicating the name of the marker as the object name and following the model view matrix.
         //
@@ -755,11 +762,35 @@ void realityEditor::renderJavascript() {
         }
         //
         // end of string generation.
-        [stringforTransform appendString:@"})"];
-    } else {
-        stringforTransform = [NSMutableString stringWithFormat:@"update({'dummy':0})"];
-    }
+        [stringforTransform appendString:@"}"];
 
+        if(sendAccelerationData == true){
+            [stringforTransform appendFormat:@",'acl':[%lf,%lf,%lf,%lf,%lf]",
+            accel.x,
+            accel.y,
+            accel.z,
+            orientation.x,
+            orientation.y
+             ];
+        }
+
+        [stringforTransform appendString:@"})"];
+
+    } else {
+        stringforTransform = [NSMutableString stringWithFormat:@"update({'obj':{'dummy':0}"];
+
+        if(sendAccelerationData == true){
+                [stringforTransform appendFormat:@",'acl':[%lf,%lf,%lf,%lf,%lf]",
+                 accel.x,
+                 accel.y,
+                 accel.z,
+                 orientation.x,
+                 orientation.y
+                 ];
+        }
+          [stringforTransform appendString:@"})"];
+
+    }
     // finally we call the dunction to update the html view.
     interface.runJavaScriptFromString(stringforTransform);
 }
