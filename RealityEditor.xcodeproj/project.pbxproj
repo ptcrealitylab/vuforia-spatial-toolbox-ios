@@ -59,6 +59,8 @@
 		5D4E33ED1C8775EB00D29BC3 /* hand.minified-1.3.8.js in Resources */ = {isa = PBXBuildFile; fileRef = 5D4E33BE1C8775EB00D29BC3 /* hand.minified-1.3.8.js */; };
 		5D4E33EE1C8775EB00D29BC3 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 5D4E33BF1C8775EB00D29BC3 /* LICENSE */; };
 		5D4E33EF1C8775EB00D29BC3 /* topUI.html in Resources */ = {isa = PBXBuildFile; fileRef = 5D4E33C01C8775EB00D29BC3 /* topUI.html */; };
+		5D4E33F91C87771400D29BC3 /* ofxWKWebViewDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D4E33F61C87771400D29BC3 /* ofxWKWebViewDelegate.mm */; };
+		5D4E33FA1C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D4E33F81C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.mm */; };
 		67DFA53619F92A69003B3434 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67DFA53419F92A5E003B3434 /* Accelerate.framework */; };
 		A704BEC91AFB442300E97FDC /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A704BE961AFB442300E97FDC /* jsoncpp.cpp */; };
 		A704BECB1AFB442300E97FDC /* ofxJSONElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A704BE9A1AFB442300E97FDC /* ofxJSONElement.cpp */; };
@@ -204,6 +206,10 @@
 		5D4E33BE1C8775EB00D29BC3 /* hand.minified-1.3.8.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "hand.minified-1.3.8.js"; sourceTree = "<group>"; };
 		5D4E33BF1C8775EB00D29BC3 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		5D4E33C01C8775EB00D29BC3 /* topUI.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = topUI.html; sourceTree = "<group>"; };
+		5D4E33F51C87771400D29BC3 /* ofxWKWebViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxWKWebViewDelegate.h; sourceTree = "<group>"; };
+		5D4E33F61C87771400D29BC3 /* ofxWKWebViewDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxWKWebViewDelegate.mm; sourceTree = "<group>"; };
+		5D4E33F71C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxWKWebViewInterfaceJavaScript.h; sourceTree = "<group>"; };
+		5D4E33F81C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxWKWebViewInterfaceJavaScript.mm; sourceTree = "<group>"; };
 		67DFA53419F92A5E003B3434 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		A704BE931AFB442300E97FDC /* json-forwards.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "json-forwards.h"; sourceTree = "<group>"; };
 		A704BE941AFB442300E97FDC /* json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json.h; sourceTree = "<group>"; };
@@ -608,6 +614,10 @@
 		5D4E33F01C87762600D29BC3 /* WKWebView */ = {
 			isa = PBXGroup;
 			children = (
+				5D4E33F51C87771400D29BC3 /* ofxWKWebViewDelegate.h */,
+				5D4E33F61C87771400D29BC3 /* ofxWKWebViewDelegate.mm */,
+				5D4E33F71C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.h */,
+				5D4E33F81C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.mm */,
 			);
 			name = WKWebView;
 			sourceTree = "<group>";
@@ -1275,6 +1285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D4E33FA1C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.mm in Sources */,
 				A7DE8BC41BCB397B00CC1525 /* ofxXmlSettings.cpp in Sources */,
 				A7DE8BC31BCB397B00CC1525 /* tinyxmlparser.cpp in Sources */,
 				A7DE8BC21BCB397B00CC1525 /* tinyxmlerror.cpp in Sources */,
@@ -1293,6 +1304,7 @@
 				E4D8936F11527B74007E1F53 /* realityEditor.mm in Sources */,
 				A704BECB1AFB442300E97FDC /* ofxJSONElement.cpp in Sources */,
 				A704BECF1AFB442300E97FDC /* ofxTCPServer.cpp in Sources */,
+				5D4E33F91C87771400D29BC3 /* ofxWKWebViewDelegate.mm in Sources */,
 				A74A4B011C1127570007A97C /* ofxQCAR_EAGLView.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
