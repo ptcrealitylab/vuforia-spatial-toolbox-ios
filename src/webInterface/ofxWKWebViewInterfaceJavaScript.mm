@@ -20,10 +20,24 @@ void ofxWKWebViewInterfaceJavaScript::initialize() {
 void ofxWKWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxWKWebViewDelegateCpp *delegate) {
     // initialize the WKWebView instance
     
+    cout << "Initialized WKWebViewInterface" << endl;
+    
     CGRect frame = CGRectMake(0, 0, ofGetWindowWidth()/[UIScreen mainScreen].scale, ofGetWindowHeight()/[UIScreen mainScreen].scale);
     
+    // create delegate to handle events
+    ofxWKWebViewDelegateObjC *delegateObjC = [[ofxWKWebViewDelegateObjC alloc] init];
+    [delegateObjC setDelegate:delegate]; // WARNING: set to 0 when using default delegate
     
-    wkWebViewInstance = [[WKWebView alloc] initWithFrame:frame];
+    // Create the user content controller and add the script to it
+    WKUserContentController *userContentController = [WKUserContentController new];
+    [userContentController addScriptMessageHandler:delegateObjC name:@"ofxWKWebView"];
+    
+    // Create the configuration with the user content controller
+    WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
+    configuration.userContentController = userContentController;
+    
+    //wkWebViewInstance = [[WKWebView alloc] initWithFrame:frame];
+    wkWebViewInstance = [[WKWebView alloc] initWithFrame:frame configuration:configuration];
     
     // make it transparent
     [wkWebViewInstance setOpaque:NO];
@@ -34,13 +48,9 @@ void ofxWKWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxWKWebViewD
     [[wkWebViewInstance scrollView] setScrollEnabled:YES];
     [[wkWebViewInstance scrollView] setBounces:NO];
     
-    // set delegate to handle events
-    ofxWKWebViewDelegateObjC *delegateObjC = [[ofxWKWebViewDelegateObjC alloc] init];
-    [delegateObjC setDelegate:delegate]; // WARNING: set to 0 when using default delegate
+    // set delegate
     [wkWebViewInstance setNavigationDelegate:delegateObjC];
     [wkWebViewInstance setUIDelegate:delegateObjC];
-    WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
-    [config.userContentController addScriptMessageHandler:delegateObjC name:@"myApp"];
 }
 
 void ofxWKWebViewInterfaceJavaScript::loadURL(string url) {

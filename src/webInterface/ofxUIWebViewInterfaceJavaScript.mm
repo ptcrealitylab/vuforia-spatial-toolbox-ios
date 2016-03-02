@@ -20,6 +20,8 @@ void ofxUIWebViewInterfaceJavaScript::initialize() {
 void ofxUIWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxUIWebViewDelegateCpp *delegate) {
     // initialize the UIWebView instance
     
+    cout << "Initialized UIWebViewInterface" << endl;
+    
     CGRect frame = CGRectMake(0, 0, ofGetWindowWidth()/[UIScreen mainScreen].scale, ofGetWindowHeight()/[UIScreen mainScreen].scale);
     
 

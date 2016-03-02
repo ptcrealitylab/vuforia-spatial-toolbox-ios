@@ -12,8 +12,6 @@
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-//    return decisionHandler(WKNavigationActionPolicyAllow);
-    
     NSString *urlScheme = [navigationAction.request.URL scheme];
     NSLog(@"Decide policy for navigation action: %@", urlScheme);
 
@@ -32,25 +30,6 @@
     NSLog(@"Message received: %@", messageString);
 }
 
-//- (void)webViewDidStartLoad:(UIWebView *)webView {
-//}
-//
-//- (void)webViewDidFinishLoad:(UIWebView *)webView {
-//}
-//
-//- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
-//}
-//
-//- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
-// navigationType:(UIWebViewNavigationType)navigationType {
-//    if ([[request.URL scheme] isEqual:@"of"]) {
-//        [self handleRequest:request];
-//        return NO; // tell UIWebView NOT to load URL
-//    } else {
-//        return YES; // tell UIWebView to load URL
-//    }
-//}
-//
 - (void)handleRequest:(NSURLRequest *)request {
     BOOL isDefaultRequest = false;
     
