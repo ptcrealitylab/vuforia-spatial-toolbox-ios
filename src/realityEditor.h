@@ -7,10 +7,11 @@
 #include "ofxQCAR.h"
 #include "ofxJSON.h"
 #include "ofxNetwork.h"
-#include "ofxUIWebViewInterfaceJavaScript.h"
+//#include "ofxUIWebViewInterfaceJavaScript.h"
 #include "ofxXmlSettings.h"
+#include "ofxWKWebViewInterfaceJavaScript.h"
 
-class realityEditor : public ofxQCAR_App, ofxUIWebViewDelegateCpp { // 
+class realityEditor : public ofxQCAR_App, ofxWKWebViewDelegateCpp { //ofxUIWebViewDelegateCpp { //
 
 public:
     void setup();
@@ -36,7 +37,9 @@ public:
     // HeartbeatListener* heartbeatListener;
     vector<vector<string> > nameCount;
 
-    ofxUIWebViewInterfaceJavaScript interface;
+//    ofxUIWebViewInterfaceJavaScript interface;
+    ofxWKWebViewInterfaceJavaScript interface;
+    
 
     void handleCustomRequest(NSString *request);
 
