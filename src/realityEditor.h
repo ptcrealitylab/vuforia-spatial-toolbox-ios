@@ -9,14 +9,14 @@
 #include "ofxNetwork.h"
 #include "ofxXmlSettings.h"
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_9_0
 #include "ofxWKWebViewInterfaceJavaScript.h"
 #else
 #include "ofxUIWebViewInterfaceJavaScript.h"
 #endif
 
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_9_0
 class realityEditor : public ofxQCAR_App, ofxWKWebViewDelegateCpp {
 #else
 class realityEditor : public ofxQCAR_App, ofxUIWebViewDelegateCpp {
@@ -46,7 +46,7 @@ public:
     // HeartbeatListener* heartbeatListener;
     vector<vector<string> > nameCount;
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_9_0
     ofxWKWebViewInterfaceJavaScript interface;
 #else
     ofxUIWebViewInterfaceJavaScript interface;
