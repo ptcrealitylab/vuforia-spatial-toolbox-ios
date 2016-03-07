@@ -622,6 +622,17 @@
 			name = WKWebView;
 			sourceTree = "<group>";
 		};
+		5D786DB41C8D2573001AFCF1 /* UIWebView */ = {
+			isa = PBXGroup;
+			children = (
+				A704BEDE1AFB44BF00E97FDC /* ofxUIWebViewDelegate.h */,
+				A704BEDF1AFB44BF00E97FDC /* ofxUIWebViewDelegate.mm */,
+				A704BEE01AFB44BF00E97FDC /* ofxUIWebViewInterfaceJavaScript.h */,
+				A704BEE11AFB44BF00E97FDC /* ofxUIWebViewInterfaceJavaScript.mm */,
+			);
+			name = UIWebView;
+			sourceTree = "<group>";
+		};
 		A704BE531AFB442300E97FDC /* ofxJSON */ = {
 			isa = PBXGroup;
 			children = (
@@ -713,11 +724,8 @@
 		A704BEDD1AFB44BF00E97FDC /* webInterface */ = {
 			isa = PBXGroup;
 			children = (
+				5D786DB41C8D2573001AFCF1 /* UIWebView */,
 				5D4E33F01C87762600D29BC3 /* WKWebView */,
-				A704BEDE1AFB44BF00E97FDC /* ofxUIWebViewDelegate.h */,
-				A704BEDF1AFB44BF00E97FDC /* ofxUIWebViewDelegate.mm */,
-				A704BEE01AFB44BF00E97FDC /* ofxUIWebViewInterfaceJavaScript.h */,
-				A704BEE11AFB44BF00E97FDC /* ofxUIWebViewInterfaceJavaScript.mm */,
 			);
 			path = webInterface;
 			sourceTree = "<group>";
