@@ -4,17 +4,19 @@
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
-    "5DB7C332A3A89035E93556A2A38BF414005BA671" : 0,
+    "6B478701120EA7939C13DE74AC015889B3C905F3" : 0,
     "A6D63C8D0F437ECA3207DE2F745A730F9F410998" : 0,
     "699BEA2634E82CF4B34F491C571DB46B219DFD4B" : 0,
-    "6B478701120EA7939C13DE74AC015889B3C905F3" : 0
+    "5FF8C2E46F7066F9B4732218965E6B1299FE38A2" : 0,
+    "5DB7C332A3A89035E93556A2A38BF414005BA671" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "CDBFE133-CD0F-4383-BE98-626A93665BA4",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "5DB7C332A3A89035E93556A2A38BF414005BA671" : "..\/..\/addons\/ofxJSON",
+    "6B478701120EA7939C13DE74AC015889B3C905F3" : "..\/..\/..",
     "A6D63C8D0F437ECA3207DE2F745A730F9F410998" : "..\/..\/addons\/ofxQCAR",
     "699BEA2634E82CF4B34F491C571DB46B219DFD4B" : "HybridEditor\/",
-    "6B478701120EA7939C13DE74AC015889B3C905F3" : "..\/..\/.."
+    "5FF8C2E46F7066F9B4732218965E6B1299FE38A2" : "HybridEditor\/bin\/data\/interfaceData\/",
+    "5DB7C332A3A89035E93556A2A38BF414005BA671" : "..\/..\/addons\/ofxJSON"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "RealityEditor",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
@@ -24,6 +26,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:jefftimesten\/ofxJSON.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "5DB7C332A3A89035E93556A2A38BF414005BA671"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/openhybrid\/editor.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "5FF8C2E46F7066F9B4732218965E6B1299FE38A2"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/vheun\/RealityEditor.git",
