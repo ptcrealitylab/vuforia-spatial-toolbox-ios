@@ -5,7 +5,7 @@ static const string kLicenseKey = "***REMOVED***";
 
 //--------------------------------------------------------------
 void realityEditor::setup() {
-    
+        
      ofxAccelerometer.setup();
 
     if( XML.loadFile(ofxiOSGetDocumentsDirectory() + "editor.xml") ){
@@ -156,6 +156,21 @@ void realityEditor::handleCustomRequest(NSString *request) {
     }
 
     if (reqstring == "reload") {
+        
+        
+        if(externalState !=""){
+            interface.deactivateView();
+            interface.loadURL(externalState.c_str());
+            interface.activateView();
+        }else{
+            interface.deactivateView();
+            interface.loadLocalFile("index");
+            interface.activateView();
+        }
+        
+        
+        
+        
         reloader = true;
         NSString *stateSender = [NSString stringWithFormat:@"setStates(%d, %d, %d, \"%s\")", developerState, extTrackingState, clearSkyState, externalState.c_str()];
         interface.runJavaScriptFromString(stateSender);
