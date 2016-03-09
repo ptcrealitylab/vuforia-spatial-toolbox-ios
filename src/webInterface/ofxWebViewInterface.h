@@ -1,8 +1,8 @@
 //
-//  ofxUIWebviewController.h
-//  ofxiPhoneWebViewController
+//  ofxWebViewInterface.h
+//  RealityEditor
 //
-//  Created by Fluid Interfaces Group on 2/22/16.
+//  Created by Benjamin Reynolds on 3/8/16.
 //
 //
 
@@ -11,9 +11,9 @@
 #include "ofMain.h"
 #include "ofAppiOSWindow.h"
 #include "ofxiPhoneExtras.h"
-//#include "ofxQCAR.h"
-#include "ofxWebViewInterface.h"
-#include "ofxWKWebViewDelegate.h"
+#include <WebKit/WebKit.h>
+#include <UIKit/UIKit.h>
+#include "ofxWebViewDelegate.h"
 
 /**
  ofxUIWebViewInterface interfaces with EXACTLY ONE UIWebView instance.
@@ -30,18 +30,18 @@
  Therefore, the protocol is up to the interface programmer to define by defining a SUBCLASS of the
  ofxUIWebViewDelegate.
  */
-@class WKWebViewMultiInteractable;
+@class UIWebViewMultiInteractable;
 
-class ofxWKWebViewInterfaceJavaScript {
+class ofxWebViewInterfaceJavaScript {
     
 public:
-    ofxWKWebViewInterfaceJavaScript();
+    ofxWebViewInterfaceJavaScript();
     
-    ~ofxWKWebViewInterfaceJavaScript();
+    ~ofxWebViewInterfaceJavaScript();
     
     /** 1. Initialize */
     void initialize(); // use default ofxUIWebViewDelegate: no custom request handling
-    void initializeWithCustomDelegate(ofxWKWebViewDelegateCpp *delegate);
+    void initializeWithCustomDelegate(ofxWebViewDelegateCpp *delegate);
     
     /** 2. Load a URL or a local file to the webview */
     void loadURL(string url);
@@ -58,14 +58,19 @@ public:
     /** 4. Running JS code */
     void *runJavaScriptFromString(NSString *script);
     
-    WKWebView *getWKWebViewInstance() {
-        return wkWebViewInstance;
-    };
+    // object returned is a UIWebView or a WKWebView depending on the OS version
+    NSObject *getWebViewInstance();
     
 private:
     bool isShowingView;
+    
+    // use if iOS version is less than 9.0
+    UIWebView *uiWebViewInstance;
+    // use if iOS version is at least 9.0
     WKWebView *wkWebViewInstance;
     
-    ofAppiOSWindow thisWindow = *ofAppiOSWindow::getInstance();
+    ofAppiOSWindow thisWindow =  *ofxiPhoneGetOFWindow();
     int screenScale = 1;
+    
+    bool shouldUseWKWebView();
 };
