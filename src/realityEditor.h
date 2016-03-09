@@ -9,18 +9,12 @@
 #include "ofxNetwork.h"
 #include "ofxXmlSettings.h"
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_9_0
-#include "ofxWKWebViewInterfaceJavaScript.h"
-#else
-#include "ofxUIWebViewInterfaceJavaScript.h"
-#endif
+//#include "ofxWKWebViewInterfaceJavaScript.h"
+//#include "ofxUIWebViewInterfaceJavaScript.h"
 
+#include "ofxWebViewInterface.h"
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_9_0
-class realityEditor : public ofxQCAR_App, ofxWKWebViewDelegateCpp {
-#else
-class realityEditor : public ofxQCAR_App, ofxUIWebViewDelegateCpp {
-#endif
+class realityEditor : public ofxQCAR_App, ofxWebViewDelegateCpp /*ofxWKWebViewDelegateCpp, ofxUIWebViewDelegateCpp*/ {
 
 public:
     void setup();
@@ -46,11 +40,10 @@ public:
     // HeartbeatListener* heartbeatListener;
     vector<vector<string> > nameCount;
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_9_0
-    ofxWKWebViewInterfaceJavaScript interface;
-#else
-    ofxUIWebViewInterfaceJavaScript interface;
-#endif
+//    ofxWKWebViewInterfaceJavaScript interface;
+//    ofxUIWebViewInterfaceJavaScript interface;
+    
+    ofxWebViewInterfaceJavaScript interface;
 
     void handleCustomRequest(NSString *request);
 
