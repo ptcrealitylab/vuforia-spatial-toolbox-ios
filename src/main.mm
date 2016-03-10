@@ -19,8 +19,6 @@ int main() {
     ofCreateWindow(settings);
 
     [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
-        
-
 
     return ofRunApp(new realityEditor);
 }

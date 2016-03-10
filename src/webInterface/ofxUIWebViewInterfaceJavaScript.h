@@ -11,6 +11,7 @@
 //#include "ofMain.h"
 //#include "ofxiPhoneExtras.h"
 #include "ofxQCAR.h"
+#include "ofxWebViewInterface.h"
 #include "ofxUIWebViewDelegate.h"
 
 /**
@@ -54,8 +55,7 @@ public:
     void toggleView();
 
     /** 4. Running JS code */
-    NSString *runJavaScriptFromString(NSString *script);
-
+    void *runJavaScriptFromString(NSString *script);
 
     UIWebView *getUIWebViewInstance() {
         return uiWebViewInstance;

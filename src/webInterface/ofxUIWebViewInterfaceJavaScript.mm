@@ -94,11 +94,9 @@ void ofxUIWebViewInterfaceJavaScript::toggleView() {
 }
 
 // relevant for sending the script
-NSString *ofxUIWebViewInterfaceJavaScript::runJavaScriptFromString(NSString *script) {
+void *ofxUIWebViewInterfaceJavaScript::runJavaScriptFromString(NSString *script) {
     if (isShowingView) {
-        return [uiWebViewInstance stringByEvaluatingJavaScriptFromString:script];
-    } else {
-        return @"";
+        [uiWebViewInstance stringByEvaluatingJavaScriptFromString:script];
     }
 }
 

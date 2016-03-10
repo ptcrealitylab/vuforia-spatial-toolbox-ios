@@ -61,6 +61,8 @@
 		5D4E33EF1C8775EB00D29BC3 /* topUI.html in Resources */ = {isa = PBXBuildFile; fileRef = 5D4E33C01C8775EB00D29BC3 /* topUI.html */; };
 		5D4E33F91C87771400D29BC3 /* ofxWKWebViewDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D4E33F61C87771400D29BC3 /* ofxWKWebViewDelegate.mm */; };
 		5D4E33FA1C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D4E33F81C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.mm */; };
+		5DD5D1B91C90AC16001B8E53 /* ofxWebViewInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5DD5D1B81C90AC16001B8E53 /* ofxWebViewInterface.mm */; };
+		5DD5D1BC1C90AF47001B8E53 /* ofxWebViewDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5DD5D1BA1C90AF47001B8E53 /* ofxWebViewDelegate.mm */; };
 		67DFA53619F92A69003B3434 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67DFA53419F92A5E003B3434 /* Accelerate.framework */; };
 		A704BEC91AFB442300E97FDC /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A704BE961AFB442300E97FDC /* jsoncpp.cpp */; };
 		A704BECB1AFB442300E97FDC /* ofxJSONElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A704BE9A1AFB442300E97FDC /* ofxJSONElement.cpp */; };
@@ -210,6 +212,10 @@
 		5D4E33F61C87771400D29BC3 /* ofxWKWebViewDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxWKWebViewDelegate.mm; sourceTree = "<group>"; };
 		5D4E33F71C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxWKWebViewInterfaceJavaScript.h; sourceTree = "<group>"; };
 		5D4E33F81C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxWKWebViewInterfaceJavaScript.mm; sourceTree = "<group>"; };
+		5D7D5D731C8F253F00DB49D6 /* ofxWebViewInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxWebViewInterface.h; sourceTree = "<group>"; };
+		5DD5D1B81C90AC16001B8E53 /* ofxWebViewInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxWebViewInterface.mm; sourceTree = "<group>"; };
+		5DD5D1BA1C90AF47001B8E53 /* ofxWebViewDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxWebViewDelegate.mm; sourceTree = "<group>"; };
+		5DD5D1BB1C90AF47001B8E53 /* ofxWebViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxWebViewDelegate.h; sourceTree = "<group>"; };
 		67DFA53419F92A5E003B3434 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		A704BE931AFB442300E97FDC /* json-forwards.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "json-forwards.h"; sourceTree = "<group>"; };
 		A704BE941AFB442300E97FDC /* json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json.h; sourceTree = "<group>"; };
@@ -622,6 +628,28 @@
 			name = WKWebView;
 			sourceTree = "<group>";
 		};
+		5D786DB41C8D2573001AFCF1 /* UIWebView */ = {
+			isa = PBXGroup;
+			children = (
+				A704BEDE1AFB44BF00E97FDC /* ofxUIWebViewDelegate.h */,
+				A704BEDF1AFB44BF00E97FDC /* ofxUIWebViewDelegate.mm */,
+				A704BEE01AFB44BF00E97FDC /* ofxUIWebViewInterfaceJavaScript.h */,
+				A704BEE11AFB44BF00E97FDC /* ofxUIWebViewInterfaceJavaScript.mm */,
+			);
+			name = UIWebView;
+			sourceTree = "<group>";
+		};
+		5DD5D1B71C90ABEB001B8E53 /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				5DD5D1BB1C90AF47001B8E53 /* ofxWebViewDelegate.h */,
+				5DD5D1BA1C90AF47001B8E53 /* ofxWebViewDelegate.mm */,
+				5D7D5D731C8F253F00DB49D6 /* ofxWebViewInterface.h */,
+				5DD5D1B81C90AC16001B8E53 /* ofxWebViewInterface.mm */,
+			);
+			name = WebView;
+			sourceTree = "<group>";
+		};
 		A704BE531AFB442300E97FDC /* ofxJSON */ = {
 			isa = PBXGroup;
 			children = (
@@ -713,11 +741,9 @@
 		A704BEDD1AFB44BF00E97FDC /* webInterface */ = {
 			isa = PBXGroup;
 			children = (
+				5DD5D1B71C90ABEB001B8E53 /* WebView */,
+				5D786DB41C8D2573001AFCF1 /* UIWebView */,
 				5D4E33F01C87762600D29BC3 /* WKWebView */,
-				A704BEDE1AFB44BF00E97FDC /* ofxUIWebViewDelegate.h */,
-				A704BEDF1AFB44BF00E97FDC /* ofxUIWebViewDelegate.mm */,
-				A704BEE01AFB44BF00E97FDC /* ofxUIWebViewInterfaceJavaScript.h */,
-				A704BEE11AFB44BF00E97FDC /* ofxUIWebViewInterfaceJavaScript.mm */,
 			);
 			path = webInterface;
 			sourceTree = "<group>";
@@ -1296,6 +1322,7 @@
 				A704BEE31AFB44BF00E97FDC /* ofxUIWebViewInterfaceJavaScript.mm in Sources */,
 				A704BED01AFB442300E97FDC /* ofxUDPManager.cpp in Sources */,
 				A704BECE1AFB442300E97FDC /* ofxTCPManager.cpp in Sources */,
+				5DD5D1B91C90AC16001B8E53 /* ofxWebViewInterface.mm in Sources */,
 				A74A4B021C1127570007A97C /* ofxQCAR_ViewController.mm in Sources */,
 				A704BECD1AFB442300E97FDC /* ofxTCPClient.cpp in Sources */,
 				A74A4B001C1127570007A97C /* ofxQCAR.mm in Sources */,
@@ -1303,6 +1330,7 @@
 				A704BEE21AFB44BF00E97FDC /* ofxUIWebViewDelegate.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* realityEditor.mm in Sources */,
 				A704BECB1AFB442300E97FDC /* ofxJSONElement.cpp in Sources */,
+				5DD5D1BC1C90AF47001B8E53 /* ofxWebViewDelegate.mm in Sources */,
 				A704BECF1AFB442300E97FDC /* ofxTCPServer.cpp in Sources */,
 				5D4E33F91C87771400D29BC3 /* ofxWKWebViewDelegate.mm in Sources */,
 				A74A4B011C1127570007A97C /* ofxQCAR_EAGLView.mm in Sources */,
