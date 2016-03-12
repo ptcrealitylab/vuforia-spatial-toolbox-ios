@@ -13,11 +13,11 @@ bool ofxWebViewInterfaceJavaScript::shouldUseWKWebView()
 //    bool canUseWKWebView = (NSClassFromString(@"WKWebView"));
     float minDeviceVersion = 9.0;
     bool canUseWKWebView = ([[[UIDevice currentDevice] systemVersion] floatValue] >= minDeviceVersion);
-    if (canUseWKWebView) {
+   /* if (canUseWKWebView) {
         cout << "Can use WKWebView" << endl;
     } else {
         cout << "Can NOT use WKWebView" << endl;
-    }
+    }*/
     return canUseWKWebView;
 }
 
