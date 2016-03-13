@@ -459,7 +459,21 @@ void realityEditor::update() {
 
 
     if (waitUntil) {
-        renderJavascript();
+        
+        if(QCAR.numOfMarkersFound()>0) {
+            cout << matrixTemp[0];
+            if(matrixOld == matrixTemp[0]._mat[0][0]) {
+                updateSwitch = false;
+            }else{
+                updateSwitch = true;
+            }
+            matrixOld = matrixTemp[0]._mat[0][0];
+        }else{
+            updateSwitch = true;
+            
+        }
+        if(updateSwitch)
+            renderJavascript();
         // update vuforia
 
         // download targets from the objects asynchronus.
@@ -713,7 +727,7 @@ void realityEditor::renderJavascript() {
             cout << "-------xxxx--------";*/
       
             
-            pMatrix = [NSString stringWithFormat:@"setProjectionMatrix([%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf])",
+            pMatrix = [NSString stringWithFormat:@"setProjectionMatrix([[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf]])",
                                                  tempMatrix._mat[0][0],
                                                  tempMatrix._mat[0][1],
                                                  tempMatrix._mat[0][2],
@@ -749,7 +763,7 @@ void realityEditor::renderJavascript() {
             
    
 
-            [stringforTransform appendFormat:@"'%s':[%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf]",
+            [stringforTransform appendFormat:@"'%s':[[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf]]",
                                              nameTemp[i].c_str(),
                                              tempMatrix._mat[0][0],
                                              tempMatrix._mat[0][1],
