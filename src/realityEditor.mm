@@ -43,24 +43,24 @@ void realityEditor::setup() {
     }
 
     // initialize vuforia
-    ofxQCAR & QCAR = *ofxQCAR::getInstance();
-    QCAR.setLicenseKey(kLicenseKey); // ADD YOUR APPLICATION LICENSE KEY HERE.
-    QCAR.addMarkerDataPath("target.xml");
-    QCAR.autoFocusOn();
-    QCAR.setOrientation(OFX_QCAR_ORIENTATION_LANDSCAPE);
-    QCAR.setCameraPixelsFlag(true);
-    QCAR.setMaxNumOfMarkers(5);
-    QCAR.setup();
+    ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+    Vuforia.setLicenseKey(kLicenseKey); // ADD YOUR APPLICATION LICENSE KEY HERE.
+    Vuforia.addMarkerDataPath("target.xml");
+    Vuforia.autoFocusOn();
+    Vuforia.setOrientation(OFX_Vuforia_ORIENTATION_LANDSCAPE);
+    Vuforia.setCameraPixelsFlag(true);
+    Vuforia.setMaxNumOfMarkers(5);
+    Vuforia.setup();
     
         
     if(extTrackingState){
         
-            ofxQCAR & QCAR = *ofxQCAR::getInstance();
-            QCAR.startExtendedTracking();
+            ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+            Vuforia.startExtendedTracking();
             extendedTracking = true;
     }else{
-        ofxQCAR & QCAR = *ofxQCAR::getInstance();
-        QCAR.stopExtendedTracking();
+        ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+        Vuforia.stopExtendedTracking();
         extendedTracking = false;
 
     }
@@ -183,8 +183,8 @@ void realityEditor::handleCustomRequest(NSString *request) {
     if (reqstring == "unfreeze") {
         freeze = false;
         frozeCameraImage = false;
-      ofxQCAR & QCAR = *ofxQCAR::getInstance();
-        QCAR.resume();
+      ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+        Vuforia.resume();
     }
     if (reqstring == "sendAccelerationData") {
         sendAccelerationData = true;
@@ -216,8 +216,8 @@ void realityEditor::handleCustomRequest(NSString *request) {
 
     
     if (reqstring == "extendedTrackingOn") {
-         ofxQCAR & QCAR = *ofxQCAR::getInstance();
-        QCAR.startExtendedTracking();
+         ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+        Vuforia.startExtendedTracking();
         extendedTracking = true;
         
         XML.setValue("SETUP:TRACKING", 1);
@@ -227,8 +227,8 @@ void realityEditor::handleCustomRequest(NSString *request) {
     }
     
     if (reqstring == "extendedTrackingOff") {
-        ofxQCAR & QCAR = *ofxQCAR::getInstance();
-        QCAR.stopExtendedTracking();
+        ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+        Vuforia.stopExtendedTracking();
         extendedTracking = false;
         
         XML.setValue("SETUP:TRACKING", 0);
@@ -414,54 +414,54 @@ void realityEditor::update() {
     }
     
  
-     ofxQCAR & QCAR = *ofxQCAR::getInstance();
+     ofxVuforia & Vuforia = *ofxVuforia::getInstance();
     
     //
-    QCAR.update();
-   //qcar->mutex.lock();
+    Vuforia.update();
+   //Vuforia->mutex.lock();
   
     matrixTemp.clear();
     nameTemp.clear();
-    //qcar->mutex.lock();
-    // tempMarker = qcar->markersFound;
+    //Vuforia->mutex.lock();
+    // tempMarker = Vuforia->markersFound;
     
-    for (int i = 0; i < QCAR.numOfMarkersFound(); i++) {
-        matrixTemp.push_back(QCAR.getMarker(i).modelViewMatrix);
-        nameTemp.push_back(QCAR.getMarker(i).markerName);
+    for (int i = 0; i < Vuforia.numOfMarkersFound(); i++) {
+        matrixTemp.push_back(Vuforia.getMarker(i).modelViewMatrix);
+        nameTemp.push_back(Vuforia.getMarker(i).markerName);
     }
     
     
     if (!frozeCameraImage && freeze == true) {
         
-    /*    int cameraW = QCAR.getCameraWidth();
-        int cameraH = QCAR.getCameraHeight();
-        unsigned char * cameraPixels = QCAR.getCameraPixels();
+    /*    int cameraW = Vuforia.getCameraWidth();
+        int cameraH = Vuforia.getCameraHeight();
+        unsigned char * cameraPixels = Vuforia.getCameraPixels();
         if(cameraW > 0 && cameraH > 0 && cameraPixels != NULL) {
             if(cameraImage.isAllocated() == false ) {
                 cameraImage.allocate(cameraW, cameraH, OF_IMAGE_GRAYSCALE);
             }
             cameraImage.setFromPixels(cameraPixels, cameraW, cameraH, OF_IMAGE_GRAYSCALE);
-            if(QCAR.getOrientation() == OFX_QCAR_ORIENTATION_PORTRAIT) {
+            if(Vuforia.getOrientation() == OFX_Vuforia_ORIENTATION_PORTRAIT) {
                 cameraImage.rotate90(1);
-            } else if(QCAR.getOrientation() == OFX_QCAR_ORIENTATION_LANDSCAPE) {
+            } else if(Vuforia.getOrientation() == OFX_Vuforia_ORIENTATION_LANDSCAPE) {
                 cameraImage.mirror(true, true);
             }
         }
         // todo, once OF 0.9 is final we have to add the color image again
         // cameraImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());*/
-         QCAR.pause();
+         Vuforia.pause();
         frozeCameraImage = true;
         ofLog() << "+++++++ i get it";
         
     }
     
-    //qcar->mutex.unlock();
+    //Vuforia->mutex.unlock();
 
 
     if (waitUntil) {
         
-        if(QCAR.numOfMarkersFound()>0) {
-            cout << matrixTemp[0];
+        if(Vuforia.numOfMarkersFound()>0) {
+          
             if(matrixOld == matrixTemp[0]._mat[0][0]) {
                 updateSwitch = false;
             }else{
@@ -474,6 +474,8 @@ void realityEditor::update() {
         }
         if(updateSwitch)
             renderJavascript();
+       // else
+         //   interface.runJavaScriptFromString([NSMutableString stringWithFormat:@"updateReDraw()"]);
         // update vuforia
 
         // download targets from the objects asynchronus.
@@ -496,7 +498,7 @@ void realityEditor::update() {
 //--------------------------------------------------------------
 void realityEditor::draw() {
     
- ofxQCAR & QCAR = *ofxQCAR::getInstance();
+ ofxVuforia & Vuforia = *ofxVuforia::getInstance();
     
 
     if (waitUntil) {
@@ -508,10 +510,10 @@ void realityEditor::draw() {
   /* if (freeze && frozeCameraImage) {
             cameraImage.draw(0, 0, ofGetWidth(), ofGetHeight());
         }else{
-            QCAR.drawBackground();
+            Vuforia.drawBackground();
         }*/
         
-        QCAR.drawBackground();
+        Vuforia.drawBackground();
 
         //ofLog() << frozeCameraImage << " ++ " << freeze;
     }
@@ -672,8 +674,8 @@ void realityEditor::downloadTargets() {
                 // process the dictonary addon
             else if (loadrunner == "a") {
                 string tmpDir([NSTemporaryDirectory() UTF8String]);
-                ofxQCAR & QCAR = *ofxQCAR::getInstance();
-                QCAR.addExtraTarget(tmpDir + json["id"].asString() + ".xml");
+                ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+                Vuforia.addExtraTarget(tmpDir + json["id"].asString() + ".xml");
                 nameCount[i][w] = "t";
 
                 NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject(%s)", nameCount[i][0].c_str()];
@@ -682,8 +684,8 @@ void realityEditor::downloadTargets() {
                 loadrunner = "w";
                 NSLog(@">>adding target");
                 if(extendedTracking){
-                    ofxQCAR & QCAR = *ofxQCAR::getInstance();
-                    QCAR.startExtendedTracking();
+                    ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+                    Vuforia.startExtendedTracking();
                 }
                 cons();
                 loadrunner = "w";
@@ -696,14 +698,14 @@ void realityEditor::downloadTargets() {
 
 // generate the javascript messages
 void realityEditor::renderJavascript() {
- ofxQCAR & QCAR = *ofxQCAR::getInstance();
+ ofxVuforia & Vuforia = *ofxVuforia::getInstance();
 
     if (nameTemp.size() > 0) {
 
         if (projectionMatrixSend == false) {
-               //qcar->mutex.lock();
-            tempMatrix = QCAR.getProjectionMatrix();
-              // qcar->mutex.unlock();
+               //Vuforia->mutex.lock();
+            tempMatrix = Vuforia.getProjectionMatrix();
+              // Vuforia->mutex.unlock();
             
          /*   cout << "-------start--------";
             
@@ -822,6 +824,8 @@ void realityEditor::renderJavascript() {
     }
     // finally we call the dunction to update the html view.
     interface.runJavaScriptFromString(stringforTransform);
+  
+    
 }
 
 // utilities for rendering the conditions of the download process.
@@ -846,8 +850,8 @@ void realityEditor::deviceOrientationChanged(int newOrientation){
 
 //--------------------------------------------------------------
 void realityEditor::exit() {
-    ofxQCAR & QCAR = *ofxQCAR::getInstance();
-    QCAR.exit();
+    ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+    Vuforia.exit();
 }
 
 

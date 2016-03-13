@@ -4,7 +4,7 @@
 //#include "ofxiOS.h"
 //#include "ofxiOSExtras.h"
 
-#include "ofxQCAR.h"
+#include "ofxVuforia.h"
 #include "ofxJSON.h"
 #include "ofxNetwork.h"
 #include "ofxXmlSettings.h"
@@ -14,7 +14,7 @@
 
 #include "ofxWebViewInterface.h"
 
-class realityEditor : public ofxQCAR_App, ofxWebViewDelegateCpp /*ofxWKWebViewDelegateCpp, ofxUIWebViewDelegateCpp*/ {
+class realityEditor : public ofxVuforia_App, ofxWebViewDelegateCpp /*ofxWKWebViewDelegateCpp, ofxUIWebViewDelegateCpp*/ {
 
 public:
     void setup();
@@ -83,7 +83,7 @@ public:
     ofImage imgInterface, imgObject;
     // NSMutableString *stringforTransform;
 
-    //vector<ofxQCAR_Marker>tempMarker;
+    //vector<ofxVuforia_Marker>tempMarker;
     bool projectionMatrixSend = false;
 
     NSString *pMatrix;

@@ -9,7 +9,7 @@
 #include "ofxWebViewInterface.h"
 
 #define wkOff floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_8_1
-#define wkOn floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_1
+#define wkOn  floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_1
 
 NSObject* ofxWebViewInterfaceJavaScript::getWebViewInstance() {
     if (wkOn) {

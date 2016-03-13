@@ -10,7 +10,7 @@
 
 //#include "ofMain.h"
 //#include "ofxiPhoneExtras.h"
-#include "ofxQCAR.h"
+#include "ofxVuforia.h"
 #include "ofxWebViewInterface.h"
 #include "ofxUIWebViewDelegate.h"
 
