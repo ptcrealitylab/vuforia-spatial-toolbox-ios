@@ -64,6 +64,7 @@ public:
     ofMatrix4x4 tempMatrix;
     vector<ofMatrix4x4> matrixTemp;
     vector<string> nameTemp;
+      float matrixOld = 0.0;
 
     int foundMarker;
     bool reloader = false;
@@ -74,6 +75,8 @@ public:
     
     ofFbo fbo;
     ofFbo fbo2;
+    
+   bool updateSwitch =true;
 
     ofImage cameraImage;
 
@@ -103,7 +106,9 @@ public:
     
     ofVec3f accel;
     ofVec2f orientation;
-
+    bool inSync = false;
+    
+    bool everySecond = false;
 
     /* void touchDown(ofTouchEventArgs & touch);
      void touchMoved(ofTouchEventArgs & touch);
