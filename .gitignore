@@ -2,6 +2,7 @@
 
 #public Interface interface
 /bin/data/interfaceData
+/bin/data/interfaceDataPhD
 
 # osx directory files
 .DS_Store
