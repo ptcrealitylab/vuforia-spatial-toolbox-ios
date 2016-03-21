@@ -5,8 +5,11 @@ static const string kLicenseKey = "***REMOVED***";
 
 //--------------------------------------------------------------
 void realityEditor::setup() {
+    
+       ofSetFrameRate(120);
+    ofSetVerticalSync(false); 
         
-     ofxAccelerometer.setup();
+    // ofxAccelerometer.setup();
 
     if( XML.loadFile(ofxiOSGetDocumentsDirectory() + "editor.xml") ){
        cout<< "mySettings.xml loaded from documents folder!";
@@ -24,7 +27,7 @@ void realityEditor::setup() {
   
     
     
-    //  ofSetFrameRate(120);
+
     ofBackground(150);
 
     // images for status in the editor
@@ -141,7 +144,7 @@ void realityEditor::handleCustomRequest(NSString *request) {
         NSString *stateSender = [NSString stringWithFormat:@"setStates(%d, %d, %d, \"%s\")", developerState, extTrackingState, clearSkyState, externalState.c_str()];
          interface.runJavaScriptFromString(stateSender);
         
-     NSLog(stateSender);
+   //  NSLog(stateSender);
 
 
         if (reloader == true) {
@@ -348,7 +351,7 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
             }
             
            
-            if (nameCount[i][1] == "t" && nameCount[i][2] == "t" && nameCount[i][3] == "t") {
+            if (nameCount[i][1] == "t" && nameCount[i][2] == "t" && nameCount[i][3] == "t" && nameCount[i][4] == "f") {
                 nameCount[i][4] = "a";
                 NSLog(@">>status at this point");
                 cons();
@@ -383,8 +386,8 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
 //--------------------------------------------------------------
 void realityEditor::update() {
     
-     accel = ofxAccelerometer.getForce();
-     orientation = ofxAccelerometer.getOrientation();
+    // accel = ofxAccelerometer.getForce();
+    // orientation = ofxAccelerometer.getOrientation();
 
     
     if (onlyOnce) {
@@ -403,11 +406,11 @@ void realityEditor::update() {
         udpConnection2.SetEnableBroadcast(true);
         udpConnection2.Connect("255.255.255.255", 52316);
         string message1 = "{\"action\":\"ping\"}";
-        udpConnection2.Send(message1.c_str(), message1.length());
+        udpConnection2.Send(message1.c_str(), int(message1.length()));
         ofSleepMillis(50);
-        udpConnection2.Send(message1.c_str(), message1.length());
+        udpConnection2.Send(message1.c_str(), int(message1.length()));
         ofSleepMillis(50);
-        udpConnection2.Send(message1.c_str(), message1.length());
+        udpConnection2.Send(message1.c_str(), int(message1.length()));
         udpConnection2.Close();
 
         onlyOnce = false;
@@ -474,9 +477,11 @@ void realityEditor::update() {
         }
         if(updateSwitch)
             renderJavascript();
-       // else
-         //   interface.runJavaScriptFromString([NSMutableString stringWithFormat:@"updateReDraw()"]);
-        // update vuforia
+        
+   //     if(!updateSwitch)
+      
+        
+            // update vuforia
 
         // download targets from the objects asynchronus.
         // we need to make sure that all processes work together using a central array of status signals.
@@ -512,9 +517,14 @@ void realityEditor::draw() {
         }else{
             Vuforia.drawBackground();
         }*/
-        
+  
+      
+        //interface.runJavaScriptFromString([NSMutableString stringWithFormat:@"updateReDraw()"]);
+     
         Vuforia.drawBackground();
-
+      
+        
+        
         //ofLog() << frozeCameraImage << " ++ " << freeze;
     }
 
@@ -675,14 +685,24 @@ void realityEditor::downloadTargets() {
             else if (loadrunner == "a") {
                 string tmpDir([NSTemporaryDirectory() UTF8String]);
                 ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+                
+                cout <<"--------------------";
+                cout <<json["id"].asString();
+                cout <<"--------------------";
+                
+                if(nameCount[i][w] == "a"){
                 Vuforia.addExtraTarget(tmpDir + json["id"].asString() + ".xml");
-                nameCount[i][w] = "t";
+      
 
                 NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject(%s)", nameCount[i][0].c_str()];
                 interface.runJavaScriptFromString(jsString3);
-
+                }
+                nameCount[i][w] = "t";
+                
+                    
                 loadrunner = "w";
                 NSLog(@">>adding target");
+             
                 if(extendedTracking){
                     ofxVuforia & Vuforia = *ofxVuforia::getInstance();
                     Vuforia.startExtendedTracking();
@@ -755,7 +775,7 @@ void realityEditor::renderJavascript() {
         // since all objects share the same projection matrix, we just take the matrix of the first object and aplly it only one time. We add it as an json object in to the javascropt call.
         //  tempMatrix= tempMarker[0].projectionMatrix;
 
-        stringforTransform = [NSMutableString stringWithFormat:@"update({'obj':{"];
+        stringforTransform = [NSMutableString stringWithFormat:@"update({"];
 
         // now for all objects we add json elements indicating the name of the marker as the object name and following the model view matrix.
         //
@@ -793,9 +813,9 @@ void realityEditor::renderJavascript() {
         }
         //
         // end of string generation.
-        [stringforTransform appendString:@"}"];
+     //   [stringforTransform appendString:@"}"];
 
-        if(sendAccelerationData == true){
+      /*  if(sendAccelerationData == true){
             [stringforTransform appendFormat:@",'acl':[%lf,%lf,%lf,%lf,%lf]",
             accel.x,
             accel.y,
@@ -804,13 +824,15 @@ void realityEditor::renderJavascript() {
             orientation.y
              ];
         }
+        */
 
         [stringforTransform appendString:@"})"];
+      
 
     } else {
-        stringforTransform = [NSMutableString stringWithFormat:@"update({'obj':{'dummy':0}"];
+        stringforTransform = [NSMutableString stringWithFormat:@"update({'dummy':0})"];
 
-        if(sendAccelerationData == true){
+       /* if(sendAccelerationData == true){
                 [stringforTransform appendFormat:@",'acl':[%lf,%lf,%lf,%lf,%lf]",
                  accel.x,
                  accel.y,
@@ -818,8 +840,8 @@ void realityEditor::renderJavascript() {
                  orientation.x,
                  orientation.y
                  ];
-        }
-          [stringforTransform appendString:@"})"];
+        }*/
+        //  [stringforTransform appendString:@"})"];
 
     }
     // finally we call the dunction to update the html view.
