@@ -1,8 +1,11 @@
 # idea editing tools
+.idea
 
 #public Interface interface
 /bin/data/interfaceData
 /bin/data/interfaceDataPhD
+/bin/data/interfaceDataPhD copy
+/bin/data/interfaceDataPhD__
 
 # osx directory files
 .DS_Store
