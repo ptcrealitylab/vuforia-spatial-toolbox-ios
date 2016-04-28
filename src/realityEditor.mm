@@ -8,7 +8,7 @@ void realityEditor::setup() {
 
     numbersToMuch = 50;
     
-    ofSetFrameRate(120);
+    ofSetFrameRate(60);
     ofSetVerticalSync(false); 
         
     // ofxAccelerometer.setup();
@@ -545,7 +545,7 @@ void realityEditor::update() {
 
         if (waitUntil) {
 
-            if (Vuforia.numOfMarkersFound() > 0) {
+            if (Vuforia.numOfMarkersFound() > 0 && !freeze) {
 
                 if (matrixOld == matrixTemp[0]._mat[0][0]) {
                     updateSwitch = false;
@@ -554,11 +554,15 @@ void realityEditor::update() {
                 }
                 matrixOld = matrixTemp[0]._mat[0][0];
             } else {
-                updateSwitch = true;
+                
+               // updateSwitch = true;
+                if(updateSwitch) updateSwitch = false;
+                else updateSwitch = true;
 
             }
-            if (updateSwitch)
-                renderJavascript();
+            
+                if (updateSwitch)
+                    renderJavascript();
 
             //     if(!updateSwitch)
 
@@ -586,8 +590,8 @@ void realityEditor::update() {
 //--------------------------------------------------------------
 void realityEditor::draw() {
     
-
-        
+  
+    
  
     
  ofxVuforia & Vuforia = *ofxVuforia::getInstance();
@@ -1065,7 +1069,7 @@ void realityEditor::renderJavascript() {
 void realityEditor::cons() {
     NSLog(@">>cons");
     for (int i = 0; i < nameCount.size(); i++) {
-        NSLog(@"%s %s %s %s,%s", nameCount[i][4].c_str(), nameCount[i][5].c_str(), nameCount[i][6].c_str(), nameCount[i][7].c_str(), nameCount[i][0].c_str());
+        NSLog(@"%s %s %s %s, name: %s version: %s  check: %s", nameCount[i][4].c_str(), nameCount[i][5].c_str(), nameCount[i][6].c_str(), nameCount[i][7].c_str(), nameCount[i][0].c_str(),nameCount[i][2].c_str(),nameCount[i][3].c_str());
     }
 
 }
