@@ -240,6 +240,9 @@ void realityEditor::handleCustomRequest(NSString *request) {
         NSString *stateSender = [NSString stringWithFormat:@"setStates(%d, %d, %d, \"%s\")", developerState, extTrackingState, clearSkyState, externalState.c_str()];
          interface.runJavaScriptFromString(stateSender);
         
+        NSString *deviceSender = [NSString stringWithFormat:@"setDeviceName(\"%s\")", ofxiOSGetDeviceRevision().c_str()];
+        interface.runJavaScriptFromString(deviceSender);
+ 
    //  NSLog(stateSender);
 
 
