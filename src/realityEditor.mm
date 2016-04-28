@@ -5,34 +5,124 @@ static const string kLicenseKey = "***REMOVED***";
 
 //--------------------------------------------------------------
 void realityEditor::setup() {
+
+    numbersToMuch = 50;
     
-       ofSetFrameRate(120);
+    ofSetFrameRate(120);
     ofSetVerticalSync(false); 
         
     // ofxAccelerometer.setup();
-
-    if( XML.loadFile(ofxiOSGetDocumentsDirectory() + "editor.xml") ){
-       cout<< "mySettings.xml loaded from documents folder!";
-    }else if( XML.loadFile("editor.xml") ){
-        cout << "mySettings.xml loaded from data folder!";
-    }else{
-        cout << "unable to load mySettings.xml check data/ folder";
-    }
     
+    if( XML.loadFile(ofxiOSGetDocumentsDirectory() + "editor.xml") ){
+       cout<< "editor.xml loaded from documents folder!";
+    }else if( XML.loadFile("editor.xml") ){
+        cout << "editor.xml loaded from data folder!";
+    }else{
+        cout << "unable to load editor.xml check data/ folder";
+    }
+
+
+    if( XMLTargets.loadFile(ofxiOSGetDocumentsDirectory() + "targets.xml") ){
+        cout<< "targets.xml loaded from documents folder!";
+    }else if( XMLTargets.loadFile("targets.xml") ){
+        cout << "targets.xml loaded from data folder!";
+    }else{
+        XMLTargets.saveFile("targets.xml");
+        cout << "unable to load targets.xml check data/ folder";
+    }
+
     
     developerState = XML.getValue("SETUP:DEVELOPER", 0);
    extTrackingState = XML.getValue("SETUP:TRACKING", 0);
       clearSkyState = XML.getValue("SETUP:CLEARSKY", 0);
     externalState = XML.getValue("SETUP:EXTERNAL", "");
-  
-    
-    
+
+    int numDragTags = XMLTargets.getNumTags("target");
+    cout << numDragTags;
+
+
+
+    if(numDragTags > numbersToMuch){
+        
+         cout <<"-------------- to many markers found. deleting oldest \t";
+
+        for(int q = 0; q < numDragTags; q++){
+            vector<string> row;
+                row.push_back(XMLTargets.getValue("target:id", "", q));  //4
+                row.push_back(XMLTargets.getValue("target:ip", "", q)); //5
+                row.push_back(XMLTargets.getValue("target:vn", "0", q)); //6
+                row.push_back(XMLTargets.getValue("target:tcs", "0", q)); //7
+            targetsList.push_back(row);
+        }
+
+      int numbersToDelete = numDragTags-numbersToMuch;
+
+        string tmpDir([NSTemporaryDirectory() UTF8String]);
+
+        for(int q = 0; q < numbersToDelete; q++){
+          
+            if(ofFile::doesFileExist(tmpDir + targetsList[q][0] + ".jpg"))
+                cout <<"-------------- file exists "<<endl;
+            else  cout <<"-------------- file not found "<<endl;
+            
+            files_.removeFile(tmpDir + targetsList[q][0] + ".jpg");
+                 cout <<"-------------- removing file: "<< targetsList[q][0]  <<".jpg"<<endl;
+            
+            if(!files_.doesFileExist(tmpDir + targetsList[q][0] + ".jpg"))
+                 cout <<"-------------- success "<<endl;
+            else
+                cout <<"-------------- file still exists "<<endl;
+            
+            
+            if(!files_.doesFileExist(tmpDir + targetsList[q][0] + ".xml"))
+                cout <<"-------------- file not found "<<endl;
+            else
+                cout <<"-------------- file exists "<<endl;
+            
+            files_.removeFile(tmpDir + targetsList[q][0] + ".xml");
+              cout <<"--------------  removing file: "<< targetsList[q][0]  <<".xml"<<endl;
+            
+            if(!files_.doesFileExist(tmpDir + targetsList[q][0] + ".xml"))
+                cout <<"-------------- success "<<endl;
+            else
+                cout <<"-------------- file still exists "<<endl;
+            
+            
+            if(!files_.doesFileExist(tmpDir + targetsList[q][0] + ".dat"))
+                cout <<"-------------- file not found "<<endl;
+            else
+                cout <<"-------------- file exists "<<endl;
+            
+            files_.removeFile(tmpDir + targetsList[q][0] + ".dat");
+             cout <<"--------------  removing file: "<< targetsList[q][0]  <<".dat" <<endl;
+            if(!files_.doesFileExist(tmpDir + targetsList[q][0] + ".dat"))
+                cout <<"-------------- success "<<endl;
+            else
+                cout <<"-------------- file still exists "<<endl;
+        }
+        
+        
+
+        XMLTargets.clear();
+
+        for(int q = numbersToDelete; q < numDragTags; q++){
+            int tagNum = XMLTargets.addTag("target");
+            XMLTargets.setValue("target:id", targetsList[q][0], tagNum);
+            XMLTargets.setValue("target:ip", targetsList[q][1], tagNum);
+            XMLTargets.setValue("target:vn", targetsList[q][2], tagNum);
+            XMLTargets.setValue("target:tcs", targetsList[q][3], tagNum);
+        }
+        XMLTargets.saveFile(ofxiOSGetDocumentsDirectory() + "targets.xml" );
+      
+    }
 
     ofBackground(150);
 
     // images for status in the editor
     imgInterface.load("interface.png");
     imgObject.load("object.png");
+    
+     imgObject.draw(20, 20);
 
     // variables for status
     waitUntil = false;
@@ -40,21 +130,23 @@ void realityEditor::setup() {
     waitGUI = false;
 
     // clear temporary folder
-    NSArray *tmpDirectory = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:NSTemporaryDirectory() error:NULL];
+   /* NSArray *tmpDirectory = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:NSTemporaryDirectory() error:NULL];
     for (NSString *file in tmpDirectory) {
         [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), file] error:NULL];
-    }
+    }*/
 
     // initialize vuforia
     ofxVuforia & Vuforia = *ofxVuforia::getInstance();
     Vuforia.setLicenseKey(kLicenseKey); // ADD YOUR APPLICATION LICENSE KEY HERE.
     Vuforia.addMarkerDataPath("target.xml");
     Vuforia.autoFocusOn();
-    Vuforia.setOrientation(OFX_Vuforia_ORIENTATION_LANDSCAPE);
+    Vuforia.setOrientation(OFX_Vuforia_ORIENTATION_LANDSCAPE_LEFT);
     Vuforia.setCameraPixelsFlag(true);
     Vuforia.setMaxNumOfMarkers(5);
-    Vuforia.setup();
+    Vuforia.setup();    
     
+    
+  
         
     if(extTrackingState){
         
@@ -67,6 +159,9 @@ void realityEditor::setup() {
         extendedTracking = false;
 
     }
+    
+    //usleep(5000000);
+    
         interface.initializeWithCustomDelegate(this);
     
     if(externalState !=""){
@@ -105,8 +200,9 @@ void realityEditor::setup() {
     fbo.allocate(ofGetWindowHeight()/screenScale, ofGetWindowHeight()/screenScale);
     
         fbo2.allocate(ofGetWindowHeight()/screenScale, ofGetWindowHeight()/screenScale);
-}
 
+   
+}
 
 /**********************************************
 HANDLING REQUESTS FROM JS/HTML (JS->C++)
@@ -150,7 +246,7 @@ void realityEditor::handleCustomRequest(NSString *request) {
         if (reloader == true) {
 
             for (int i = 0; i < nameCount.size(); i++) {
-                NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject(%s)", nameCount[i][0].c_str()];
+                NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})", nameCount[i][0].c_str(), nameCount[i][1].c_str(), stoi(nameCount[i][2].c_str()) ,nameCount[i][3].c_str()];
                 interface.runJavaScriptFromString(jsString3);
                 //   NSLog(@"reload interfaces");
             }
@@ -313,46 +409,29 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
         // the json hear beat | dat file laoded | xml file loaded | writen to dictionary.
         // w means loading or writing, f means nothing jet happend, t means fully loaded, n means there is an error or nothing to load.
         for (int i = 0; i < nameCount.size(); i++) {
-            for (int w = 0; w < nameCount[i].size(); w++) {
+            for (int w = 4; w < nameCount[i].size(); w++) {
                 loadrunner = nameCount[i][w];
 
                 if (loadrunner == "w") {
-                    json.parse(nameCount[i][0]);
                     string tmpDir([NSTemporaryDirectory() UTF8String]);
-                    if (w == 1) {
-                        if (ofBufferToFile(tmpDir + json["id"].asString() + ".dat", response.data) == true) {
-                            nameCount[i][w] = "t";
-                            NSLog(@">>copy dat");
-                            cons();
-                           
+
+                    for(int e = 0;e <  3; e++){
+                        if (w == e+4) {
+                            if (ofBufferToFile(tmpDir + nameCount[i][0] + "."+ arrayList[e], response.data)) {
+                                nameCount[i][w] = "t";
+                                NSLog(@">>copy %s",arrayList[e].c_str());
+                                cons();
+                            }
+                            goto stop2;
                         }
-                        break;
-                    }
-                    if (w == 2) {
-                        if (ofBufferToFile(tmpDir + json["id"].asString() + ".xml", response.data) == true) {
-                            nameCount[i][w] = "t";
-                            NSLog(@">>copy xml");
-                            cons();
-                            
-                        }
-                        break;
-                    }
-                    if (w == 3) {
-                        if (ofBufferToFile(tmpDir + json["id"].asString() + ".jpg", response.data) == true) {
-                            nameCount[i][w] = "t";
-                            NSLog(@">>copy jpg");
-                            cons();
-                            
-                        }
-                      //    nameCount[i][w] = "t";
-                        break;
                     }
                 }
             }
-            
+
+            stop2:;
            
-            if (nameCount[i][1] == "t" && nameCount[i][2] == "t" && nameCount[i][3] == "t" && nameCount[i][4] == "f") {
-                nameCount[i][4] = "a";
+            if (nameCount[i][4] == "t" && nameCount[i][5] == "t" && nameCount[i][6] == "t" && nameCount[i][7] == "f") {
+                nameCount[i][7] = "a";
                 NSLog(@">>status at this point");
                 cons();
                
@@ -368,10 +447,10 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
                 loadrunner = nameCount[i][w];
 
                 if (loadrunner == "w") {
-                    nameCount[i][1] = "n";
-                    nameCount[i][2] = "n";
-                    nameCount[i][3] = "n";
                     nameCount[i][4] = "n";
+                    nameCount[i][5] = "n";
+                    nameCount[i][6] = "n";
+                    nameCount[i][7] = "n";
                 }
             }
         }
@@ -385,126 +464,131 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
 
 //--------------------------------------------------------------
 void realityEditor::update() {
-    
-    // accel = ofxAccelerometer.getForce();
-    // orientation = ofxAccelerometer.getOrientation();
+    if (interfaceCounter> 30) {
+        // accel = ofxAccelerometer.getForce();
+        // orientation = ofxAccelerometer.getOrientation();
 
-    
-    if (onlyOnce) {
-        NSLog(@">>once");
-        // onece after the interface has been loaded, start the udp bindings.
-        udpConnection.Create();
-        udpConnection.Bind(52316);
-        udpConnection.SetNonBlocking(true);
-        udpConnection.SetEnableBroadcast(true);
-        ofRegisterURLNotification(this);
 
-        // send a request action message to all objects so that they right in time respond with a heartbeat. 3 times in a row so that it makes sure all objects are received.
-        // the system parses json strings that have an action object as actions to act on.
-        // {"action":"ping"} indicates that all object need to send a responding beat.
-        udpConnection2.Create();
-        udpConnection2.SetEnableBroadcast(true);
-        udpConnection2.Connect("255.255.255.255", 52316);
-        string message1 = "{\"action\":\"ping\"}";
-        udpConnection2.Send(message1.c_str(), int(message1.length()));
-        ofSleepMillis(50);
-        udpConnection2.Send(message1.c_str(), int(message1.length()));
-        ofSleepMillis(50);
-        udpConnection2.Send(message1.c_str(), int(message1.length()));
-        udpConnection2.Close();
+        if (onlyOnce) {
+            NSLog(@">>once");
+            // onece after the interface has been loaded, start the udp bindings.
+            udpConnection.Create();
+            udpConnection.Bind(52316);
+            udpConnection.SetNonBlocking(true);
+            udpConnection.SetEnableBroadcast(true);
+            ofRegisterURLNotification(this);
 
-        onlyOnce = false;
-    }
-    
- 
-     ofxVuforia & Vuforia = *ofxVuforia::getInstance();
-    
-    //
-    Vuforia.update();
-   //Vuforia->mutex.lock();
-  
-    matrixTemp.clear();
-    nameTemp.clear();
-    //Vuforia->mutex.lock();
-    // tempMarker = Vuforia->markersFound;
-    
-    for (int i = 0; i < Vuforia.numOfMarkersFound(); i++) {
-        matrixTemp.push_back(Vuforia.getMarker(i).modelViewMatrix);
-        nameTemp.push_back(Vuforia.getMarker(i).markerName);
-    }
-    
-    
-    if (!frozeCameraImage && freeze == true) {
-        
-    /*    int cameraW = Vuforia.getCameraWidth();
-        int cameraH = Vuforia.getCameraHeight();
-        unsigned char * cameraPixels = Vuforia.getCameraPixels();
-        if(cameraW > 0 && cameraH > 0 && cameraPixels != NULL) {
-            if(cameraImage.isAllocated() == false ) {
-                cameraImage.allocate(cameraW, cameraH, OF_IMAGE_GRAYSCALE);
-            }
-            cameraImage.setFromPixels(cameraPixels, cameraW, cameraH, OF_IMAGE_GRAYSCALE);
-            if(Vuforia.getOrientation() == OFX_Vuforia_ORIENTATION_PORTRAIT) {
-                cameraImage.rotate90(1);
-            } else if(Vuforia.getOrientation() == OFX_Vuforia_ORIENTATION_LANDSCAPE) {
-                cameraImage.mirror(true, true);
-            }
+            // send a request action message to all objects so that they right in time respond with a heartbeat. 3 times in a row so that it makes sure all objects are received.
+            // the system parses json strings that have an action object as actions to act on.
+            // {"action":"ping"} indicates that all object need to send a responding beat.
+            udpConnection2.Create();
+            udpConnection2.SetEnableBroadcast(true);
+            udpConnection2.Connect("255.255.255.255", 52316);
+            string message1 = "{\"action\":\"ping\"}";
+            udpConnection2.Send(message1.c_str(), int(message1.length()));
+            ofSleepMillis(50);
+            udpConnection2.Send(message1.c_str(), int(message1.length()));
+            ofSleepMillis(50);
+            udpConnection2.Send(message1.c_str(), int(message1.length()));
+            udpConnection2.Close();
+
+            onlyOnce = false;
         }
-        // todo, once OF 0.9 is final we have to add the color image again
-        // cameraImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());*/
-         Vuforia.pause();
-        frozeCameraImage = true;
-        ofLog() << "+++++++ i get it";
-        
-    }
-    
-    //Vuforia->mutex.unlock();
 
 
-    if (waitUntil) {
-        
-        if(Vuforia.numOfMarkersFound()>0) {
-          
-            if(matrixOld == matrixTemp[0]._mat[0][0]) {
-                updateSwitch = false;
-            }else{
+        ofxVuforia &Vuforia = *ofxVuforia::getInstance();
+
+        //
+        Vuforia.update();
+        //Vuforia->mutex.lock();
+
+        matrixTemp.clear();
+        nameTemp.clear();
+        //Vuforia->mutex.lock();
+        // tempMarker = Vuforia->markersFound;
+
+        for (int i = 0; i < Vuforia.numOfMarkersFound(); i++) {
+            matrixTemp.push_back(Vuforia.getMarker(i).modelViewMatrix);
+            nameTemp.push_back(Vuforia.getMarker(i).markerName);
+        }
+
+
+        if (!frozeCameraImage && freeze == true) {
+
+            /*    int cameraW = Vuforia.getCameraWidth();
+                int cameraH = Vuforia.getCameraHeight();
+                unsigned char * cameraPixels = Vuforia.getCameraPixels();
+                if(cameraW > 0 && cameraH > 0 && cameraPixels != NULL) {
+                    if(cameraImage.isAllocated() == false ) {
+                        cameraImage.allocate(cameraW, cameraH, OF_IMAGE_GRAYSCALE);
+                    }
+                    cameraImage.setFromPixels(cameraPixels, cameraW, cameraH, OF_IMAGE_GRAYSCALE);
+                    if(Vuforia.getOrientation() == OFX_Vuforia_ORIENTATION_PORTRAIT) {
+                        cameraImage.rotate90(1);
+                    } else if(Vuforia.getOrientation() == OFX_Vuforia_ORIENTATION_LANDSCAPE) {
+                        cameraImage.mirror(true, true);
+                    }
+                }
+                // todo, once OF 0.9 is final we have to add the color image again
+                // cameraImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());*/
+            Vuforia.pause();
+            frozeCameraImage = true;
+            ofLog() << "+++++++ i get it";
+
+        }
+
+        //Vuforia->mutex.unlock();
+
+
+        if (waitUntil) {
+
+            if (Vuforia.numOfMarkersFound() > 0) {
+
+                if (matrixOld == matrixTemp[0]._mat[0][0]) {
+                    updateSwitch = false;
+                } else {
+                    updateSwitch = true;
+                }
+                matrixOld = matrixTemp[0]._mat[0][0];
+            } else {
                 updateSwitch = true;
+
             }
-            matrixOld = matrixTemp[0]._mat[0][0];
-        }else{
-            updateSwitch = true;
-            
-        }
-        if(updateSwitch)
-            renderJavascript();
-        
-   //     if(!updateSwitch)
-      
-        
+            if (updateSwitch)
+                renderJavascript();
+
+            //     if(!updateSwitch)
+
+
             // update vuforia
 
-        // download targets from the objects asynchronus.
-        // we need to make sure that all processes work together using a central array of status signals.
-        downloadTargets();
+            // download targets from the objects asynchronus.
+            // we need to make sure that all processes work together using a central array of status signals.
+            downloadTargets();
 
-    }
-
-    waitGUI = true;
-    if (nameCount.size() == 0) waitGUI = false;
-
-    for (int i = 0; i < nameCount.size(); i++) {
-        if (nameCount[i][4] != "t" && nameCount[i][4] != "n") {
-            waitGUI = false;
-            // NSLog(@">>response");
         }
-    }
+
+        waitGUI = true;
+        if (nameCount.size() == 0) waitGUI = false;
+
+        for (int i = 0; i < nameCount.size(); i++) {
+            if (nameCount[i][4] != "t" && nameCount[i][4] != "n") {
+                waitGUI = false;
+                // NSLog(@">>response");
+            }
+        }
+    } else {interfaceCounter++;}
 }
 
 //--------------------------------------------------------------
 void realityEditor::draw() {
     
- ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+
+        
+ 
     
+ ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+       // cout << Vuforia.VuforiaInitTrackers() << "\t"
 
     if (waitUntil) {
 // run the messages that process the javascrip view.
@@ -575,6 +659,7 @@ void realityEditor::downloadTargets() {
         string message = udpMessage;
         nameExists = false;
 
+       // cout << message;
         // if message is a valid heartbeat do the following
         if (!json.parse(message.c_str()) || json["id"].empty() || json["ip"].empty()) {
             nameExists = true;
@@ -585,43 +670,149 @@ void realityEditor::downloadTargets() {
         }
 
          if(json["id"].asString().size()<13 || json["ip"].asString().size()<7){
+             NSLog(@">>ip or id was wrong");
                 nameExists = true;
                 break;
             }
 
-
+//this calls an action
         if (!json["action"].empty()) {
             NSString *jsString4 = [NSString stringWithFormat:@"action('%s')", json["action"].asString().c_str()];
             interface.runJavaScriptFromString(jsString4);
             NSLog(@"%@", jsString4);
+            break;
         }
 
         string nameJson = "";
         // NSLog(@">>got something");
 
         // if the id is valid then check if the name is already in the array.
-        if (json["id"].asString().size() > 0) {
-            nameJson = json["id"].asString();
-
+        // todo check for checksum!
+        
+        
+        if(!json["tcs"].asString().empty()){
+            
             for (int i = 0; i < nameCount.size(); i++) {
-                if (nameCount[i][0] == message) {
+                
+                if(nameCount[i][3].c_str() == json["tcs"].asString()){
                     nameExists = true;
+                    break;
+                }
+             
+            }
+        } else {
+            for (int i = 0; i < nameCount.size(); i++) {
+                if (nameCount[i][0] == json["id"].asString()) {
+                    nameExists = true;
+                    break;
                 };
             };
+            
+        }
+        targetExists = false;
+        if (nameExists == false) {
+
+        int numDragTags = XMLTargets.getNumTags("target");
+
+        if(numDragTags > 0){
+
+            for(int i = 0; i< numDragTags; i++){
+
+                string id_ = XMLTargets.getValue("target:id", "", i);
+                string ip_ = XMLTargets.getValue("target:ip", "", i);
+                string vn_ = XMLTargets.getValue("target:vn", "0", i);
+                string tcs_ = XMLTargets.getValue("target:tcs", "0", i);
+
+               if(id_ == json["id"].asString() &&
+                       tcs_  == json["tcs"].asString() &&
+                       tcs_  != "0"){
+
+                   NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
+                                   id_.c_str(),
+                                   ip_.c_str(),
+                                   stoi(vn_.c_str()),
+                                   tcs_.c_str()];
+                   interface.runJavaScriptFromString(jsString3);
+                   targetExists = true;
+                   NSLog(@">>found double for %s",json["id"].asString().c_str());
+                   break;
+               }
+
+            }
+        }
         }
 
         // if name is not in the array generate a new row of an array of strings. and fill them with "f" so that the software knows to process all.
         // remember, the first cell is the full json heart beat, the second indicates the status of the dat file the 3th the status of the xml file and the last cell indicates the status of adding the files to the dictionary.
         if (nameExists == false) {
+
+            
+            bool yespush = true;
+            
+            for (int i = 0; i < nameCount.size(); i++) {
+                if (nameCount[i][0] == json["id"].asString()) {
+                 
+                     ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+                    Vuforia.removeExtraTarget(datasetList[i]);
+                    
+                    datasetHolder = i;
+                    
+                    nameCount[i][0] = json["id"].asString();
+                    nameCount[i][1] = json["ip"].asString();
+                    nameCount[i][2] = json["vn"].asString();
+                    nameCount[i][3] = json["tcs"].asString();
+                    nameCount[i][4] = "f";
+                    nameCount[i][5] = "f";
+                     nameCount[i][6] = "f";
+                     nameCount[i][7] = "f";
+                    
+                    
+                      string tmpDir([NSTemporaryDirectory() UTF8String]);
+                    
+            
+                    files_.removeFile(tmpDir + nameCount[i][0] + ".jpg");
+                    files_.removeFile(tmpDir + nameCount[i][0] + ".xml");
+                    files_.removeFile(tmpDir + nameCount[i][0] + ".dat");
+          
+                    
+                    
+                    yespush = false;
+                    
+                };
+            };
+            
+            
+            if(yespush){
             vector<string> row;
-            row.push_back(message);
-            row.push_back("f");
-            row.push_back("f");
-            row.push_back("f");
-             row.push_back("f");
+            row.push_back(json["id"].asString()); //0
+            row.push_back(json["ip"].asString()); // 1
+            if(!json["vn"].empty()){                //2
+                row.push_back(json["vn"].asString());
+            } else{
+                row.push_back("0");
+            }
+            if(!json["tcs"].empty()){               //3
+                row.push_back(json["tcs"].asString());
+            } else{
+                row.push_back("0");
+            }
+            if(targetExists) {
+                row.push_back("t");  //4
+                row.push_back("t"); //5
+                row.push_back("t"); //6
+                row.push_back("a"); //7
+            } else
+            {
+                row.push_back("f");  //4
+                row.push_back("f"); //5
+                row.push_back("f"); //6
+                row.push_back("f"); //7
+            }
+
             nameCount.push_back(row);
             NSLog(@">>adding new object");
             cons();
+            }
         }
     }
 
@@ -632,54 +823,30 @@ void realityEditor::downloadTargets() {
             break;
         }
 
-        for (int w = 0; w < nameCount[i].size(); w++) {
+        for (int w = 4; w < nameCount[i].size(); w++) {
             loadrunner = nameCount[i][w];
             if (loadrunner == "w") {
                 break;
             }
             else if (loadrunner == "f") {
-                json.parse(nameCount[i][0]);
-                if (w == 1) {
 
-                    string objName = json["id"].asString();
-                    objName.erase(objName.end() - 12, objName.end());
-                    string sURL = "http://" + json["ip"].asString() + ":8080/obj/" + objName + "/target/target.dat";
-                    ofLoadURLAsync(sURL, "done");
-                    nameCount[i][w] = "w";
-                    loadrunner = "w";
-                    NSLog(@">>downloading dat");
-                    cons();
-                    loadrunner = "w";
-                    break;
+                for(int e = 0;e <  3; e++){
+
+                    if (w == e+4) {
+                        string objName = nameCount[i][0];
+                        objName.erase(objName.end() - 12, objName.end());
+                        string sURL = "http://" + nameCount[i][1] + ":8080/obj/" + objName + "/target/target."+arrayList[e];
+                        ofLoadURLAsync(sURL, "done");
+                        nameCount[i][w] = "w";
+                        loadrunner = "w";
+                        NSLog(@">>downloading %s",arrayList[e].c_str());
+                        cons();
+                        loadrunner = "w";
+                        goto stop1;
+                    }
+
                 }
-                if (w == 2) {
-                    string objName2 = json["id"].asString();
-                    objName2.erase(objName2.end() - 12, objName2.end());
-                    string sURL = "http://" + json["ip"].asString() + ":8080/obj/" + objName2 + "/target/target.xml";
-                    ofLoadURLAsync(sURL, "done");
-                    nameCount[i][w] = "w";
-                    loadrunner = "w";
-                    NSLog(@">>downloading xml");
-                    cons();
-                    loadrunner = "w";
-                    break;
-                }
-                 if(w==3){
-                     string objName2 = json["id"].asString();
-                     objName2.erase(objName2.end() - 12, objName2.end());
-                     string sURL = "http://" + json["ip"].asString() + ":8080/obj/" + objName2 + "/target/target.jpg";
-                     
-                       NSLog(@"%s", sURL.c_str());
-                     
-                     ofLoadURLAsync(sURL, "done");
-                     nameCount[i][w] = "w";
-                     loadrunner = "w";
-                     NSLog(@">>downloading jpg");
-                     cons();
-                     loadrunner = "w";
-                     break;
-                  }
-  
+
             }
                 // process the dictonary addon
             else if (loadrunner == "a") {
@@ -687,15 +854,55 @@ void realityEditor::downloadTargets() {
                 ofxVuforia & Vuforia = *ofxVuforia::getInstance();
                 
                 cout <<"--------------------";
-                cout <<json["id"].asString();
+                cout <<nameCount[i][0];
                 cout <<"--------------------";
                 
                 if(nameCount[i][w] == "a"){
-                Vuforia.addExtraTarget(tmpDir + json["id"].asString() + ".xml");
-      
+                    
+                    if(datasetHolder ==100000){
+                           datasetList.push_back(Vuforia.addExtraTarget(tmpDir + nameCount[i][0] + ".xml"));
+                        
+                    } else {
+                         datasetList[datasetHolder]=(Vuforia.addExtraTarget(tmpDir + nameCount[i][0] + ".xml"));
+                        datasetHolder =100000;
+                    }
+                    
+            
+                    
+                   cout << "this set size: "<< datasetList.size() << endl;
 
-                NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject(%s)", nameCount[i][0].c_str()];
-                interface.runJavaScriptFromString(jsString3);
+                    NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})", nameCount[i][0].c_str(), nameCount[i][1].c_str(), stoi(nameCount[i][2].c_str()) ,nameCount[i][3].c_str()];
+                    interface.runJavaScriptFromString(jsString3);
+
+
+
+
+                    int numDragTags2 = XMLTargets.getNumTags("target");
+
+                    bool checkDouble = false;
+                    if(numDragTags2 > 0){
+
+                        for(int e = 0; e< numDragTags2; e++){
+                            if(nameCount[i][0] == XMLTargets.getValue("target:id", "", e)){
+                                XMLTargets.setValue("target:id", nameCount[i][0], e);
+                                XMLTargets.setValue("target:ip", nameCount[i][1], e);
+                                XMLTargets.setValue("target:vn", nameCount[i][2], e);
+                                XMLTargets.setValue("target:tcs",nameCount[i][3], e);
+                                checkDouble = true;
+                            };
+                        }
+                    }
+
+                    if(!checkDouble) {
+                        int tagNum = XMLTargets.addTag("target");
+                        XMLTargets.setValue("target:id", nameCount[i][0], tagNum);
+                        XMLTargets.setValue("target:ip", nameCount[i][1], tagNum);
+                        XMLTargets.setValue("target:vn", nameCount[i][2], tagNum);
+                        XMLTargets.setValue("target:tcs", nameCount[i][3], tagNum);
+                    }
+                    XMLTargets.saveFile(ofxiOSGetDocumentsDirectory() + "targets.xml" );
+
+
                 }
                 nameCount[i][w] = "t";
                 
@@ -709,10 +916,11 @@ void realityEditor::downloadTargets() {
                 }
                 cons();
                 loadrunner = "w";
-                
-                break;
+
+                goto stop1;
             }
         }
+        stop1:;
     }
 }
 
@@ -854,17 +1062,27 @@ void realityEditor::renderJavascript() {
 void realityEditor::cons() {
     NSLog(@">>cons");
     for (int i = 0; i < nameCount.size(); i++) {
-        NSLog(@"%s %s %s %s,%s", nameCount[i][1].c_str(), nameCount[i][2].c_str(), nameCount[i][3].c_str(), nameCount[i][4].c_str(), nameCount[i][0].c_str());
+        NSLog(@"%s %s %s %s,%s", nameCount[i][4].c_str(), nameCount[i][5].c_str(), nameCount[i][6].c_str(), nameCount[i][7].c_str(), nameCount[i][0].c_str());
     }
 
 }
 
 void realityEditor::deviceOrientationChanged(int newOrientation){
+  // ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+    
 
-
-    if(newOrientation == 4 || newOrientation == 3){
-        //ofSetOrientation((ofOrientation)newOrientation);
-        
+    if(newOrientation == 4){
+      //  ofSetOrientation((ofOrientation)newOrientation);
+    //   Vuforia.setOrientation(OFX_Vuforia_ORIENTATION_LANDSCAPE_RIGHT);
+       
+    }
+    
+    if(newOrientation == 3){
+       // ofSetOrientation((ofOrientation)newOrientation);
+     
+      //  Vuforia.setOrientation(OFX_Vuforia_ORIENTATION_LANDSCAPE_LEFT);
+      
+       
     }
     
 }

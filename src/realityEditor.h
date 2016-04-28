@@ -34,11 +34,12 @@ public:
     void cons();
 
     void urlResponse(ofHttpResponse &response);
-    
 
+    ofFile files_;
     ofxUDPManager udpConnection, udpConnection2;
     // HeartbeatListener* heartbeatListener;
     vector<vector<string> > nameCount;
+    vector<vector<string> > targetsList;
 
 //    ofxWKWebViewInterfaceJavaScript interface;
 //    ofxUIWebViewInterfaceJavaScript interface;
@@ -53,8 +54,17 @@ public:
     bool waitGUI;
     char udpMessage[256];
     bool nameExists = false;
+    bool targetExists = false;
+        int numbersToMuch;
+
+    string arrayList[3] = {"dat", "xml", "jpg"};
+
+    int datasetHolder = 100000;
     
     ofxXmlSettings XML;
+    ofxXmlSettings XMLTargets;
+
+    int interfaceCounter = 0;
     	string xmlStructure;
 
     ofHttpResponse ofSaveURLTo(string url, string path);
@@ -64,6 +74,9 @@ public:
     ofMatrix4x4 tempMatrix;
     vector<ofMatrix4x4> matrixTemp;
     vector<string> nameTemp;
+    
+     vector<Vuforia::DataSet *>  datasetList;
+
       float matrixOld = 0.0;
 
     int foundMarker;
@@ -120,6 +133,7 @@ public:
       void gotFocus();
       void gotMemoryWarning();
       void deviceOrientationChanged(int newOrientation);*/
+
 
 };
 
