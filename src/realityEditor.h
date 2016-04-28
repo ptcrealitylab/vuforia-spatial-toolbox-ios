@@ -101,7 +101,7 @@ public:
 
     NSString *pMatrix;
 
-    NSMutableString *stringforTransform = [NSMutableString stringWithCapacity:1000];
+    NSMutableString *stringforTransform = [NSMutableString stringWithCapacity:2000];
 
     ofAppiOSWindow thisWindow =  *ofxiPhoneGetOFWindow();
     int screenScale = 1;
@@ -122,6 +122,8 @@ public:
     bool inSync = false;
     
     bool everySecond = false;
+    
+    string lastTracker;
 
     /* void touchDown(ofTouchEventArgs & touch);
      void touchMoved(ofTouchEventArgs & touch);
