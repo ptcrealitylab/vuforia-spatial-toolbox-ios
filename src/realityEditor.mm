@@ -246,14 +246,19 @@ void realityEditor::handleCustomRequest(NSString *request) {
    //  NSLog(stateSender);
 
 
-        if (reloader == true) {
+       // if (reloader == true) {
+            
 
+            cout<< "---->>>---<<<---Sending reload";
+        
+        
             for (int i = 0; i < nameCount.size(); i++) {
+                    cout<<&nameCount[i];
                 NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})", nameCount[i][0].c_str(), nameCount[i][1].c_str(), stoi(nameCount[i][2].c_str()) ,nameCount[i][3].c_str()];
                 interface.runJavaScriptFromString(jsString3);
                 //   NSLog(@"reload interfaces");
             }
-        }
+        //}
         NSLog(@"reload interfaces");
     }
 
