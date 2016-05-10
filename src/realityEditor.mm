@@ -662,7 +662,7 @@ void realityEditor::draw() {
 }
 
 void realityEditor::downloadTargets() {
-
+    string loadrunner = "";
     // file handling
 
     // check if udp message
@@ -677,13 +677,15 @@ void realityEditor::downloadTargets() {
             nameExists = true;
             NSLog(@">>udp message is not a object ping");
                  NSLog(@"%s", json["id"].asString().c_str());
+            goto stop2;
             break;
-            
+
         }
 
-         if(json["id"].asString().size()<13 || json["ip"].asString().size()<7){
-             NSLog(@">>ip or id was wrong");
+         if(json["ip"].asString().size()<7){
+             NSLog(@">>ip was wrong");
                 nameExists = true;
+             goto stop2;
                 break;
             }
 
@@ -692,6 +694,7 @@ void realityEditor::downloadTargets() {
             NSString *jsString4 = [NSString stringWithFormat:@"action('%s')", json["action"].asString().c_str()];
             interface.runJavaScriptFromString(jsString4);
             NSLog(@"%@", jsString4);
+            goto stop2;
             break;
         }
 
@@ -708,6 +711,7 @@ void realityEditor::downloadTargets() {
                 
                 if(nameCount[i][3].c_str() == json["tcs"].asString()){
                     nameExists = true;
+                    goto stop2;
                     break;
                 }
              
@@ -716,6 +720,7 @@ void realityEditor::downloadTargets() {
             for (int i = 0; i < nameCount.size(); i++) {
                 if (nameCount[i][0] == json["id"].asString()) {
                     nameExists = true;
+                    goto stop2;
                     break;
                 };
             };
@@ -829,7 +834,8 @@ void realityEditor::downloadTargets() {
     }
 
     // process the file downloads
-    string loadrunner = "";
+    loadrunner = "";
+
     for (int i = 0; i < nameCount.size(); i++) {
         if (loadrunner == "w") {
             break;
@@ -934,6 +940,7 @@ void realityEditor::downloadTargets() {
         }
         stop1:;
     }
+    stop2:;
 }
 
 // generate the javascript messages
@@ -969,7 +976,7 @@ void realityEditor::renderJavascript() {
             cout << "-------xxxx--------";*/
       
             
-            pMatrix = [NSString stringWithFormat:@"setProjectionMatrix([[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf]])",
+            pMatrix = [NSString stringWithFormat:@"setProjectionMatrix([%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf])",
                                                  tempMatrix._mat[0][0],
                                                  tempMatrix._mat[0][1],
                                                  tempMatrix._mat[0][2],
@@ -1003,9 +1010,7 @@ void realityEditor::renderJavascript() {
 
             tempMatrix = matrixTemp[i];
             
-   
-
-            [stringforTransform appendFormat:@"'%s':[[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf],[%lf,%lf,%lf,%lf]]",
+            [stringforTransform appendFormat:@"'%s':[%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf]",
                                              nameTemp[i].c_str(),
                                              tempMatrix._mat[0][0],
                                              tempMatrix._mat[0][1],
