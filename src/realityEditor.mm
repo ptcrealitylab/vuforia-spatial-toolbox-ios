@@ -194,27 +194,17 @@ void realityEditor::setup() {
     if(thisWindow.isRetinaEnabled()){
         screenScale =2;
     }
-    
-    cameraImage.allocate(ofGetWindowHeight()/screenScale, ofGetWindowHeight()/screenScale, OF_IMAGE_COLOR);
-    fbo.allocate(ofGetWindowHeight()/screenScale, ofGetWindowHeight()/screenScale);
-    
-    fbo2.allocate(ofGetWindowHeight()/screenScale, ofGetWindowHeight()/screenScale);
-    
 }
 
 /**********************************************
  HANDLING REQUESTS FROM JS/HTML (JS->C++)
  **********************************************/
-void realityEditor::handleCustomRequest(NSString *request) {
-    NSLog(@"------------------------------------------------------------%@", request);
+void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
     string reqstring([request UTF8String]);
     
+    Poco::URI uri([[url absoluteString] UTF8String]);
     
     ofLog() << reqstring;
-    
-    
-    
-    
     
     // if the html interface is loaded kickoff will be send to the c++ code.
     if (reqstring == "kickoff") {
@@ -283,13 +273,10 @@ void realityEditor::handleCustomRequest(NSString *request) {
     }
     
     if (reqstring == "freeze") {
-        freeze = true;
+        freeze();
     }
     if (reqstring == "unfreeze") {
-        freeze = false;
-        frozeCameraImage = false;
-        ofxVuforia & Vuforia = *ofxVuforia::getInstance();
-        Vuforia.resume();
+        unfreeze();
     }
     if (reqstring == "sendAccelerationData") {
         sendAccelerationData = true;
@@ -341,64 +328,83 @@ void realityEditor::handleCustomRequest(NSString *request) {
         cout << "editor.xml saved to app documents folder";
     }
     
-    
-    
-    string str2 ("loadNewUI");
-    
-    size_t found1 = reqstring.find(str2);
-    
-    
-    if(found1 == 0){
-        
-        
-        long endBlock = reqstring.find_first_of("loadNewUI");
-        
-        ofLog() << endBlock;
-        
-        if(endBlock ==0){
-            
-            
-            
-            string reloadURL = reqstring.substr (endBlock+9, reqstring.size());
-            
-            ofLog() << "this is the new URL:" << reloadURL <<":";
-            
-            if(reloadURL !=""){
-                haveChangedUIwithURL = 500;
-                changedURLOk = false;
-                
-                interface.deactivateView();
-                // interface.loadLocalFile("setup","page");
-                
-                cout << "this has been loaded from the webuI";
-                cout << reloadURL.c_str();
-                
-                interface.loadURL(reloadURL.c_str());
-                NSLog(@"%s", reloadURL.c_str());
-                
-                XML.setValue("SETUP:EXTERNAL", reloadURL);
-                XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
-                cout << "editor.xml saved to app documents folder";
-                
-                externalState =reloadURL;
-                
-                
-                //    interface.loadURL("http://html5test.com");
-                
-                interface.activateView();
-                
-                
-                
-            }
-            
-            
-        }
-        
-        
-        
-        
+    if (reqstring == "createMemory") {
+        tempMemory = shared_ptr<VuforiaState>(new VuforiaState(getCameraImage(), matrixTemp, nameTemp));
+        sendThumbnail(tempMemory);
     }
     
+    if (reqstring == "clearMemory") {
+        tempMemory = nullptr;
+    }
+    
+    string loadNewUI("loadNewUI");
+    
+    string reqData;
+    
+    if (getDataFromReq(reqstring, &reqData)) {
+        string reloadURL = reqData;
+        ofLog() << "this is the new URL:" << reloadURL <<":";
+        
+        if(reloadURL !=""){
+            haveChangedUIwithURL = 500;
+            changedURLOk = false;
+            
+            interface.deactivateView();
+            // interface.loadLocalFile("setup","page");
+            
+            cout << "this has been loaded from the webuI";
+            cout << reloadURL.c_str();
+            
+            interface.loadURL(reloadURL.c_str());
+            NSLog(@"%s", reloadURL.c_str());
+            
+            XML.setValue("SETUP:EXTERNAL", reloadURL);
+            XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+            cout << "editor.xml saved to app documents folder";
+            
+            externalState =reloadURL;
+            
+            
+            //    interface.loadURL("http://html5test.com");
+            
+            interface.activateView();
+        }
+    }
+    
+    if (getDataFromReq(reqstring, "memorize", &reqData)) {
+        int memoryIndex = stoi(reqData.c_str());
+        this->memorize(memoryIndex);
+    }
+    
+    if (getDataFromReq(reqstring, "remember", &reqData)) {
+        int memoryIndex = stoi(reqData.c_str());
+        this->remember(memoryIndex);
+    }
+    
+    if (uri.getHost() == "remember") {
+        Poco::URI::QueryParameters params = uri.getQueryParameters();
+        string dataStr = "";
+        
+        for (pair<string, string> param : params) {
+            if (param.first == "data") {
+                dataStr = param.second;
+                break;
+            }
+        }
+        
+        if (dataStr != "") {
+            ofxJSONElement memoryInfo;
+            VuforiaState memory;
+            memoryInfo.parse(dataStr);
+            memory.name.push_back(memoryInfo["name"].asString());
+            ofMatrix4x4 matrix;
+            for (int i = 0; i < 16; i++) {
+                matrix._mat[i / 4][i % 4] = memoryInfo["matrix"][i].asFloat();
+            }
+            memory.matrix.push_back(matrix);
+            *currentMemory = memory;
+        }
+    }
 }
 
 //--------------------------------------------------------------
@@ -508,47 +514,26 @@ void realityEditor::update() {
         Vuforia.update();
         //Vuforia->mutex.lock();
         
-        matrixTemp.clear();
-        nameTemp.clear();
-        //Vuforia->mutex.lock();
-        // tempMarker = Vuforia->markersFound;
-        
-        for (int i = 0; i < Vuforia.numOfMarkersFound(); i++) {
-            matrixTemp.push_back(Vuforia.getMarker(i).modelViewMatrix);
-            nameTemp.push_back(Vuforia.getMarker(i).markerName);
-        }
-        
-        
-        if (!frozeCameraImage && freeze == true) {
+        if (!currentMemory) {
+            matrixTemp.clear();
+            nameTemp.clear();
+            //Vuforia->mutex.lock();
+            // tempMarker = Vuforia->markersFound;
             
-            /*    int cameraW = Vuforia.getCameraWidth();
-             int cameraH = Vuforia.getCameraHeight();
-             unsigned char * cameraPixels = Vuforia.getCameraPixels();
-             if(cameraW > 0 && cameraH > 0 && cameraPixels != NULL) {
-             if(cameraImage.isAllocated() == false ) {
-             cameraImage.allocate(cameraW, cameraH, OF_IMAGE_GRAYSCALE);
-             }
-             cameraImage.setFromPixels(cameraPixels, cameraW, cameraH, OF_IMAGE_GRAYSCALE);
-             if(Vuforia.getOrientation() == OFX_Vuforia_ORIENTATION_PORTRAIT) {
-             cameraImage.rotate90(1);
-             } else if(Vuforia.getOrientation() == OFX_Vuforia_ORIENTATION_LANDSCAPE) {
-             cameraImage.mirror(true, true);
-             }
-             }
-             // todo, once OF 0.9 is final we have to add the color image again
-             // cameraImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());*/
-            Vuforia.pause();
-            frozeCameraImage = true;
-            ofLog() << "+++++++ i get it";
-            
+            for (int i = 0; i < Vuforia.numOfMarkersFound(); i++) {
+                matrixTemp.push_back(Vuforia.getMarker(i).modelViewMatrix);
+                nameTemp.push_back(Vuforia.getMarker(i).markerName);
+            }
+        } else {
+            matrixTemp = currentMemory->matrix;
+            nameTemp = currentMemory->name;
         }
         
         //Vuforia->mutex.unlock();
         
         
         if (waitUntil) {
-            
-            if (Vuforia.numOfMarkersFound() > 0 && !freeze) {
+            if (Vuforia.numOfMarkersFound() > 0 && !currentMemory) {
                 
                 if (matrixOld == matrixTemp[0]._mat[0][0]) {
                     updateSwitch = false;
@@ -558,7 +543,6 @@ void realityEditor::update() {
                 matrixOld = matrixTemp[0]._mat[0][0];
             } else {
                 
-                // updateSwitch = true;
                 if(updateSwitch) updateSwitch = false;
                 else updateSwitch = true;
                 
@@ -607,16 +591,12 @@ void realityEditor::draw() {
         // run the messages that process the javascrip view.
         
         // render the interface
-        //  ofLog() << frozeCameraImage << " ++ " << freeze;
-        
-        /* if (freeze && frozeCameraImage) {
-         cameraImage.draw(0, 0, ofGetWidth(), ofGetHeight());
-         }else{
-         Vuforia.drawBackground();
-         }*/
-        
-        
-        Vuforia.drawBackground();
+
+        if (!currentMemory) {
+            Vuforia.drawBackground();
+        } else {
+            currentMemory->image.draw(0, 0, ofGetWidth(), ofGetHeight());
+        }
         
         
         
@@ -1118,10 +1098,192 @@ void realityEditor::deviceOrientationChanged(int newOrientation){
         // ofSetOrientation((ofOrientation)newOrientation);
         
         //  Vuforia.setOrientation(OFX_Vuforia_ORIENTATION_LANDSCAPE_LEFT);
-        
-        
+    }
+}
+
+ofImage realityEditor::getCameraImage() {
+    /*
+    ofxVuforia & vuforia = *ofxVuforia::getInstance();
+    int cameraW = vuforia.getCameraWidth();
+    int cameraH = vuforia.getCameraHeight();
+    unsigned char * cameraPixels = vuforia.getCameraPixels();
+    ofImage cameraImage;
+    cameraImage.allocate(cameraW, cameraH, OF_IMAGE_GRAYSCALE);
+    // cameraImage.allocate(ofGetScreenWidth(), ofGetScreenHeight(), OF_IMAGE_COLOR);
+    // cameraImage.grabScreen(0, 0, ofGetScreenWidth(), ofGetScreenHeight());
+    if(cameraW > 0 && cameraH > 0 && cameraPixels != NULL) {
+        cameraImage.setFromPixels(cameraPixels, cameraW, cameraH, OF_IMAGE_GRAYSCALE);
+        if(vuforia.getOrientation() == OFX_Vuforia_ORIENTATION_PORTRAIT) {
+            cameraImage.rotate90(1);
+        } else if(vuforia.getOrientation() == OFX_Vuforia_ORIENTATION_LANDSCAPE) {
+            cameraImage.mirror(true, true);
+        } else {
+            cameraImage.mirror(true, true);
+        }
+    }
+    float currentRatio = ((float)cameraW) / ((float)cameraH);
+    float desiredRatio = ((float)ofGetWidth()) / ((float)ofGetHeight());
+    if (desiredRatio > currentRatio) {
+        int newWidth = cameraH * desiredRatio;
+        int letterbox = newWidth - cameraW;
+        cameraImage.crop(letterbox / 2, 0, newWidth, cameraH);
+    } else {
+        int newHeight = cameraW / desiredRatio;
+        int letterbox = newHeight - cameraH;
+        cameraImage.crop(0, letterbox / 2, cameraW, newHeight);
+    }
+    ofLog() << cameraImage.getWidth() << "x" << cameraImage.getHeight();
+    return cameraImage;
+      */
+    // from ofxiOSScreenGrab()
+    
+    CGRect rect = [[UIScreen mainScreen] bounds];
+
+    //fix from: http://forum.openframeworks.cc/index.php/topic,6092.15.html
+    //TODO: look and see if we need to take rotation into account
+    if(ofxiOSGetOFWindow()->isRetinaEnabled()) {
+        float f_scale = [[UIScreen mainScreen] scale];
+        rect.size.width *= f_scale;
+        rect.size.height *= f_scale;
+    }
+
+    int width  = rect.size.width;
+    int height = rect.size.height;
+
+    NSInteger myDataLength = width * height * 4;
+    GLubyte *buffer = (GLubyte *) malloc(myDataLength);
+    GLubyte *bufferFlipped = (GLubyte *) malloc((width * height / 4) * 3);
+    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+    
+    // Skip every other pixel in buffer, writing RGB only
+    for(int y = 0; y < height; y += 2) {
+        for(int x = 0; x < width; x += 2) {
+            for (int i = 0; i < 3; i++) {
+                bufferFlipped[(height / 2 - 1 - y / 2) * width / 2 * 3 + x * 3 / 2 + i] = buffer[y * 4 * width + x * 4 + i];
+            }
+        }
+    }
+    free(buffer);	// free original buffer
+    
+    ofImage cameraImage;
+    cameraImage.setFromPixels(bufferFlipped, width / 2, height / 2, OF_IMAGE_COLOR);
+    free(bufferFlipped);
+    return cameraImage;
+}
+
+void realityEditor::sendThumbnail(shared_ptr<VuforiaState> memory) {
+    ofImage thumbnail;
+    thumbnail.clone(memory->image);
+    thumbnail.resize(thumbnailWidth, thumbnailHeight);
+    
+    NSString* base64 = convertImageToBase64(thumbnail);
+
+    NSString* jsStr = [NSString stringWithFormat:@"receiveThumbnail(\"data:image/jpeg;base64,%@\")", base64];
+    interface.runJavaScriptFromString(jsStr);
+}
+
+void realityEditor::uploadMemory(shared_ptr<VuforiaState> memory) {
+    if (memory->name.size() > 1 || memory->name.size() == 0) {
+        ofLog() << "Bailing because we want exactly one marker";
+        return;
     }
     
+    string objName = memory->name[0];
+    objName.erase(objName.end() - 12, objName.end());
+    
+    string ip;
+    string id;
+    bool found = false;
+    for (vector<string> info : nameCount) {
+        string infoName = info[0]; // object id
+        infoName.erase(infoName.end() - 12, infoName.end());
+        if (objName == infoName) {
+            id = info[0];
+            ip = info[1];
+            found = true;
+            break;
+        }
+    }
+    
+    if (!found) {
+        ofLog() << "No object found in nameCount";
+        return;
+    }
+    
+    using namespace Poco;
+    using namespace Poco::Net;
+    
+    // Adapted from a stackoverflow response
+    HTTPRequest request(HTTPRequest::HTTP_POST, "/object/" + id + "/memory", HTTPMessage::HTTP_1_1);
+    
+    HTMLForm form;
+    form.setEncoding(HTMLForm::ENCODING_MULTIPART);
+    
+    ofxJSONElement memoryInfo;
+    for (int i = 0; i < 16; i++) {
+        memoryInfo["matrix"][i] = memory->matrix[0]._mat[i / 4][i % 4];
+    }
+    
+    form.set("memoryInfo", memoryInfo.getRawString());
+    form.addPart("memoryImage", new ImagePartSource(memory->image));
+    form.prepareSubmit(request);
+    
+    HTTPClientSession httpSession(ip, 8080);
+    httpSession.setTimeout(Timespan(20, 0));
+    form.write(httpSession.sendRequest(request));
+    
+    HTTPResponse res;
+    istream &is = httpSession.receiveResponse(res);
+    StreamCopier::copyStream(is, std::cout);
+}
+
+NSString* realityEditor::convertImageToBase64(ofImage image) {
+    ofBuffer buffer;
+    ofSaveImage(image.getPixels(), buffer, OF_IMAGE_FORMAT_JPEG, OF_IMAGE_QUALITY_BEST);
+    ostringstream ss;
+    Poco::Base64Encoder encoder(ss);
+    // Poco's underlying Base64EncoderBuf automatically inserts \r\n every 72 characters
+    encoder << buffer;
+    encoder.close();
+    NSString* rawBase64 = [NSString stringWithUTF8String:ss.str().c_str()];
+    return [rawBase64 stringByReplacingOccurrencesOfString: @"\r\n" withString: @""];
+}
+
+void realityEditor::memorize(int memoryIndex) {
+    if (!tempMemory) {
+        return;
+    }
+    memories[memoryIndex] = tempMemory;
+    uploadMemory(memories[memoryIndex]);
+    tempMemory = nullptr;
+}
+
+void realityEditor::remember(int memoryIndex) {
+    currentMemory = memories[memoryIndex];
+}
+
+void realityEditor::unfreeze() {
+    currentMemory = nullptr;
+}
+
+void realityEditor::freeze() {
+    currentMemory = shared_ptr<VuforiaState>(new VuforiaState(getCameraImage(), matrixTemp, nameTemp));
+}
+    
+/**
+ * @param req - Full host of request, including data to be placed in {data}
+ * @param requestName - Desired name of request. If found, request is of form `requestName + data`
+ * @param data - String to store data in
+ * @return Whether the request has name (prefix) requestName
+ */
+bool realityEditor::getDataFromReq(string req, string requestName, string* data) {
+    size_t foundIdx = req.find(requestName);
+    if (foundIdx != 0) {
+        return false;
+    }
+    
+    *data = req.substr(requestName.size(), req.size());
+    return true;
 }
 
 

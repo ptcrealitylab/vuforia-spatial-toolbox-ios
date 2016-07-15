@@ -14,8 +14,20 @@
 
 #include "ofxWebViewInterface.h"
 
+#include "Poco/Base64Encoder.h"
+#include "Poco/Net/FilePartSource.h"
+#include "Poco/Net/HTTPClientSession.h"
+#include "Poco/Net/HTTPResponse.h"
+#include "Poco/Net/HTTPRequest.h"
+#include "Poco/Net/HTMLForm.h"
+#include "Poco/StreamCopier.h"
+#include "Poco/Timespan.h"
+#include "Poco/URI.h"
+
+#include "ImagePartSource.h"
+#include "VuforiaState.h"
+
 class realityEditor : public ofxVuforia_App, ofxWebViewDelegateCpp /*ofxWKWebViewDelegateCpp, ofxUIWebViewDelegateCpp*/ {
-    
 public:
     void setup();
     
@@ -38,6 +50,14 @@ public:
     ofFile files_;
     ofxUDPManager udpConnection, udpConnection2;
     // HeartbeatListener* heartbeatListener;
+    // 0 -> name/id
+    // 1 -> ip
+    // 2 -> version
+    // 3 -> TCS
+    // 4 -> state thing
+    // 5 -> state thing
+    // 6 -> state thing
+    // 7 -> state thing
     vector<vector<string> > nameCount;
     vector<vector<string> > targetsList;
     
@@ -45,9 +65,9 @@ public:
     //    ofxUIWebViewInterfaceJavaScript interface;
     
     ofxWebViewInterfaceJavaScript interface;
-    
-    void handleCustomRequest(NSString *request);
-    
+
+    void handleCustomRequest(NSString *request, NSURL *url);
+
     ofxJSONElement json;
     bool waitUntil;
     bool onlyOnce;
@@ -72,27 +92,23 @@ public:
     ofBuffer dataBuffer;
     
     ofMatrix4x4 tempMatrix;
+    
     vector<ofMatrix4x4> matrixTemp;
     vector<string> nameTemp;
     
+    shared_ptr<VuforiaState> currentMemory = nullptr;
+    
     vector<Vuforia::DataSet *>  datasetList;
-    
+
     float matrixOld = 0.0;
-    
+
     int foundMarker;
     bool reloader = false;
-    bool freeze = false;
     bool extendedTracking = false;
-    bool frozeCameraImage = false;
     float cameraRatio = 1;
     
-    ofFbo fbo;
-    ofFbo fbo2;
-    
     bool updateSwitch =true;
-    
-    ofImage cameraImage;
-    
+
     ofImage imgInterface, imgObject;
     // NSMutableString *stringforTransform;
     
@@ -134,6 +150,22 @@ public:
     ofFile file;
     ofBuffer buff;
     
+    map<int, shared_ptr<VuforiaState>> memories;
+    // The memory that will be made permanent by memorize() or thrown away by clearMemory()
+    shared_ptr<VuforiaState> tempMemory;
+    void memorize(int memoryIndex);
+    void remember(int memoryIndex);
+    void unfreeze();
+    void freeze();
+    
+    const int thumbnailWidth = 134;
+    const int thumbnailHeight = 75;
+
+    ofImage getCameraImage();
+    void sendThumbnail(shared_ptr<VuforiaState> memory);
+    void uploadMemory(shared_ptr<VuforiaState> memory);
+    NSString* convertImageToBase64(ofImage image);
+    bool getDataFromReq(string req, string reqName, string* data);
     /* void touchDown(ofTouchEventArgs & touch);
      void touchMoved(ofTouchEventArgs & touch);
      void touchUp(ofTouchEventArgs & touch);
