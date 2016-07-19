@@ -202,9 +202,9 @@ void realityEditor::setup() {
 void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
     string reqstring([request UTF8String]);
     
-    Poco::URI uri([[url absoluteString] UTF8String]);
-    
     ofLog() << reqstring;
+    Poco::URI uri([[url absoluteString] UTF8String]);
+    ofLog() << "Handling " << uri.toString() << " aka " << reqstring;
     
     // if the html interface is loaded kickoff will be send to the c++ code.
     if (reqstring == "kickoff") {
@@ -329,6 +329,9 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
     }
     
     if (reqstring == "createMemory") {
+        if (nameTemp.size() > 0) {
+            ofLog() << "createMemory " << nameTemp[0];
+        }
         tempMemory = shared_ptr<VuforiaState>(new VuforiaState(getCameraImage(), matrixTemp, nameTemp));
         sendThumbnail(tempMemory);
     }
@@ -337,11 +340,9 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
         tempMemory = nullptr;
     }
     
-    string loadNewUI("loadNewUI");
-    
     string reqData;
     
-    if (getDataFromReq(reqstring, &reqData)) {
+    if (getDataFromReq(reqstring, "loadNewUI", &reqData)) {
         string reloadURL = reqData;
         ofLog() << "this is the new URL:" << reloadURL <<":";
         
@@ -371,17 +372,12 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
         }
     }
     
-    if (getDataFromReq(reqstring, "memorize", &reqData)) {
-        int memoryIndex = stoi(reqData.c_str());
-        this->memorize(memoryIndex);
+    if (reqstring == "memorize") {
+        this->memorize();
     }
     
-    if (getDataFromReq(reqstring, "remember", &reqData)) {
-        int memoryIndex = stoi(reqData.c_str());
-        this->remember(memoryIndex);
-    }
-    
-    if (uri.getHost() == "remember") {
+    if (reqstring == "remember") {
+        ofLog() << "Is a remember";
         Poco::URI::QueryParameters params = uri.getQueryParameters();
         string dataStr = "";
         
@@ -393,16 +389,18 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
         }
         
         if (dataStr != "") {
+            ofLog() << "With data " << dataStr;
             ofxJSONElement memoryInfo;
-            VuforiaState memory;
+            VuforiaState* memory = new VuforiaState();
             memoryInfo.parse(dataStr);
-            memory.name.push_back(memoryInfo["name"].asString());
+            memory->name.push_back(memoryInfo["id"].asString());
             ofMatrix4x4 matrix;
             for (int i = 0; i < 16; i++) {
                 matrix._mat[i / 4][i % 4] = memoryInfo["matrix"][i].asFloat();
             }
-            memory.matrix.push_back(matrix);
-            *currentMemory = memory;
+            memory->matrix.push_back(matrix);
+            memory->image.allocate(1, 1, OF_IMAGE_GRAYSCALE);
+            currentMemory = shared_ptr<VuforiaState>(memory);
         }
     }
 }
@@ -650,31 +648,30 @@ void realityEditor::downloadTargets() {
         string message = udpMessage;
         nameExists = false;
         
-        // cout << message;
+        // ofLog() << "Received udp message " << message;
         // if message is a valid heartbeat do the following
         if (!json.parse(message.c_str()) || json["id"].empty() || json["ip"].empty()) {
             nameExists = true;
             NSLog(@">>udp message is not a object ping");
             NSLog(@"%s", json["id"].asString().c_str());
-            goto stop2;
-            break;
+            return;
             
         }
         
         if(json["ip"].asString().size()<7){
             NSLog(@">>ip was wrong");
             nameExists = true;
-            goto stop2;
-            break;
+            return;
         }
         
         //this calls an action
         if (!json["action"].empty()) {
-            NSString *jsString4 = [NSString stringWithFormat:@"action('%s')", json["action"].asString().c_str()];
+            NSString *jsString4 = [NSString stringWithFormat:@"action({action: '%s', id: '%s', ip: '%s'});",
+                                   json["action"].asCString(), json["id"].asCString(),
+                                   json["ip"].asCString()];
             interface.runJavaScriptFromString(jsString4);
             NSLog(@"%@", jsString4);
-            goto stop2;
-            break;
+            return;
         }
         
         string nameJson = "";
@@ -690,8 +687,7 @@ void realityEditor::downloadTargets() {
                 
                 if(nameCount[i][3].c_str() == json["tcs"].asString()){
                     nameExists = true;
-                    goto stop2;
-                    break;
+                    return;
                 }
                 
             }
@@ -699,8 +695,7 @@ void realityEditor::downloadTargets() {
             for (int i = 0; i < nameCount.size(); i++) {
                 if (nameCount[i][0] == json["id"].asString()) {
                     nameExists = true;
-                    goto stop2;
-                    break;
+                    return;
                 };
             };
             
@@ -940,7 +935,6 @@ void realityEditor::downloadTargets() {
         }
     stop1:;
     }
-stop2:;
 }
 
 // generate the javascript messages
@@ -1249,17 +1243,12 @@ NSString* realityEditor::convertImageToBase64(ofImage image) {
     return [rawBase64 stringByReplacingOccurrencesOfString: @"\r\n" withString: @""];
 }
 
-void realityEditor::memorize(int memoryIndex) {
+void realityEditor::memorize() {
     if (!tempMemory) {
         return;
     }
-    memories[memoryIndex] = tempMemory;
-    uploadMemory(memories[memoryIndex]);
+    uploadMemory(tempMemory);
     tempMemory = nullptr;
-}
-
-void realityEditor::remember(int memoryIndex) {
-    currentMemory = memories[memoryIndex];
 }
 
 void realityEditor::unfreeze() {
