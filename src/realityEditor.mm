@@ -1177,7 +1177,7 @@ void realityEditor::uploadMemory(shared_ptr<VuforiaState> memory) {
         return;
     }
 
-    if (!memoryUploader->done) {
+    if (memoryUploader && !memoryUploader->done) {
         ofLog() << "Already processing one upload";
         return;
     }
