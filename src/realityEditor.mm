@@ -332,7 +332,7 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
         if (nameTemp.size() > 0) {
             ofLog() << "createMemory " << nameTemp[0];
         }
-        tempMemory = shared_ptr<VuforiaState>(new VuforiaState(getCameraImage(), matrixTemp, nameTemp));
+        tempMemory = make_shared<VuforiaState>(getCameraImage(), matrixTemp, nameTemp);
         sendThumbnail(tempMemory);
     }
     
@@ -1096,45 +1096,11 @@ void realityEditor::deviceOrientationChanged(int newOrientation){
 }
 
 ofImage realityEditor::getCameraImage() {
-    /*
-    ofxVuforia & vuforia = *ofxVuforia::getInstance();
-    int cameraW = vuforia.getCameraWidth();
-    int cameraH = vuforia.getCameraHeight();
-    unsigned char * cameraPixels = vuforia.getCameraPixels();
-    ofImage cameraImage;
-    cameraImage.allocate(cameraW, cameraH, OF_IMAGE_GRAYSCALE);
-    // cameraImage.allocate(ofGetScreenWidth(), ofGetScreenHeight(), OF_IMAGE_COLOR);
-    // cameraImage.grabScreen(0, 0, ofGetScreenWidth(), ofGetScreenHeight());
-    if(cameraW > 0 && cameraH > 0 && cameraPixels != NULL) {
-        cameraImage.setFromPixels(cameraPixels, cameraW, cameraH, OF_IMAGE_GRAYSCALE);
-        if(vuforia.getOrientation() == OFX_Vuforia_ORIENTATION_PORTRAIT) {
-            cameraImage.rotate90(1);
-        } else if(vuforia.getOrientation() == OFX_Vuforia_ORIENTATION_LANDSCAPE) {
-            cameraImage.mirror(true, true);
-        } else {
-            cameraImage.mirror(true, true);
-        }
-    }
-    float currentRatio = ((float)cameraW) / ((float)cameraH);
-    float desiredRatio = ((float)ofGetWidth()) / ((float)ofGetHeight());
-    if (desiredRatio > currentRatio) {
-        int newWidth = cameraH * desiredRatio;
-        int letterbox = newWidth - cameraW;
-        cameraImage.crop(letterbox / 2, 0, newWidth, cameraH);
-    } else {
-        int newHeight = cameraW / desiredRatio;
-        int letterbox = newHeight - cameraH;
-        cameraImage.crop(0, letterbox / 2, cameraW, newHeight);
-    }
-    ofLog() << cameraImage.getWidth() << "x" << cameraImage.getHeight();
-    return cameraImage;
-      */
     // from ofxiOSScreenGrab()
     
     CGRect rect = [[UIScreen mainScreen] bounds];
 
     //fix from: http://forum.openframeworks.cc/index.php/topic,6092.15.html
-    //TODO: look and see if we need to take rotation into account
     if(ofxiOSGetOFWindow()->isRetinaEnabled()) {
         float f_scale = [[UIScreen mainScreen] scale];
         rect.size.width *= f_scale;
@@ -1146,21 +1112,23 @@ ofImage realityEditor::getCameraImage() {
 
     NSInteger myDataLength = width * height * 4;
     GLubyte *buffer = (GLubyte *) malloc(myDataLength);
-    GLubyte *bufferFlipped = (GLubyte *) malloc((width * height / 4) * 3);
+    GLubyte *bufferFlipped = (GLubyte *) malloc((width * height / 4));
     glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
     
     // Skip every other pixel in buffer, writing RGB only
     for(int y = 0; y < height; y += 2) {
         for(int x = 0; x < width; x += 2) {
-            for (int i = 0; i < 3; i++) {
-                bufferFlipped[(height / 2 - 1 - y / 2) * width / 2 * 3 + x * 3 / 2 + i] = buffer[y * 4 * width + x * 4 + i];
-            }
+            int r = buffer[y * 4 * width + x * 4 + 0];
+            int g = buffer[y * 4 * width + x * 4 + 1];
+            int b = buffer[y * 4 * width + x * 4 + 2];
+            int intensity = 0.2989 * r + 0.5870 * g + 0.1140 * b;
+            bufferFlipped[(height / 2 - 1 - y / 2) * width / 2 + x / 2] = intensity;
         }
     }
     free(buffer);	// free original buffer
     
     ofImage cameraImage;
-    cameraImage.setFromPixels(bufferFlipped, width / 2, height / 2, OF_IMAGE_COLOR);
+    cameraImage.setFromPixels(bufferFlipped, width / 2, height / 2, OF_IMAGE_GRAYSCALE);
     free(bufferFlipped);
     return cameraImage;
 }
@@ -1177,10 +1145,12 @@ void realityEditor::sendThumbnail(shared_ptr<VuforiaState> memory) {
 }
 
 void realityEditor::uploadMemory(shared_ptr<VuforiaState> memory) {
+    ofLog() << "memory 1: " << memory.get();
     if (memory->name.size() > 1 || memory->name.size() == 0) {
         ofLog() << "Bailing because we want exactly one marker";
         return;
     }
+    ofLog() << "memory 2: " << memory.get();
     
     string objName = memory->name[0];
     objName.erase(objName.end() - 12, objName.end());
@@ -1203,32 +1173,13 @@ void realityEditor::uploadMemory(shared_ptr<VuforiaState> memory) {
         ofLog() << "No object found in nameCount";
         return;
     }
-    
-    using namespace Poco;
-    using namespace Poco::Net;
-    
-    // Adapted from a stackoverflow response
-    HTTPRequest request(HTTPRequest::HTTP_POST, "/object/" + id + "/memory", HTTPMessage::HTTP_1_1);
-    
-    HTMLForm form;
-    form.setEncoding(HTMLForm::ENCODING_MULTIPART);
-    
-    ofxJSONElement memoryInfo;
-    for (int i = 0; i < 16; i++) {
-        memoryInfo["matrix"][i] = memory->matrix[0]._mat[i / 4][i % 4];
+
+    if (!memoryUploader->done) {
+        ofLog() << "Already processing one upload";
+        return;
     }
-    
-    form.set("memoryInfo", memoryInfo.getRawString());
-    form.addPart("memoryImage", new ImagePartSource(memory->image));
-    form.prepareSubmit(request);
-    
-    HTTPClientSession httpSession(ip, 8080);
-    httpSession.setTimeout(Timespan(20, 0));
-    form.write(httpSession.sendRequest(request));
-    
-    HTTPResponse res;
-    istream &is = httpSession.receiveResponse(res);
-    StreamCopier::copyStream(is, std::cout);
+    memoryUploader = make_shared<MemoryUploader>(id, ip, memory);
+    memoryThreadPool.start(*memoryUploader);
 }
 
 NSString* realityEditor::convertImageToBase64(ofImage image) {
