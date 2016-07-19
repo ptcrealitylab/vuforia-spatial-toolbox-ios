@@ -1,0 +1,43 @@
+//
+//  MemoryUploader.h
+//  RealityEditor
+//
+//  Created by James Hobin on 7/19/16.
+//
+//
+
+#ifndef MemoryUploader_h
+#define MemoryUploader_h
+
+#include <memory>
+
+#include "ofMain.h"
+#include "ofxiOS.h"
+#include "ofxJSON.h"
+#include "Poco/Net/FilePartSource.h"
+#include "Poco/Net/HTTPClientSession.h"
+#include "Poco/Net/HTTPResponse.h"
+#include "Poco/Net/HTTPRequest.h"
+#include "Poco/Net/HTMLForm.h"
+#include "Poco/Runnable.h"
+#include "Poco/StreamCopier.h"
+#include "Poco/Timespan.h"
+#include "ImagePartSource.h"
+#include "VuforiaState.h"
+
+using namespace std;
+using namespace Poco;
+using namespace Poco::Net;
+
+class MemoryUploader : public Poco::Runnable {
+public:
+    MemoryUploader(string _objId, string _ip, shared_ptr<VuforiaState> _memory);
+    virtual void run();
+    bool done;
+private:
+    shared_ptr<VuforiaState> memory;
+    string ip, objId;
+    
+};
+
+#endif /* MemoryUploader_h */

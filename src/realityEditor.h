@@ -15,17 +15,12 @@
 #include "ofxWebViewInterface.h"
 
 #include "Poco/Base64Encoder.h"
-#include "Poco/Net/FilePartSource.h"
-#include "Poco/Net/HTTPClientSession.h"
-#include "Poco/Net/HTTPResponse.h"
-#include "Poco/Net/HTTPRequest.h"
-#include "Poco/Net/HTMLForm.h"
-#include "Poco/StreamCopier.h"
-#include "Poco/Timespan.h"
+#include "Poco/ThreadPool.h"
 #include "Poco/URI.h"
 
 #include "ImagePartSource.h"
 #include "VuforiaState.h"
+#include "MemoryUploader.h"
 
 class realityEditor : public ofxVuforia_App, ofxWebViewDelegateCpp /*ofxWKWebViewDelegateCpp, ofxUIWebViewDelegateCpp*/ {
 public:
@@ -152,6 +147,11 @@ public:
     
     // The memory that will be made permanent by memorize() or thrown away by clearMemory()
     shared_ptr<VuforiaState> tempMemory;
+    
+    // A thread pool used for executing memory uploading off the main thread
+    Poco::ThreadPool memoryThreadPool;
+    shared_ptr<MemoryUploader> memoryUploader;
+    
     void memorize();
     void unfreeze();
     void freeze();
