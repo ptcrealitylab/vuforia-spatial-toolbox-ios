@@ -150,11 +150,9 @@ public:
     ofFile file;
     ofBuffer buff;
     
-    map<int, shared_ptr<VuforiaState>> memories;
     // The memory that will be made permanent by memorize() or thrown away by clearMemory()
     shared_ptr<VuforiaState> tempMemory;
-    void memorize(int memoryIndex);
-    void remember(int memoryIndex);
+    void memorize();
     void unfreeze();
     void freeze();
     
