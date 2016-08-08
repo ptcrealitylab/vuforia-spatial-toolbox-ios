@@ -29,6 +29,12 @@ void MemoryUploader::run() {
 
     form.set("memoryInfo", memoryInfo.getRawString());
     form.addPart("memoryImage", new ImagePartSource(memory->image));
+    ofImage thumbnailImage;
+    thumbnailImage.clone(memory->image);
+    
+    thumbnailImage.resize(thumbnailWidth, thumbnailHeight);
+    
+    form.addPart("memoryThumbnailImage", new ImagePartSource(thumbnailImage));
     form.prepareSubmit(request);
 
     HTTPClientSession httpSession(ip, 8080);

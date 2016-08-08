@@ -35,6 +35,9 @@ public:
     virtual void run();
     bool done;
 private:
+    // See also realityEditor.h thumbnailWidth and thumbnailHeight
+    const int thumbnailWidth = 134;
+    const int thumbnailHeight = 75;
     shared_ptr<VuforiaState> memory;
     string ip, objId;
     
