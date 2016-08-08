@@ -1,16 +1,18 @@
 #pragma once
 
-//#include "ofMain.h"
-//#include "ofxiOS.h"
-//#include "ofxiOSExtras.h"
+#include "ofMain.h"
+#include "ofxiOS.h"
+#include "ofxiOSExtras.h"
 
 #include "ofxVuforia.h"
 #include "ofxJSON.h"
 #include "ofxNetwork.h"
 #include "ofxXmlSettings.h"
 
-//#include "ofxWKWebViewInterfaceJavaScript.h"
-//#include "ofxUIWebViewInterfaceJavaScript.h"
+#import <Vuforia/CameraCalibration.h>
+#import <Vuforia/CameraDevice.h>
+#import <Vuforia/Tool.h>
+#import <Vuforia/Matrices.h>
 
 #include "ofxWebViewInterface.h"
 
@@ -62,7 +64,9 @@ public:
     ofxWebViewInterfaceJavaScript interface;
 
     void handleCustomRequest(NSString *request, NSURL *url);
-
+    virtual void VuforiaInitARDone(NSError *error);
+    bool vuforiaInitARDone = false;
+    
     ofxJSONElement json;
     bool waitUntil;
     bool onlyOnce;
@@ -108,8 +112,7 @@ public:
     // NSMutableString *stringforTransform;
     
     //vector<ofxVuforia_Marker>tempMarker;
-    bool projectionMatrixSend = false;
-    
+
     NSString *pMatrix;
     
     NSMutableString *stringforTransform = [NSMutableString stringWithCapacity:2000];
@@ -164,6 +167,12 @@ public:
     void uploadMemory(shared_ptr<VuforiaState> memory);
     NSString* convertImageToBase64(ofImage image);
     bool getDataFromReq(string req, string reqName, string* data);
+
+    NSString* stringFromMatrix(ofMatrix4x4 mat);
+    void sendProjectionMatrix();
+
+    string getName(string objectId);
+
     /* void touchDown(ofTouchEventArgs & touch);
      void touchMoved(ofTouchEventArgs & touch);
      void touchUp(ofTouchEventArgs & touch);

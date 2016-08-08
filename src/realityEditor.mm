@@ -217,7 +217,9 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
             // here is where we need to write the permanent link saving mechanism
         }
         
-        projectionMatrixSend = false;
+        if (vuforiaInitARDone) {
+            sendProjectionMatrix();
+        }
         
         // help to reestablish the arrays when reloaded the interface
         // needs some more work on getting back and forth all the different objects
@@ -846,8 +848,7 @@ void realityEditor::downloadTargets() {
                 for(int e = 0;e <  3; e++){
                     
                     if (w == e+4) {
-                        string objName = nameCount[i][0];
-                        objName.erase(objName.end() - 12, objName.end());
+                        string objName = getName(nameCount[i][0]);
                         string sURL = "http://" + nameCount[i][1] + ":8080/obj/" + objName + "/target/target."+arrayList[e];
                         ofLoadURLAsync(sURL, "done");
                         nameCount[i][w] = "w";
@@ -937,65 +938,47 @@ void realityEditor::downloadTargets() {
     }
 }
 
+void realityEditor::VuforiaInitARDone(NSError *error) {
+    vuforiaInitARDone = true;
+    sendProjectionMatrix();
+}
+
+NSString* realityEditor::stringFromMatrix(ofMatrix4x4 mat) {
+    return [NSString stringWithFormat:@"[%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf]",
+            mat._mat[0][0],
+            mat._mat[0][1],
+            mat._mat[0][2],
+            mat._mat[0][3],
+            mat._mat[1][0],
+            mat._mat[1][1],
+            mat._mat[1][2],
+            mat._mat[1][3],
+            mat._mat[2][0],
+            mat._mat[2][1],
+            mat._mat[2][2],
+            mat._mat[2][3],
+            mat._mat[3][0],
+            mat._mat[3][1],
+            mat._mat[3][2],
+            mat._mat[3][3]
+            ];
+}
+
+void realityEditor::sendProjectionMatrix() {
+    float nearPlane = 2;
+    float farPlane = 2000;
+    const Vuforia::CameraCalibration& cameraCalibration = Vuforia::CameraDevice::getInstance().getCameraCalibration();
+    Vuforia::Matrix44F projectionMatrix = Vuforia::Tool::getProjectionGL(cameraCalibration, nearPlane, farPlane);
+
+    ofMatrix4x4 projMatrix = ofMatrix4x4(projectionMatrix.data);
+    NSString* code = [NSString stringWithFormat:@"setProjectionMatrix(%@);", stringFromMatrix(projMatrix)];
+    ofLog() << [code UTF8String];
+    interface.runJavaScriptFromString(code);
+}
+
 // generate the javascript messages
 void realityEditor::renderJavascript() {
-    ofxVuforia & Vuforia = *ofxVuforia::getInstance();
-    
     if (nameTemp.size() > 0) {
-        
-        if (projectionMatrixSend == false) {
-            //Vuforia->mutex.lock();
-            tempMatrix = Vuforia.getProjectionMatrix();
-            // Vuforia->mutex.unlock();
-            
-            /*   cout << "-------start--------";
-             
-             cout << ":" <<  tempMatrix._mat[0][0];
-             cout << ":" <<   tempMatrix._mat[0][1];
-             cout << ":" <<   tempMatrix._mat[0][2];
-             cout << ":" <<   tempMatrix._mat[0][3];
-             cout << ":" <<   tempMatrix._mat[1][0];
-             cout << ":" <<   tempMatrix._mat[1][1];
-             cout << ":" <<   tempMatrix._mat[1][2];
-             cout << ":" <<  tempMatrix._mat[1][3];
-             cout << ":" <<  tempMatrix._mat[2][0];
-             cout << ":" <<  tempMatrix._mat[2][1];
-             cout << ":" <<  tempMatrix._mat[2][2];
-             cout << ":" <<  tempMatrix._mat[2][3];
-             cout << ":" <<  tempMatrix._mat[3][0];
-             cout << ":" <<  tempMatrix._mat[3][1];
-             cout << ":" <<  tempMatrix._mat[3][2];
-             cout << ":" <<  tempMatrix._mat[3][3];
-             
-             cout << "-------xxxx--------";*/
-            
-            
-            pMatrix = [NSString stringWithFormat:@"setProjectionMatrix([%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf])",
-                       tempMatrix._mat[0][0],
-                       tempMatrix._mat[0][1],
-                       tempMatrix._mat[0][2],
-                       tempMatrix._mat[0][3],
-                       tempMatrix._mat[1][0],
-                       tempMatrix._mat[1][1],
-                       tempMatrix._mat[1][2],
-                       tempMatrix._mat[1][3],
-                       tempMatrix._mat[2][0],
-                       tempMatrix._mat[2][1],
-                       tempMatrix._mat[2][2],
-                       tempMatrix._mat[2][3],
-                       tempMatrix._mat[3][0],
-                       tempMatrix._mat[3][1],
-                       tempMatrix._mat[3][2],
-                       tempMatrix._mat[3][3]
-                       ];
-            interface.runJavaScriptFromString(pMatrix);
-            
-            projectionMatrixSend = true;
-        };
-        
-        // since all objects share the same projection matrix, we just take the matrix of the first object and aplly it only one time. We add it as an json object in to the javascropt call.
-        //  tempMatrix= tempMarker[0].projectionMatrix;
-        
         stringforTransform = [NSMutableString stringWithFormat:@"update({"];
         
         // now for all objects we add json elements indicating the name of the marker as the object name and following the model view matrix.
@@ -1004,24 +987,9 @@ void realityEditor::renderJavascript() {
             
             tempMatrix = matrixTemp[i];
             
-            [stringforTransform appendFormat:@"'%s':[%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf]",
+            [stringforTransform appendFormat:@"'%s':%@",
              nameTemp[i].c_str(),
-             tempMatrix._mat[0][0],
-             tempMatrix._mat[0][1],
-             tempMatrix._mat[0][2],
-             tempMatrix._mat[0][3],
-             tempMatrix._mat[1][0],
-             tempMatrix._mat[1][1],
-             tempMatrix._mat[1][2],
-             tempMatrix._mat[1][3],
-             tempMatrix._mat[2][0],
-             tempMatrix._mat[2][1],
-             tempMatrix._mat[2][2],
-             tempMatrix._mat[2][3],
-             tempMatrix._mat[3][0],
-             tempMatrix._mat[3][1],
-             tempMatrix._mat[3][2],
-             tempMatrix._mat[3][3]
+             stringFromMatrix(tempMatrix)
              ];
             // formating condition for json.
             if (i < matrixTemp.size() - 1) {
@@ -1147,6 +1115,14 @@ void realityEditor::sendThumbnail(shared_ptr<VuforiaState> memory) {
     interface.runJavaScriptFromString(jsStr);
 }
 
+string realityEditor::getName(string objectId) {
+    if (objectId.length() < 12) {
+        ofLog() << "Warning: object id too short";
+        return objectId;
+    }
+    return objectId.substr(0,objectId.length() - 12);
+}
+
 void realityEditor::uploadMemory(shared_ptr<VuforiaState> memory) {
     ofLog() << "memory 1: " << memory.get();
     if (memory->name.size() > 1 || memory->name.size() == 0) {
@@ -1155,15 +1131,13 @@ void realityEditor::uploadMemory(shared_ptr<VuforiaState> memory) {
     }
     ofLog() << "memory 2: " << memory.get();
     
-    string objName = memory->name[0];
-    objName.erase(objName.end() - 12, objName.end());
+    string objName = getName(memory->name[0]);
     
     string ip;
     string id;
     bool found = false;
     for (vector<string> info : nameCount) {
-        string infoName = info[0]; // object id
-        infoName.erase(infoName.end() - 12, infoName.end());
+        string infoName = getName(info[0]); // object id
         if (objName == infoName) {
             id = info[0];
             ip = info[1];
