@@ -8,8 +8,7 @@
 /bin/data/interfaceDataPhD__
 /bin/data/editor_PHD
 /bin/data/editor_private
-
-
+/bin/data/editor
 
 # osx directory files
 .DS_Store
