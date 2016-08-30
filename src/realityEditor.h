@@ -15,39 +15,39 @@
 #include "ofxWebViewInterface.h"
 
 class realityEditor : public ofxVuforia_App, ofxWebViewDelegateCpp /*ofxWKWebViewDelegateCpp, ofxUIWebViewDelegateCpp*/ {
-
+    
 public:
     void setup();
-
+    
     void update();
-
+    
     void draw();
     
     void deviceOrientationChanged(int newOrientation);
-
+    
     void exit();
-
+    
     void renderJavascript();
-
+    
     void downloadTargets();
-
+    
     void cons();
-
+    
     void urlResponse(ofHttpResponse &response);
-
+    
     ofFile files_;
     ofxUDPManager udpConnection, udpConnection2;
     // HeartbeatListener* heartbeatListener;
     vector<vector<string> > nameCount;
     vector<vector<string> > targetsList;
-
-//    ofxWKWebViewInterfaceJavaScript interface;
-//    ofxUIWebViewInterfaceJavaScript interface;
+    
+    //    ofxWKWebViewInterfaceJavaScript interface;
+    //    ofxUIWebViewInterfaceJavaScript interface;
     
     ofxWebViewInterfaceJavaScript interface;
-
+    
     void handleCustomRequest(NSString *request);
-
+    
     ofxJSONElement json;
     bool waitUntil;
     bool onlyOnce;
@@ -55,54 +55,54 @@ public:
     char udpMessage[256];
     bool nameExists = false;
     bool targetExists = false;
-        int numbersToMuch;
-
+    int numbersToMuch;
+    
     string arrayList[3] = {"dat", "xml", "jpg"};
-
+    
     int datasetHolder = 100000;
     
     ofxXmlSettings XML;
     ofxXmlSettings XMLTargets;
-
+    
     int interfaceCounter = 0;
-    	string xmlStructure;
-
+    string xmlStructure;
+    
     ofHttpResponse ofSaveURLTo(string url, string path);
-
+    
     ofBuffer dataBuffer;
-
+    
     ofMatrix4x4 tempMatrix;
     vector<ofMatrix4x4> matrixTemp;
     vector<string> nameTemp;
     
-     vector<Vuforia::DataSet *>  datasetList;
-
-      float matrixOld = 0.0;
-
+    vector<Vuforia::DataSet *>  datasetList;
+    
+    float matrixOld = 0.0;
+    
     int foundMarker;
     bool reloader = false;
     bool freeze = false;
-        bool extendedTracking = false;
+    bool extendedTracking = false;
     bool frozeCameraImage = false;
     float cameraRatio = 1;
     
     ofFbo fbo;
     ofFbo fbo2;
     
-   bool updateSwitch =true;
-
+    bool updateSwitch =true;
+    
     ofImage cameraImage;
-
+    
     ofImage imgInterface, imgObject;
     // NSMutableString *stringforTransform;
-
+    
     //vector<ofxVuforia_Marker>tempMarker;
     bool projectionMatrixSend = false;
-
+    
     NSString *pMatrix;
-
+    
     NSMutableString *stringforTransform = [NSMutableString stringWithCapacity:2000];
-
+    
     ofAppiOSWindow thisWindow =  *ofxiPhoneGetOFWindow();
     int screenScale = 1;
     
@@ -110,10 +110,10 @@ public:
     bool changedURLOk = false;
     
     
-   int developerState = 0;
-   int extTrackingState = 0;
-   int clearSkyState = 0;
-   string externalState = "";
+    int developerState = 0;
+    int extTrackingState = 0;
+    int clearSkyState = 0;
+    string externalState = "";
     
     bool sendAccelerationData = false;
     
@@ -124,19 +124,19 @@ public:
     bool everySecond = false;
     
     string lastTracker;
-
+    
     /* void touchDown(ofTouchEventArgs & touch);
      void touchMoved(ofTouchEventArgs & touch);
      void touchUp(ofTouchEventArgs & touch);
      void touchDoubleTap(ofTouchEventArgs & touch);
      void touchCancelled(ofTouchEventArgs & touch);*/
-
+    
     /*  void lostFocus();
-      void gotFocus();
-      void gotMemoryWarning();
-      void deviceOrientationChanged(int newOrientation);*/
-
-
+     void gotFocus();
+     void gotMemoryWarning();
+     void deviceOrientationChanged(int newOrientation);*/
+    
+    
 };
 
 
