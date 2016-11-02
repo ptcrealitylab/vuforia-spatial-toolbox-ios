@@ -333,9 +333,9 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
     if (reqstring == "createMemory") {
         if (nameTemp.size() > 0) {
             ofLog() << "createMemory " << nameTemp[0];
+            tempMemory = make_shared<VuforiaState>(getCameraImage(), matrixTemp, nameTemp);
+            sendThumbnail(tempMemory);
         }
-        tempMemory = make_shared<VuforiaState>(getCameraImage(), matrixTemp, nameTemp);
-        sendThumbnail(tempMemory);
     }
     
     if (reqstring == "clearMemory") {
