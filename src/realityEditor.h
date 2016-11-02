@@ -125,6 +125,15 @@ public:
     
     string lastTracker;
     
+    int32_t crc32(const void* data, size_t length);
+    long bitNumber (bool bits[21]);
+    string itob62( long i );
+    uint32_t crc = 0xffffffff;
+    void crc32reset();
+    
+    ofFile file;
+    ofBuffer buff;
+    
     /* void touchDown(ofTouchEventArgs & touch);
      void touchMoved(ofTouchEventArgs & touch);
      void touchUp(ofTouchEventArgs & touch);
