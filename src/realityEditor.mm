@@ -652,12 +652,25 @@ void realityEditor::downloadTargets() {
         
         // ofLog() << "Received udp message " << message;
         // if message is a valid heartbeat do the following
-        if (!json.parse(message.c_str()) || json["id"].empty() || json["ip"].empty()) {
-            nameExists = true;
-            NSLog(@">>udp message is not a object ping");
+        if (!json.parse(message.c_str())) {
+            NSLog(@">>udp message is not valid JSON: %s", message.c_str());
+            return;
+        }
+        
+        //this calls an action
+        
+        if (json["loadMemory"].isObject() || json["reloadLink"].isObject() || json["reloadObject"].isObject()) {
+            NSString *jsString4 = [NSString stringWithFormat:@"action(%s);",
+                                   json.toStyledString().c_str()];
+            interface.runJavaScriptFromString(jsString4);
+            NSLog(@"%@", jsString4);
+            return;
+        }
+        
+        if (json["id"].empty() || json["ip"].empty()) {
+            NSLog(@">>udp message is not an object ping: %s", message.c_str());
             NSLog(@"%s", json["id"].asString().c_str());
             return;
-            
         }
         
         if(json["ip"].asString().size()<7){
@@ -665,16 +678,7 @@ void realityEditor::downloadTargets() {
             nameExists = true;
             return;
         }
-        
-        //this calls an action
-        if (!json["action"].empty()) {
-            NSString *jsString4 = [NSString stringWithFormat:@"action({action: '%s', id: '%s', ip: '%s'});",
-                                   json["action"].asCString(), json["id"].asCString(),
-                                   json["ip"].asCString()];
-            interface.runJavaScriptFromString(jsString4);
-            NSLog(@"%@", jsString4);
-            return;
-        }
+
         
         string nameJson = "";
         // NSLog(@">>got something");
