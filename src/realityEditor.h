@@ -27,23 +27,23 @@
 class realityEditor : public ofxVuforia_App, ofxWebViewDelegateCpp /*ofxWKWebViewDelegateCpp, ofxUIWebViewDelegateCpp*/ {
 public:
     void setup();
-    
+
     void update();
-    
+
     void draw();
-    
+
     void deviceOrientationChanged(int newOrientation);
-    
+
     void exit();
-    
+
     void renderJavascript();
-    
+
     void downloadTargets();
-    
+
     void cons();
-    
+
     void urlResponse(ofHttpResponse &response);
-    
+
     ofFile files_;
     ofxUDPManager udpConnection, udpConnection2;
     // HeartbeatListener* heartbeatListener;
@@ -57,16 +57,16 @@ public:
     // 7 -> state thing
     vector<vector<string> > nameCount;
     vector<vector<string> > targetsList;
-    
+
     //    ofxWKWebViewInterfaceJavaScript interface;
     //    ofxUIWebViewInterfaceJavaScript interface;
-    
+
     ofxWebViewInterfaceJavaScript interface;
 
     void handleCustomRequest(NSString *request, NSURL *url);
     virtual void VuforiaInitARDone(NSError *error);
     bool vuforiaInitARDone = false;
-    
+
     ofxJSONElement json;
     bool waitUntil;
     bool onlyOnce;
@@ -75,28 +75,28 @@ public:
     bool nameExists = false;
     bool targetExists = false;
     int numbersToMuch;
-    
+
     string arrayList[3] = {"dat", "xml", "jpg"};
-    
+
     int datasetHolder = 100000;
-    
+
     ofxXmlSettings XML;
     ofxXmlSettings XMLTargets;
-    
+
     int interfaceCounter = 0;
     string xmlStructure;
-    
+
     ofHttpResponse ofSaveURLTo(string url, string path);
-    
+
     ofBuffer dataBuffer;
-    
+
     ofMatrix4x4 tempMatrix;
-    
+
     vector<ofMatrix4x4> matrixTemp;
     vector<string> nameTemp;
-    
+
     shared_ptr<VuforiaState> currentMemory = nullptr;
-    
+
     vector<Vuforia::DataSet *>  datasetList;
 
     float matrixOld = 0.0;
@@ -105,60 +105,60 @@ public:
     bool reloader = false;
     bool extendedTracking = false;
     float cameraRatio = 1;
-    
+
     bool updateSwitch =true;
 
     ofImage imgInterface, imgObject;
     // NSMutableString *stringforTransform;
-    
+
     //vector<ofxVuforia_Marker>tempMarker;
 
     NSString *pMatrix;
-    
+
     NSMutableString *stringforTransform = [NSMutableString stringWithCapacity:2000];
-    
+
     ofAppiOSWindow thisWindow =  *ofxiPhoneGetOFWindow();
     int screenScale = 1;
-    
+
     int haveChangedUIwithURL = 0;
     bool changedURLOk = false;
-    
-    
+
+
     int developerState = 0;
     int extTrackingState = 0;
     int clearSkyState = 0;
     string externalState = "";
-    
+
     bool sendAccelerationData = false;
-    
+
     ofVec3f accel;
     ofVec2f orientation;
     bool inSync = false;
-    
+
     bool everySecond = false;
-    
+
     string lastTracker;
-    
+
     int32_t crc32(const void* data, size_t length);
     long bitNumber (bool bits[21]);
     string itob62( long i );
     uint32_t crc = 0xffffffff;
     void crc32reset();
-    
+
     ofFile file;
     ofBuffer buff;
-    
+
     // The memory that will be made permanent by memorize() or thrown away by clearMemory()
     shared_ptr<VuforiaState> tempMemory;
-    
+
     // A thread pool used for executing memory uploading off the main thread
     Poco::ThreadPool memoryThreadPool;
     shared_ptr<MemoryUploader> memoryUploader;
-    
+
     void memorize();
     void unfreeze();
     void freeze();
-    
+
     const int thumbnailWidth = 134;
     const int thumbnailHeight = 75;
 
@@ -178,13 +178,13 @@ public:
      void touchUp(ofTouchEventArgs & touch);
      void touchDoubleTap(ofTouchEventArgs & touch);
      void touchCancelled(ofTouchEventArgs & touch);*/
-    
+
     /*  void lostFocus();
      void gotFocus();
      void gotMemoryWarning();
      void deviceOrientationChanged(int newOrientation);*/
-    
-    
+
+
 };
 
 
