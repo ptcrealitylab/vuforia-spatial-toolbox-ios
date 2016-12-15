@@ -403,6 +403,8 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
             memory->matrix.push_back(matrix);
             memory->image.allocate(1, 1, OF_IMAGE_GRAYSCALE);
             currentMemory = shared_ptr<VuforiaState>(memory);
+        } else {
+            currentMemory = tempMemory;
         }
     }
 }
@@ -1180,7 +1182,6 @@ void realityEditor::memorize() {
         return;
     }
     uploadMemory(tempMemory);
-    tempMemory = nullptr;
 }
 
 void realityEditor::unfreeze() {
