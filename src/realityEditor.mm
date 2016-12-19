@@ -673,12 +673,26 @@ void realityEditor::downloadTargets() {
         // cout << message;
         // if message is a valid heartbeat do the following
         if (!json.parse(message.c_str()) || json["id"].empty() || json["ip"].empty()) {
-            nameExists = true;
-            NSLog(@">>udp message is not a object ping");
-            NSLog(@"%s", json["id"].asString().c_str());
-            goto stop2;
-            break;
             
+            
+            //this calls an action
+            if (!json["action"].empty()) {
+                
+                
+                cout << "action";
+              NSString *jsString4 = [NSString stringWithFormat:@"action(%s)", json["action"].toStyledString().c_str()];
+                interface.runJavaScriptFromString(jsString4);
+               // NSLog(@"%@", jsString4);
+                goto stop2;
+                break;
+            }else {
+            
+                nameExists = true;
+                NSLog(@">>udp message is not a object ping");
+                NSLog(@"%s", json["id"].toStyledString().c_str());
+                goto stop2;
+                break;
+            }
         }
         
         if(json["ip"].asString().size()<7){
@@ -688,14 +702,7 @@ void realityEditor::downloadTargets() {
             break;
         }
         
-        //this calls an action
-        if (!json["action"].empty()) {
-            NSString *jsString4 = [NSString stringWithFormat:@"action('%s')", json["action"].asString().c_str()];
-            interface.runJavaScriptFromString(jsString4);
-            NSLog(@"%@", jsString4);
-            goto stop2;
-            break;
-        }
+      
         
         string nameJson = "";
         // NSLog(@">>got something");
