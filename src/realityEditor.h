@@ -47,6 +47,14 @@ public:
     ofFile files_;
     ofxUDPManager udpConnection, udpConnection2;
     // HeartbeatListener* heartbeatListener;
+    // 0 -> name/id
+    // 1 -> ip
+    // 2 -> version
+    // 3 -> TCS
+    // 4 -> state thing
+    // 5 -> state thing
+    // 6 -> state thing
+    // 7 -> state thing
     vector<vector<string> > nameCount;
     vector<vector<string> > targetsList;
 
