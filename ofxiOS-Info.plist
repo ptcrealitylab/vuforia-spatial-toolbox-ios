@@ -37,6 +37,8 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>The Camera is needed for AR</string>
 	<key>UIApplicationExitsOnSuspend</key>
 	<true/>
 	<key>UIInterfaceOrientation</key>

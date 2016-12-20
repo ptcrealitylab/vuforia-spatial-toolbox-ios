@@ -21,7 +21,7 @@ public:
     this class. Designers then define their own protocol to communicate
     from the HTML/JS layer to the C++ layer.
     **************************************************************************/
-    virtual void handleCustomRequest(NSString *request) = 0;
+    virtual void handleCustomRequest(NSString *request, NSURL *url) = 0;
 
 private:
     ofxUIWebViewDelegateObjC *delegate;
