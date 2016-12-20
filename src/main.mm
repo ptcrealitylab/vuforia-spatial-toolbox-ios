@@ -17,8 +17,8 @@ int main() {
     settings.glesVersion = OFXIOS_RENDERER_ES2; // type of renderer to use, ES1, ES2, ES3
     settings.windowMode = OF_FULLSCREEN;
     ofCreateWindow(settings);
-
+    
     [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
-
+    
     return ofRunApp(new realityEditor);
 }

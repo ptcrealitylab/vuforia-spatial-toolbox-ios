@@ -19,11 +19,11 @@ void ofxUIWebViewInterfaceJavaScript::initialize() {
 
 void ofxUIWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxUIWebViewDelegateCpp *delegate) {
     // initialize the UIWebView instance
-    
+
     cout << "Initialized UIWebViewInterface" << endl;
-    
-    CGRect frame = CGRectMake(0, 0, ofGetWindowWidth()/[UIScreen mainScreen].scale, ofGetWindowHeight()/[UIScreen mainScreen].scale);
-    
+
+    CGRect frame = CGRectMake(0, 0, ofGetWindowWidth() / [UIScreen mainScreen].scale, ofGetWindowHeight() / [UIScreen mainScreen].scale);
+
 
     uiWebViewInstance = [[UIWebView alloc] initWithFrame:frame];
 
@@ -32,19 +32,19 @@ void ofxUIWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxUIWebViewD
     [uiWebViewInstance setBackgroundColor:[UIColor clearColor]];
     [uiWebViewInstance.window makeKeyAndVisible];
 
- /*   // make it NOT scrollable
-    [[uiWebViewInstance scrollView] setScrollEnabled:NO];
-    [[uiWebViewInstance scrollView] setBounces:NO];
-    */
-    
+    /*   // make it NOT scrollable
+       [[uiWebViewInstance scrollView] setScrollEnabled:NO];
+       [[uiWebViewInstance scrollView] setBounces:NO];
+       */
+
     // make it NOT scrollable
     [[uiWebViewInstance scrollView] setScrollEnabled:YES];
     [[uiWebViewInstance scrollView] setBounces:NO];
-    
-    
+
+
     //  [uiWebViewInstance scalesPageToFit];
-    
-   // uiWebViewInstance.scalesPageToFit = YES;
+
+    // uiWebViewInstance.scalesPageToFit = YES;
 
     // set delegate to handle events
     ofxUIWebViewDelegateObjC *delegateObjC = [[ofxUIWebViewDelegateObjC alloc] init];
