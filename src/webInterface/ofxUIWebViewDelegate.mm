@@ -38,7 +38,7 @@
         isDefaultRequest = true;
     }
 
-    if (!isDefaultRequest && [self delegate] != 0) [self delegate]->handleCustomRequest([request.URL host]);
+    if (!isDefaultRequest && [self delegate] != 0) [self delegate]->handleCustomRequest([request.URL host], request.URL);
 }
 
 @end
