@@ -3,6 +3,12 @@
 
 static const string kLicenseKey = "***REMOVED***";
 
+static const string networkNamespace = "realityEditor.network";
+static const string deviceNamespace = "realityEditor.device";
+static const string arNamespace = "realityEditor.gui.ar";
+static const string drawNamespace = "realityEditor.gui.ar.draw";
+
+
 //--------------------------------------------------------------
 void realityEditor::setup() {
     
@@ -159,7 +165,7 @@ void realityEditor::setup() {
         
     }
     
-    //usleep(5000000);
+    usleep(50000);
     
     interface.initializeWithCustomDelegate(this);
     
@@ -235,10 +241,17 @@ void realityEditor::handleCustomRequest(NSString *request) {
         
         // if the message is reload then the interface reloads and all objects are resent to the editor
         
-        NSString *stateSender = [NSString stringWithFormat:@"setStates(%d, %d, %d, \"%s\")", developerState, extTrackingState, clearSkyState, externalState.c_str()];
+        NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, \"%s\")",
+                                 deviceNamespace.c_str(),
+                                 developerState,
+                                 extTrackingState,
+                                 clearSkyState,
+                                 externalState.c_str()];
         interface.runJavaScriptFromString(stateSender);
         
-        NSString *deviceSender = [NSString stringWithFormat:@"setDeviceName(\"%s\")", ofxiOSGetDeviceRevision().c_str()];
+        NSString *deviceSender = [NSString stringWithFormat:@"%s.setDeviceName(\"%s\")",
+                                  deviceNamespace.c_str(),
+                                  ofxiOSGetDeviceRevision().c_str()];
         interface.runJavaScriptFromString(deviceSender);
         
         //  NSLog(stateSender);
@@ -252,7 +265,12 @@ void realityEditor::handleCustomRequest(NSString *request) {
         
         for (int i = 0; i < nameCount.size(); i++) {
             cout<<&nameCount[i];
-            NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})", nameCount[i][0].c_str(), nameCount[i][1].c_str(), stoi(nameCount[i][2].c_str()) ,nameCount[i][3].c_str()];
+            NSString *jsString3 = [NSString stringWithFormat:@"%s.addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
+                                   networkNamespace.c_str(),
+                                   nameCount[i][0].c_str(),
+                                   nameCount[i][1].c_str(),
+                                   stoi(nameCount[i][2].c_str()),
+                                   nameCount[i][3].c_str()];
             interface.runJavaScriptFromString(jsString3);
             //   NSLog(@"reload interfaces");
         }
@@ -277,7 +295,12 @@ void realityEditor::handleCustomRequest(NSString *request) {
         
         
         //reloader = true;
-        NSString *stateSender = [NSString stringWithFormat:@"setStates(%d, %d, %d, \"%s\")", developerState, extTrackingState, clearSkyState, externalState.c_str()];
+        NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, \"%s\")",
+                                 deviceNamespace.c_str(),
+                                 developerState,
+                                 extTrackingState,
+                                 clearSkyState,
+                                 externalState.c_str()];
         interface.runJavaScriptFromString(stateSender);
         
     }
@@ -690,7 +713,9 @@ void realityEditor::downloadTargets() {
         
         //this calls an action
         if (!json["action"].empty()) {
-            NSString *jsString4 = [NSString stringWithFormat:@"action('%s')", json["action"].asString().c_str()];
+            NSString *jsString4 = [NSString stringWithFormat:@"%s.onAction('%s')",
+                                   networkNamespace.c_str(),
+                                   json["action"].asString().c_str()];
             interface.runJavaScriptFromString(jsString4);
             NSLog(@"%@", jsString4);
             goto stop2;
@@ -759,7 +784,8 @@ void realityEditor::downloadTargets() {
                         if(itob62(crc32(buff.getData(),buff.size())) == tcs_){
                             targetExists = true;
                       
-                        NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
+                        NSString *jsString3 = [NSString stringWithFormat:@"%s.addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
+                                               networkNamespace.c_str(),
                                                id_.c_str(),
                                                ip_.c_str(),
                                                stoi(vn_.c_str()),
@@ -909,7 +935,12 @@ void realityEditor::downloadTargets() {
                     
                     cout << "this set size: "<< datasetList.size() << endl;
                     
-                    NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})", nameCount[i][0].c_str(), nameCount[i][1].c_str(), stoi(nameCount[i][2].c_str()) ,nameCount[i][3].c_str()];
+                    NSString *jsString3 = [NSString stringWithFormat:@"%s.addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
+                                           networkNamespace.c_str(),
+                                           nameCount[i][0].c_str(),
+                                           nameCount[i][1].c_str(),
+                                           stoi(nameCount[i][2].c_str()),
+                                           nameCount[i][3].c_str()];
                     interface.runJavaScriptFromString(jsString3);
                     
                     
@@ -996,7 +1027,8 @@ void realityEditor::renderJavascript() {
              cout << "-------xxxx--------";*/
             
             
-            pMatrix = [NSString stringWithFormat:@"setProjectionMatrix([%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf])",
+            pMatrix = [NSString stringWithFormat:@"%s.setProjectionMatrix([%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf])",
+                       arNamespace.c_str(),
                        tempMatrix._mat[0][0],
                        tempMatrix._mat[0][1],
                        tempMatrix._mat[0][2],
@@ -1075,7 +1107,7 @@ void realityEditor::renderJavascript() {
         
         
     } else {
-        stringforTransform = [NSMutableString stringWithFormat:@"update({})"];
+        stringforTransform = [NSMutableString stringWithFormat:@"%s.update({})", drawNamespace.c_str()];
         
         /* if(sendAccelerationData == true){
          [stringforTransform appendFormat:@",'acl':[%lf,%lf,%lf,%lf,%lf]",
