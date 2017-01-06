@@ -693,7 +693,7 @@ void realityEditor::downloadTargets() {
         string message = udpMessage;
         nameExists = false;
         
-        // cout << message;
+         cout << message;
         // if message is a valid heartbeat do the following
         if (!json.parse(message.c_str()) || json["id"].empty() || json["ip"].empty()) {
             
@@ -1056,7 +1056,7 @@ void realityEditor::renderJavascript() {
         // since all objects share the same projection matrix, we just take the matrix of the first object and aplly it only one time. We add it as an json object in to the javascropt call.
         //  tempMatrix= tempMarker[0].projectionMatrix;
         
-        stringforTransform = [NSMutableString stringWithFormat:@"update({"];
+        stringforTransform = [NSMutableString stringWithFormat:@"%s.update({", drawNamespace.c_str()];
         
         // now for all objects we add json elements indicating the name of the marker as the object name and following the model view matrix.
         //
