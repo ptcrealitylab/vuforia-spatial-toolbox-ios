@@ -701,9 +701,11 @@ void realityEditor::downloadTargets() {
             if (!json["action"].empty()) {
                 NSString *jsString4 = [NSString stringWithFormat:@"%s.onAction('%s')",
                                        networkNamespace.c_str(),
-                                       json["action"].asString().c_str()];
-                interface.runJavaScriptFromString(jsString4);
-                NSLog(@"%@", jsString4);
+                                       json["action"].toStyledString().c_str()];
+                // JSON with these newline characters results in unexpected EOF error when trying to send to the javascript
+                NSString *jsStringWithoutNewlines = [[jsString4 componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
+                interface.runJavaScriptFromString(jsStringWithoutNewlines);
+                NSLog(@"%@", jsStringWithoutNewlines);
                 goto stop2;
                 break;
                 
