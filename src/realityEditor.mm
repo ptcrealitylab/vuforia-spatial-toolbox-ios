@@ -3,6 +3,12 @@
 
 static const string kLicenseKey = "***REMOVED***";
 
+static const string networkNamespace = "realityEditor.network";
+static const string deviceNamespace = "realityEditor.device";
+static const string arNamespace = "realityEditor.gui.ar";
+static const string drawNamespace = "realityEditor.gui.ar.draw";
+static const string memoryNamespace = "realityEditor.gui.memory";
+
 //--------------------------------------------------------------
 void realityEditor::setup() {
 
@@ -161,6 +167,7 @@ void realityEditor::setup() {
 
     //usleep(5000000);
 
+
     interface.initializeWithCustomDelegate(this);
 
     if(externalState !=""){
@@ -226,11 +233,18 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
 
 
         // if the message is reload then the interface reloads and all objects are resent to the editor
-
-        NSString *stateSender = [NSString stringWithFormat:@"setStates(%d, %d, %d, \"%s\")", developerState, extTrackingState, clearSkyState, externalState.c_str()];
+        
+        NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, \"%s\")",
+                                 deviceNamespace.c_str(),
+                                 developerState,
+                                 extTrackingState,
+                                 clearSkyState,
+                                 externalState.c_str()];
         interface.runJavaScriptFromString(stateSender);
-
-        NSString *deviceSender = [NSString stringWithFormat:@"setDeviceName(\"%s\")", ofxiOSGetDeviceRevision().c_str()];
+        
+        NSString *deviceSender = [NSString stringWithFormat:@"%s.setDeviceName(\"%s\")",
+                                  deviceNamespace.c_str(),
+                                  ofxiOSGetDeviceRevision().c_str()];
         interface.runJavaScriptFromString(deviceSender);
 
         //  NSLog(stateSender);
@@ -244,7 +258,12 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
 
         for (int i = 0; i < nameCount.size(); i++) {
             cout<<&nameCount[i];
-            NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})", nameCount[i][0].c_str(), nameCount[i][1].c_str(), stoi(nameCount[i][2].c_str()) ,nameCount[i][3].c_str()];
+            NSString *jsString3 = [NSString stringWithFormat:@"%s.addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
+                                   networkNamespace.c_str(),
+                                   nameCount[i][0].c_str(),
+                                   nameCount[i][1].c_str(),
+                                   stoi(nameCount[i][2].c_str()),
+                                   nameCount[i][3].c_str()];
             interface.runJavaScriptFromString(jsString3);
             //   NSLog(@"reload interfaces");
         }
@@ -269,7 +288,12 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
 
 
         //reloader = true;
-        NSString *stateSender = [NSString stringWithFormat:@"setStates(%d, %d, %d, \"%s\")", developerState, extTrackingState, clearSkyState, externalState.c_str()];
+        NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, \"%s\")",
+                                 deviceNamespace.c_str(),
+                                 developerState,
+                                 extTrackingState,
+                                 clearSkyState,
+                                 externalState.c_str()];
         interface.runJavaScriptFromString(stateSender);
 
     }
@@ -653,21 +677,23 @@ void realityEditor::downloadTargets() {
         nameExists = false;
 
         // ofLog() << "Received udp message " << message;
+
         // if message is a valid heartbeat do the following
         if (!json.parse(message.c_str()) || json["id"].empty() || json["ip"].empty()) {
             
-            
             //this calls an action
             if (!json["action"].empty()) {
-                
-                
-                cout << "action";
-              NSString *jsString4 = [NSString stringWithFormat:@"action(%s)", json["action"].toStyledString().c_str()];
-                interface.runJavaScriptFromString(jsString4);
-               // NSLog(@"%@", jsString4);
+                NSString *jsString4 = [NSString stringWithFormat:@"%s.onAction('%s')",
+                                       networkNamespace.c_str(),
+                                       json["action"].toStyledString().c_str()];
+                // JSON with these newline characters results in unexpected EOF error when trying to send to the javascript
+                NSString *jsStringWithoutNewlines = [[jsString4 componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
+                interface.runJavaScriptFromString(jsStringWithoutNewlines);
+                NSLog(@"%@", jsStringWithoutNewlines);
                 goto stop2;
                 break;
-            }else {
+                
+            } else {
             
                 nameExists = true;
                 NSLog(@">>udp message is not a object ping");
@@ -683,7 +709,6 @@ void realityEditor::downloadTargets() {
             goto stop2;
             break;
         }
-
 
         string nameJson = "";
         // NSLog(@">>got something");
@@ -747,7 +772,8 @@ void realityEditor::downloadTargets() {
                         if(itob62(crc32(buff.getData(),buff.size())) == tcs_){
                             targetExists = true;
                       
-                        NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
+                        NSString *jsString3 = [NSString stringWithFormat:@"%s.addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
+                                               networkNamespace.c_str(),
                                                id_.c_str(),
                                                ip_.c_str(),
                                                stoi(vn_.c_str()),
@@ -896,7 +922,12 @@ void realityEditor::downloadTargets() {
                     
                     cout << "this set size: "<< datasetList.size() << endl;
                     
-                    NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})", nameCount[i][0].c_str(), nameCount[i][1].c_str(), stoi(nameCount[i][2].c_str()) ,nameCount[i][3].c_str()];
+                    NSString *jsString3 = [NSString stringWithFormat:@"%s.addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
+                                           networkNamespace.c_str(),
+                                           nameCount[i][0].c_str(),
+                                           nameCount[i][1].c_str(),
+                                           stoi(nameCount[i][2].c_str()),
+                                           nameCount[i][3].c_str()];
                     interface.runJavaScriptFromString(jsString3);
                     
                     
@@ -983,7 +1014,7 @@ void realityEditor::sendProjectionMatrix() {
     Vuforia::Matrix44F projectionMatrix = Vuforia::Tool::getProjectionGL(cameraCalibration, nearPlane, farPlane);
 
     ofMatrix4x4 projMatrix = ofMatrix4x4(projectionMatrix.data);
-    NSString* code = [NSString stringWithFormat:@"setProjectionMatrix(%@);", stringFromMatrix(projMatrix)];
+    NSString* code = [NSString stringWithFormat:@"%s.setProjectionMatrix(%@);", arNamespace.c_str(), stringFromMatrix(projMatrix)];
     ofLog() << [code UTF8String];
     interface.runJavaScriptFromString(code);
 }
@@ -991,7 +1022,7 @@ void realityEditor::sendProjectionMatrix() {
 // generate the javascript messages
 void realityEditor::renderJavascript() {
     if (nameTemp.size() > 0) {
-        stringforTransform = [NSMutableString stringWithFormat:@"update({"];
+        stringforTransform = [NSMutableString stringWithFormat:@"%s.update({", drawNamespace.c_str()];
 
         // now for all objects we add json elements indicating the name of the marker as the object name and following the model view matrix.
         //
@@ -1029,8 +1060,8 @@ void realityEditor::renderJavascript() {
 
 
     } else {
-        stringforTransform = [NSMutableString stringWithFormat:@"update({})"];
-
+        stringforTransform = [NSMutableString stringWithFormat:@"%s.update({})", drawNamespace.c_str()];
+        
         /* if(sendAccelerationData == true){
          [stringforTransform appendFormat:@",'acl':[%lf,%lf,%lf,%lf,%lf]",
          accel.x,
@@ -1123,7 +1154,7 @@ void realityEditor::sendThumbnail(shared_ptr<VuforiaState> memory) {
 
     NSString* base64 = convertImageToBase64(thumbnail);
 
-    NSString* jsStr = [NSString stringWithFormat:@"receiveThumbnail(\"data:image/jpeg;base64,%@\")", base64];
+    NSString* jsStr = [NSString stringWithFormat:@"%s.receiveThumbnail(\"data:image/jpeg;base64,%@\")", memoryNamespace.c_str(), base64];
     interface.runJavaScriptFromString(jsStr);
 }
 
