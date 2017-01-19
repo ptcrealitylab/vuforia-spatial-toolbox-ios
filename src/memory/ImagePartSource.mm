@@ -8,7 +8,7 @@
 
 #include "ImagePartSource.h"
 
-ImagePartSource::ImagePartSource(const ofImage& image) : PartSource("image/jpeg") {
+ImagePartSource::ImagePartSource(ofImage image) : PartSource("image/jpeg") {
     ofSaveImage(image.getPixels(), _buf, OF_IMAGE_FORMAT_JPEG, OF_IMAGE_QUALITY_HIGH);
     _str.setData(_buf.getData(), _buf.getData() + _buf.size());
     _in = new istream(&_str);

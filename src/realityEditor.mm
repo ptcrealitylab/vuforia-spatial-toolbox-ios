@@ -3,6 +3,12 @@
 
 static const string kLicenseKey = "***REMOVED***";
 
+static const string networkNamespace = "realityEditor.network";
+static const string deviceNamespace = "realityEditor.device";
+static const string arNamespace = "realityEditor.gui.ar";
+static const string drawNamespace = "realityEditor.gui.ar.draw";
+static const string memoryNamespace = "realityEditor.gui.memory";
+
 //--------------------------------------------------------------
 void realityEditor::setup() {
 
@@ -161,6 +167,7 @@ void realityEditor::setup() {
 
     //usleep(5000000);
 
+
     interface.initializeWithCustomDelegate(this);
 
     if(externalState !=""){
@@ -226,11 +233,18 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
 
 
         // if the message is reload then the interface reloads and all objects are resent to the editor
-
-        NSString *stateSender = [NSString stringWithFormat:@"setStates(%d, %d, %d, \"%s\")", developerState, extTrackingState, clearSkyState, externalState.c_str()];
+        
+        NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, \"%s\")",
+                                 deviceNamespace.c_str(),
+                                 developerState,
+                                 extTrackingState,
+                                 clearSkyState,
+                                 externalState.c_str()];
         interface.runJavaScriptFromString(stateSender);
-
-        NSString *deviceSender = [NSString stringWithFormat:@"setDeviceName(\"%s\")", ofxiOSGetDeviceRevision().c_str()];
+        
+        NSString *deviceSender = [NSString stringWithFormat:@"%s.setDeviceName(\"%s\")",
+                                  deviceNamespace.c_str(),
+                                  ofxiOSGetDeviceRevision().c_str()];
         interface.runJavaScriptFromString(deviceSender);
 
         //  NSLog(stateSender);
@@ -244,7 +258,12 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
 
         for (int i = 0; i < nameCount.size(); i++) {
             cout<<&nameCount[i];
-            NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})", nameCount[i][0].c_str(), nameCount[i][1].c_str(), stoi(nameCount[i][2].c_str()) ,nameCount[i][3].c_str()];
+            NSString *jsString3 = [NSString stringWithFormat:@"%s.addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
+                                   networkNamespace.c_str(),
+                                   nameCount[i][0].c_str(),
+                                   nameCount[i][1].c_str(),
+                                   stoi(nameCount[i][2].c_str()),
+                                   nameCount[i][3].c_str()];
             interface.runJavaScriptFromString(jsString3);
             //   NSLog(@"reload interfaces");
         }
@@ -269,7 +288,12 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
 
 
         //reloader = true;
-        NSString *stateSender = [NSString stringWithFormat:@"setStates(%d, %d, %d, \"%s\")", developerState, extTrackingState, clearSkyState, externalState.c_str()];
+        NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, \"%s\")",
+                                 deviceNamespace.c_str(),
+                                 developerState,
+                                 extTrackingState,
+                                 clearSkyState,
+                                 externalState.c_str()];
         interface.runJavaScriptFromString(stateSender);
 
     }
@@ -653,34 +677,38 @@ void realityEditor::downloadTargets() {
         nameExists = false;
 
         // ofLog() << "Received udp message " << message;
+
         // if message is a valid heartbeat do the following
-        if (!json.parse(message.c_str())) {
-            NSLog(@">>udp message is not valid JSON: %s", message.c_str());
-            return;
+        if (!json.parse(message.c_str()) || json["id"].empty() || json["ip"].empty()) {
+            
+            //this calls an action
+            if (!json["action"].empty()) {
+                NSString *jsString4 = [NSString stringWithFormat:@"%s.onAction('%s')",
+                                       networkNamespace.c_str(),
+                                       json["action"].toStyledString().c_str()];
+                // JSON with these newline characters results in unexpected EOF error when trying to send to the javascript
+                NSString *jsStringWithoutNewlines = [[jsString4 componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
+                interface.runJavaScriptFromString(jsStringWithoutNewlines);
+                NSLog(@"%@", jsStringWithoutNewlines);
+                goto stop2;
+                break;
+                
+            } else {
+            
+                nameExists = true;
+                NSLog(@">>udp message is not a object ping");
+                NSLog(@"%s", json["id"].toStyledString().c_str());
+                goto stop2;
+                break;
+            }
         }
-
-        //this calls an action
-
-        if (json["loadMemory"].isObject() || json["reloadLink"].isObject() || json["reloadObject"].isObject()) {
-            NSString *jsString4 = [NSString stringWithFormat:@"action(%s);",
-                                   json.toStyledString().c_str()];
-            interface.runJavaScriptFromString(jsString4);
-            NSLog(@"%@", jsString4);
-            return;
-        }
-
-        if (json["id"].empty() || json["ip"].empty()) {
-            NSLog(@">>udp message is not an object ping: %s", message.c_str());
-            NSLog(@"%s", json["id"].asString().c_str());
-            return;
-        }
-
+        
         if(json["ip"].asString().size()<7){
             NSLog(@">>ip was wrong");
             nameExists = true;
-            return;
+            goto stop2;
+            break;
         }
-
 
         string nameJson = "";
         // NSLog(@">>got something");
@@ -695,54 +723,57 @@ void realityEditor::downloadTargets() {
 
                 if(nameCount[i][3].c_str() == json["tcs"].asString()){
                     nameExists = true;
-                    return;
+                    goto stop2;
+                    break;
                 }
-
+                
             }
         } else {
             for (int i = 0; i < nameCount.size(); i++) {
                 if (nameCount[i][0] == json["id"].asString()) {
                     nameExists = true;
-                    return;
+                    goto stop2;
+                    break;
                 };
             };
-
+            
         }
         targetExists = false;
         if (nameExists == false) {
-
+            
             int numDragTags = XMLTargets.getNumTags("target");
-
+            
             if(numDragTags > 0){
-
+                
                 for(int i = 0; i< numDragTags; i++){
-
+                    
                     string id_ = XMLTargets.getValue("target:id", "", i);
                     string ip_ = XMLTargets.getValue("target:ip", "", i);
                     string vn_ = XMLTargets.getValue("target:vn", "0", i);
                     string tcs_ = XMLTargets.getValue("target:tcs", "0", i);
-
+                    
                     if(id_ == json["id"].asString() &&
                        tcs_  == json["tcs"].asString() &&
                        tcs_  != "0"){
-
+                        
                         crc32reset();
-
+                        
                         // this is reproducing the checksom from the actual files.
                         // if the files are corrupt and not matching with the server version then it forces a new download.
-
+                        
                         string tmpDir([NSTemporaryDirectory() UTF8String]);
-
+                        
                         buff = ofBufferFromFile(tmpDir + id_ + ".jpg");
                         crc32(buff.getData(),buff.size());
                         buff = ofBufferFromFile(tmpDir + id_ + ".xml");
                         crc32(buff.getData(),buff.size());
                         buff = ofBufferFromFile(tmpDir + id_ + ".dat");
-
+                        
                         if(itob62(crc32(buff.getData(),buff.size())) == tcs_){
                             targetExists = true;
-
-                        NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
+                      
+                        NSString *jsString3 = [NSString stringWithFormat:@"%s.addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
+                                               networkNamespace.c_str(),
                                                id_.c_str(),
                                                ip_.c_str(),
                                                stoi(vn_.c_str()),
@@ -751,32 +782,32 @@ void realityEditor::downloadTargets() {
                         targetExists = true;
                         NSLog(@">>found double for %s",json["id"].asString().c_str());
                         break;
-
+                            
                         } else {
                             targetExists = false;
                         }
-
+                        
                     }
-
+                    
                 }
             }
         }
-
+        
         // if name is not in the array generate a new row of an array of strings. and fill them with "f" so that the software knows to process all.
         // remember, the first cell is the full json heart beat, the second indicates the status of the dat file the 3th the status of the xml file and the last cell indicates the status of adding the files to the dictionary.
         if (nameExists == false) {
-
-
+            
+            
             bool yespush = true;
-
+            
             for (int i = 0; i < nameCount.size(); i++) {
                 if (nameCount[i][0] == json["id"].asString()) {
-
+                    
                     ofxVuforia & Vuforia = *ofxVuforia::getInstance();
                     Vuforia.removeExtraTarget(datasetList[i]);
-
+                    
                     datasetHolder = i;
-
+                    
                     nameCount[i][0] = json["id"].asString();
                     nameCount[i][1] = json["ip"].asString();
                     nameCount[i][2] = json["vn"].asString();
@@ -785,23 +816,23 @@ void realityEditor::downloadTargets() {
                     nameCount[i][5] = "f";
                     nameCount[i][6] = "f";
                     nameCount[i][7] = "f";
-
-
+                    
+                    
                     string tmpDir([NSTemporaryDirectory() UTF8String]);
-
-
+                    
+                    
                     files_.removeFile(tmpDir + nameCount[i][0] + ".jpg");
                     files_.removeFile(tmpDir + nameCount[i][0] + ".xml");
                     files_.removeFile(tmpDir + nameCount[i][0] + ".dat");
-
-
-
+                    
+                    
+                    
                     yespush = false;
-
+                    
                 };
             };
-
-
+            
+            
             if(yespush){
                 vector<string> row;
                 row.push_back(json["id"].asString()); //0
@@ -828,31 +859,31 @@ void realityEditor::downloadTargets() {
                     row.push_back("f"); //6
                     row.push_back("f"); //7
                 }
-
+                
                 nameCount.push_back(row);
                 NSLog(@">>adding new object");
                 cons();
             }
         }
     }
-
+    
     // process the file downloads
     loadrunner = "";
-
+    
     for (int i = 0; i < nameCount.size(); i++) {
         if (loadrunner == "w") {
             break;
         }
-
+        
         for (int w = 4; w < nameCount[i].size(); w++) {
             loadrunner = nameCount[i][w];
             if (loadrunner == "w") {
                 break;
             }
             else if (loadrunner == "f") {
-
+                
                 for(int e = 0;e <  3; e++){
-
+                    
                     if (w == e+4) {
                         string objName = getName(nameCount[i][0]);
                         string sURL = "http://" + nameCount[i][1] + ":8080/obj/" + objName + "/target/target."+arrayList[e];
@@ -864,44 +895,49 @@ void realityEditor::downloadTargets() {
                         loadrunner = "w";
                         goto stop1;
                     }
-
+                    
                 }
-
+                
             }
             // process the dictonary addon
             else if (loadrunner == "a") {
                 string tmpDir([NSTemporaryDirectory() UTF8String]);
                 ofxVuforia & Vuforia = *ofxVuforia::getInstance();
-
+                
                 cout <<"--------------------";
                 cout <<nameCount[i][0];
                 cout <<"--------------------";
-
+                
                 if(nameCount[i][w] == "a"){
-
+                    
                     if(datasetHolder ==100000){
                         datasetList.push_back(Vuforia.addExtraTarget(tmpDir + nameCount[i][0] + ".xml"));
-
+                        
                     } else {
                         datasetList[datasetHolder]=(Vuforia.addExtraTarget(tmpDir + nameCount[i][0] + ".xml"));
                         datasetHolder =100000;
                     }
-
-
-
+                    
+                    
+                    
                     cout << "this set size: "<< datasetList.size() << endl;
-
-                    NSString *jsString3 = [NSString stringWithFormat:@"addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})", nameCount[i][0].c_str(), nameCount[i][1].c_str(), stoi(nameCount[i][2].c_str()) ,nameCount[i][3].c_str()];
+                    
+                    NSString *jsString3 = [NSString stringWithFormat:@"%s.addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
+                                           networkNamespace.c_str(),
+                                           nameCount[i][0].c_str(),
+                                           nameCount[i][1].c_str(),
+                                           stoi(nameCount[i][2].c_str()),
+                                           nameCount[i][3].c_str()];
                     interface.runJavaScriptFromString(jsString3);
-
-
-
-
+                    
+                    
+                    
+                    
                     int numDragTags2 = XMLTargets.getNumTags("target");
-
+                    
                     bool checkDouble = false;
                     if(numDragTags2 > 0){
-
+                        
                         for(int e = 0; e< numDragTags2; e++){
                             if(nameCount[i][0] == XMLTargets.getValue("target:id", "", e)){
                                 XMLTargets.setValue("target:id", nameCount[i][0], e);
@@ -912,7 +948,7 @@ void realityEditor::downloadTargets() {
                             };
                         }
                     }
-
+                    
                     if(!checkDouble) {
                         int tagNum = XMLTargets.addTag("target");
                         XMLTargets.setValue("target:id", nameCount[i][0], tagNum);
@@ -921,27 +957,28 @@ void realityEditor::downloadTargets() {
                         XMLTargets.setValue("target:tcs", nameCount[i][3], tagNum);
                     }
                     XMLTargets.saveFile(ofxiOSGetDocumentsDirectory() + "targets.xml" );
-
-
+                    
+                    
                 }
                 nameCount[i][w] = "t";
-
-
+                
+                
                 loadrunner = "w";
                 NSLog(@">>adding target");
-
+                
                 if(extendedTracking){
                     ofxVuforia & Vuforia = *ofxVuforia::getInstance();
                     Vuforia.startExtendedTracking();
                 }
                 cons();
                 loadrunner = "w";
-
+                
                 goto stop1;
             }
         }
     stop1:;
     }
+    stop2:;
 }
 
 void realityEditor::VuforiaInitARDone(NSError *error) {
@@ -977,7 +1014,7 @@ void realityEditor::sendProjectionMatrix() {
     Vuforia::Matrix44F projectionMatrix = Vuforia::Tool::getProjectionGL(cameraCalibration, nearPlane, farPlane);
 
     ofMatrix4x4 projMatrix = ofMatrix4x4(projectionMatrix.data);
-    NSString* code = [NSString stringWithFormat:@"setProjectionMatrix(%@);", stringFromMatrix(projMatrix)];
+    NSString* code = [NSString stringWithFormat:@"%s.setProjectionMatrix(%@);", arNamespace.c_str(), stringFromMatrix(projMatrix)];
     ofLog() << [code UTF8String];
     interface.runJavaScriptFromString(code);
 }
@@ -985,7 +1022,7 @@ void realityEditor::sendProjectionMatrix() {
 // generate the javascript messages
 void realityEditor::renderJavascript() {
     if (nameTemp.size() > 0) {
-        stringforTransform = [NSMutableString stringWithFormat:@"update({"];
+        stringforTransform = [NSMutableString stringWithFormat:@"%s.update({", drawNamespace.c_str()];
 
         // now for all objects we add json elements indicating the name of the marker as the object name and following the model view matrix.
         //
@@ -1023,8 +1060,8 @@ void realityEditor::renderJavascript() {
 
 
     } else {
-        stringforTransform = [NSMutableString stringWithFormat:@"update({})"];
-
+        stringforTransform = [NSMutableString stringWithFormat:@"%s.update({})", drawNamespace.c_str()];
+        
         /* if(sendAccelerationData == true){
          [stringforTransform appendFormat:@",'acl':[%lf,%lf,%lf,%lf,%lf]",
          accel.x,
@@ -1049,22 +1086,22 @@ void realityEditor::cons() {
     for (int i = 0; i < nameCount.size(); i++) {
         NSLog(@"%s %s %s %s, name: %s version: %s  check: %s", nameCount[i][4].c_str(), nameCount[i][5].c_str(), nameCount[i][6].c_str(), nameCount[i][7].c_str(), nameCount[i][0].c_str(),nameCount[i][2].c_str(),nameCount[i][3].c_str());
     }
-
+    
 }
 
 void realityEditor::deviceOrientationChanged(int newOrientation){
     // ofxVuforia & Vuforia = *ofxVuforia::getInstance();
-
-
+    
+    
     if(newOrientation == 4){
         //  ofSetOrientation((ofOrientation)newOrientation);
         //   Vuforia.setOrientation(OFX_Vuforia_ORIENTATION_LANDSCAPE_RIGHT);
-
+        
     }
-
+    
     if(newOrientation == 3){
         // ofSetOrientation((ofOrientation)newOrientation);
-
+        
         //  Vuforia.setOrientation(OFX_Vuforia_ORIENTATION_LANDSCAPE_LEFT);
     }
 }
@@ -1117,7 +1154,7 @@ void realityEditor::sendThumbnail(shared_ptr<VuforiaState> memory) {
 
     NSString* base64 = convertImageToBase64(thumbnail);
 
-    NSString* jsStr = [NSString stringWithFormat:@"receiveThumbnail(\"data:image/jpeg;base64,%@\")", base64];
+    NSString* jsStr = [NSString stringWithFormat:@"%s.receiveThumbnail(\"data:image/jpeg;base64,%@\")", memoryNamespace.c_str(), base64];
     interface.runJavaScriptFromString(jsStr);
 }
 
@@ -1326,7 +1363,7 @@ string realityEditor::itob62( long i )
 {
     unsigned long u = *reinterpret_cast<unsigned long*>( &i ) ;
     std::string b32 ;
-
+    
     do
     {
         long d = u % 62 ;
@@ -1342,11 +1379,11 @@ string realityEditor::itob62( long i )
         {
             b32.insert( 0, 1, 'A' + d - 36 ) ;
         }
-
+        
         u /= 62 ;
-
+        
     } while( u > 0 );
-
+    
     return b32 ;
 }
 
