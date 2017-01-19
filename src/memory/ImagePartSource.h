@@ -31,7 +31,7 @@ public:
 
 class ImagePartSource : public PartSource {
 public:
-    ImagePartSource(const ofImage& image);
+    ImagePartSource(ofImage image);
     
     istream& stream();
     
