@@ -1120,22 +1120,27 @@ ofImage realityEditor::getCameraImage() {
 
     int width  = rect.size.width;
     int height = rect.size.height;
+    int bufHeight = height / 2;
+    int bufWidth = width / 2;
 
     NSInteger myDataLength = width * height * 4;
-    GLubyte *buffer = (GLubyte *) malloc(myDataLength);
-    GLubyte *bufferFlipped = (GLubyte *) malloc((width * height / 4 * 3));
+    GLubyte *buffer = (GLubyte *) malloc(sizeof(GLubyte) * myDataLength);
+
+    GLubyte *bufferFlipped = (GLubyte *) malloc(sizeof(GLubyte) * bufWidth * bufHeight * 3);
     glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 
     // Skip every other pixel in buffer, writing RGB only
     for(int y = 0; y < height; y += 2) {
+        int bufY = y / 2;
         for(int x = 0; x < width; x += 2) {
+            int bufX = x / 2;
 //            int r = buffer[y * 4 * width + x * 4 + 0];
 //            int g = buffer[y * 4 * width + x * 4 + 1];
 //            int b = buffer[y * 4 * width + x * 4 + 2];
 //            int intensity = 0.2989 * r + 0.5870 * g + 0.1140 * b;
 //            bufferFlipped[(height / 2 - 1 - y / 2) * width / 2 + x / 2] = intensity;
             for (int i = 0; i < 3; i++) {
-                bufferFlipped[(height / 2 - 1 - y / 2) * width * 3 / 2 + x * 3 / 2 + i] = buffer[y * 4 * width + x * 4 + i];
+                bufferFlipped[((bufHeight - 1 - bufY) * bufWidth + bufX) * 3 + i] = buffer[y * 4 * width + x * 4 + i];
             }
         }
     }
