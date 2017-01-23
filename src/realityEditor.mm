@@ -1108,7 +1108,7 @@ void realityEditor::deviceOrientationChanged(int newOrientation){
 
 ofImage realityEditor::getCameraImage() {
     // from ofxiOSScreenGrab()
-
+/*
     CGRect rect = [[UIScreen mainScreen] bounds];
 
     //fix from: http://forum.openframeworks.cc/index.php/topic,6092.15.html
@@ -1116,10 +1116,10 @@ ofImage realityEditor::getCameraImage() {
         float f_scale = [[UIScreen mainScreen] scale];
         rect.size.width *= f_scale;
         rect.size.height *= f_scale;
-    }
+    }*/
 
-    int width  = rect.size.width;
-    int height = rect.size.height;
+    int height  = ofGetWindowHeight() ;
+    int width = ofGetWindowWidth() ;
 
     NSInteger myDataLength = width * height * 4;
     GLubyte *buffer = (GLubyte *) malloc(myDataLength);
