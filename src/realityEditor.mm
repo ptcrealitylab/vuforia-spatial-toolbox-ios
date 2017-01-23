@@ -1107,19 +1107,8 @@ void realityEditor::deviceOrientationChanged(int newOrientation){
 }
 
 ofImage realityEditor::getCameraImage() {
-    // from ofxiOSScreenGrab()
-
-    CGRect rect = [[UIScreen mainScreen] bounds];
-
-    //fix from: http://forum.openframeworks.cc/index.php/topic,6092.15.html
-    if(ofxiOSGetOFWindow()->isRetinaEnabled()) {
-        float f_scale = [[UIScreen mainScreen] scale];
-        rect.size.width *= f_scale;
-        rect.size.height *= f_scale;
-    }
-
-    int width  = rect.size.width;
-    int height = rect.size.height;
+    int width  = ofGetWidth();
+    int height = ofGetHeight();
     int bufHeight = height / 2;
     int bufWidth = width / 2;
 
