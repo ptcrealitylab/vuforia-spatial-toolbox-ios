@@ -159,8 +159,8 @@ public:
     void unfreeze();
     void freeze();
 
-    const int thumbnailWidth = 134;
-    const int thumbnailHeight = 75;
+    const int thumbnailWidth = 200;
+    const int thumbnailHeight = 112;
 
     ofImage getCameraImage();
     void sendThumbnail(shared_ptr<VuforiaState> memory);
