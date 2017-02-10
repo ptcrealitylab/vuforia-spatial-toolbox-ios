@@ -14,6 +14,7 @@
 		511FEF011E09F15000BB06AB /* MemoryUploader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 511FEEFE1E09F15000BB06AB /* MemoryUploader.mm */; };
 		5326AEA810A23A0500278DE6 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5326AEA710A23A0500278DE6 /* CoreLocation.framework */; };
 		53F323EB10A20EDB00E0DAE4 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */; };
+		5D4278CD1E4E5CBC009F8A5D /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D4278CC1E4E5CBC009F8A5D /* LocalAuthentication.framework */; };
 		5D4E33F91C87771400D29BC3 /* ofxWKWebViewDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D4E33F61C87771400D29BC3 /* ofxWKWebViewDelegate.mm */; };
 		5D4E33FA1C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D4E33F81C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.mm */; };
 		5DD5D1B91C90AC16001B8E53 /* ofxWebViewInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5DD5D1B81C90AC16001B8E53 /* ofxWebViewInterface.mm */; };
@@ -120,6 +121,7 @@
 		511FEEFF1E09F15000BB06AB /* VuforiaState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VuforiaState.h; path = memory/VuforiaState.h; sourceTree = "<group>"; };
 		5326AEA710A23A0500278DE6 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		5D4278CC1E4E5CBC009F8A5D /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		5D4E33F51C87771400D29BC3 /* ofxWKWebViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxWKWebViewDelegate.h; sourceTree = "<group>"; };
 		5D4E33F61C87771400D29BC3 /* ofxWKWebViewDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxWKWebViewDelegate.mm; sourceTree = "<group>"; };
 		5D4E33F71C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxWKWebViewInterfaceJavaScript.h; sourceTree = "<group>"; };
@@ -312,6 +314,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D4278CD1E4E5CBC009F8A5D /* LocalAuthentication.framework in Frameworks */,
 				A7BC537A1AFBC54C00B7D2C2 /* WebKit.framework in Frameworks */,
 				A720E48D1AFB3C9000B29F68 /* CoreMotion.framework in Frameworks */,
 				A720E48B1AFB3C8600B29F68 /* Security.framework in Frameworks */,
@@ -371,6 +374,7 @@
 				BB16F26B0F2B646B00518274 /* addons */,
 				BB16E9930F2B1E5900518274 /* libs */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				5D4278CB1E4E5CBC009F8A5D /* Frameworks */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -394,6 +398,14 @@
 				67DFA53419F92A5E003B3434 /* Accelerate.framework */,
 			);
 			name = "core frameworks";
+			sourceTree = "<group>";
+		};
+		5D4278CB1E4E5CBC009F8A5D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5D4278CC1E4E5CBC009F8A5D /* LocalAuthentication.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		5D4E33F01C87762600D29BC3 /* WKWebView */ = {
