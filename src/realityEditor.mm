@@ -344,6 +344,7 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
         XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
         cout << "editor.xml saved to app documents folder";
 
+    
     }
     if (reqstring == "clearSkyOff") {
         XML.setValue("SETUP:CLEARSKY", 0);
