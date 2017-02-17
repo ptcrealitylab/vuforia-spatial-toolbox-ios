@@ -123,7 +123,6 @@ public:
     int haveChangedUIwithURL = 0;
     bool changedURLOk = false;
 
-
     int developerState = 0;
     int extTrackingState = 0;
     int clearSkyState = 0;
