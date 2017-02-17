@@ -14,6 +14,7 @@
 #include <WebKit/WebKit.h>
 #include <UIKit/UIKit.h>
 #include "ofxWebViewDelegate.h"
+#include <LocalAuthentication/LocalAuthentication.h>
 
 /**
  ofxUIWebViewInterface interfaces with EXACTLY ONE UIWebView instance.
@@ -61,6 +62,10 @@ public:
     // object returned is a UIWebView or a WKWebView depending on the OS version
     NSObject *getWebViewInstance();
     
+    // tells the iOS system to ask for touch security
+    //    void promptForTouch(std::function<void(bool)> &callback);
+    void promptForTouch();
+    
 private:
     bool isShowingView;
     
@@ -73,4 +78,10 @@ private:
     int screenScale = 1;
     
     bool shouldUseWKWebView();
+    
+    // touch security methods
+    void touchAuthSucceeded();
+    void touchAuthFailed();
+    NSString* sha256HashFor(NSString *input);
+    NSString* encryptIdString(NSString *idString);
 };
