@@ -12,7 +12,7 @@ static const string memoryNamespace = "realityEditor.gui.memory";
 //--------------------------------------------------------------
 void realityEditor::setup() {
 
-    numbersToMuch = 50;
+    numbersToMuch = 100;
 
     ofSetFrameRate(60);
     ofSetVerticalSync(false);
@@ -41,7 +41,9 @@ void realityEditor::setup() {
     developerState = XML.getValue("SETUP:DEVELOPER", 0);
     extTrackingState = XML.getValue("SETUP:TRACKING", 0);
     clearSkyState = XML.getValue("SETUP:CLEARSKY", 0);
+    instantState = XML.getValue("SETUP:INSTANT", 1);
     externalState = XML.getValue("SETUP:EXTERNAL", "");
+    retailState = XML.getValue("SETUP:RETAIL", 0);
 
     int numDragTags = XMLTargets.getNumTags("target");
     cout << numDragTags;
@@ -173,7 +175,15 @@ void realityEditor::setup() {
     if(externalState !=""){
 
         cout << "loading interface from: " << externalState;
+        
+       
+    
+        if (externalState.rfind("http://", 0) != 0)
+        {
+            externalState = "http://"+externalState;
+        }
 
+       
         interface.loadURL(externalState.c_str());
         interface.activateView();
         haveChangedUIwithURL = 500;
@@ -234,12 +244,13 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
 
         // if the message is reload then the interface reloads and all objects are resent to the editor
         
-        NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, \"%s\")",
+        NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, %d, \"%s\", %d)",
                                  deviceNamespace.c_str(),
                                  developerState,
                                  extTrackingState,
                                  clearSkyState,
-                                 externalState.c_str()];
+                                 instantState,
+                                 externalState.c_str(), retailState];
         interface.runJavaScriptFromString(stateSender);
         
         NSString *deviceSender = [NSString stringWithFormat:@"%s.setDeviceName(\"%s\")",
@@ -276,6 +287,12 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
 
         if(externalState !=""){
             interface.deactivateView();
+            
+            if (externalState.rfind("http://", 0) != 0)
+            {
+                externalState = "http://"+externalState;
+            }
+
             interface.loadURL(externalState.c_str());
             interface.activateView();
         }else{
@@ -288,12 +305,14 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
 
 
         //reloader = true;
-        NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, \"%s\")",
+        NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, %d, \"%s\", %d)",
                                  deviceNamespace.c_str(),
                                  developerState,
                                  extTrackingState,
                                  clearSkyState,
-                                 externalState.c_str()];
+                                 instantState,
+                                 externalState.c_str(),
+                                 retailState];
         interface.runJavaScriptFromString(stateSender);
 
     }
@@ -331,6 +350,31 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
         XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
         cout << "editor.xml saved to app documents folder";
     }
+    
+    if (reqstring == "retailOn") {
+        XML.setValue("SETUP:RETAIL", 1);
+        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+        cout << "editor.xml saved to app documents folder";
+        
+    }
+    if (reqstring == "retailOff") {
+        XML.setValue("SETUP:RETAIL", 0);
+        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+        cout << "editor.xml saved to app documents folder";
+    }
+    
+    if (reqstring == "instantOn") {
+        XML.setValue("SETUP:INSTANT", 1);
+        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+        cout << "editor.xml saved to app documents folder";
+        
+    }
+    if (reqstring == "instantOff") {
+        XML.setValue("SETUP:INSTANT", 0);
+        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+        cout << "editor.xml saved to app documents folder";
+    }
+    
 
 
     if (reqstring == "extendedTrackingOn") {
@@ -369,6 +413,7 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
     string reqData;
 
     if (getDataFromReq(reqstring, "loadNewUI", &reqData)) {
+        cout << "got the URL";
         string reloadURL = reqData;
         ofLog() << "this is the new URL:" << reloadURL <<":";
 
@@ -381,6 +426,12 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
 
             cout << "this has been loaded from the webuI";
             cout << reloadURL.c_str();
+
+            
+            if (reloadURL.rfind("http://", 0) != 0)
+            {
+                reloadURL = "http://"+reloadURL;
+            }
 
             interface.loadURL(reloadURL.c_str());
             NSLog(@"%s", reloadURL.c_str());
@@ -804,6 +855,7 @@ void realityEditor::downloadTargets() {
                 if (nameCount[i][0] == json["id"].asString()) {
                     
                     ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+                    if(datasetList.size()>0)
                     Vuforia.removeExtraTarget(datasetList[i]);
                     
                     datasetHolder = i;
@@ -914,8 +966,10 @@ void realityEditor::downloadTargets() {
                         datasetList.push_back(Vuforia.addExtraTarget(tmpDir + nameCount[i][0] + ".xml"));
                         
                     } else {
+                        if(datasetList.size()>0){
                         datasetList[datasetHolder]=(Vuforia.addExtraTarget(tmpDir + nameCount[i][0] + ".xml"));
                         datasetHolder =100000;
+                        }
                     }
                     
                     
