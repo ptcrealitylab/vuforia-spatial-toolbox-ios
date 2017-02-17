@@ -7,9 +7,12 @@
 //
 
 #include "ofxWebViewInterface.h"
+#include <CommonCrypto/CommonCrypto.h>
 
 #define wkOff floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_8_1
 #define wkOn floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_1
+
+static const string securityNamespace = "realityEditor.device.security";
 
 NSObject* ofxWebViewInterfaceJavaScript::getWebViewInstance() {
     if (wkOn) {
@@ -154,5 +157,74 @@ void *ofxWebViewInterfaceJavaScript::runJavaScriptFromString(NSString *script) {
 
 ofxWebViewInterfaceJavaScript::~ofxWebViewInterfaceJavaScript() {
     
+}
+
+#pragma mark - Touch Security
+
+void ofxWebViewInterfaceJavaScript::promptForTouch() {
+    LAContext *myContext = [[LAContext alloc] init];
+    NSError *authError = nil;
+    NSString *myLocalizedReasonString = @"Authentication is needed to lock or unlock secured objects";
+    
+    if ([myContext canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&authError]) {
+        [myContext evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
+                  localizedReason:myLocalizedReasonString
+                            reply:^(BOOL success, NSError *error) {
+                                if (success) {
+                                    // User authenticated successfully, take appropriate action
+                                    touchAuthSucceeded();
+                                    
+                                } else {
+                                    // User did not authenticate successfully, look at error and take appropriate action
+                                    NSLog(@"User did not authenticate successfully, look at error and take appropriate action");
+                                    touchAuthFailed();
+                                    
+                                }
+                            }];
+    } else {
+        // Could not evaluate policy; look at authError and present an appropriate message to user
+        NSLog(@"Could not evaluate policy; look at authError and present an appropriate message to user");
+        touchAuthFailed();
+        
+    }
+}
+
+NSString* ofxWebViewInterfaceJavaScript::sha256HashFor(NSString *input)
+{
+    const char* str = [input UTF8String];
+    unsigned char result[CC_SHA256_DIGEST_LENGTH];
+    CC_SHA256(str, (uint)strlen(str), result);
+    
+    NSMutableString *ret = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH*2];
+    for(int i = 0; i<CC_SHA256_DIGEST_LENGTH; i++)
+    {
+        [ret appendFormat:@"%02x",result[i]];
+    }
+    return ret;
+}
+
+NSString* ofxWebViewInterfaceJavaScript::encryptIdString(NSString *idString) {
+    NSString *salt = @"qFAxGpq1f2";
+    NSString *saltedId = [NSString stringWithFormat:@"%@%@", idString, salt];
+    return sha256HashFor(saltedId);
+}
+
+void ofxWebViewInterfaceJavaScript::touchAuthSucceeded() {
+    NSLog(@"User authenticated successfully, take appropriate action");
+    NSString *userId = [[UIDevice currentDevice] identifierForVendor].UUIDString;
+    
+    NSString *encryptedIdString = encryptIdString(userId);
+    
+    //    if let idString : String = UIDevice.currentDevice().identifierForVendor?.UUIDString {
+    
+    NSString *jsString = [NSString stringWithFormat:@"%s.authenticateSessionForUser('%@');", securityNamespace.c_str(), encryptedIdString];
+    NSLog(@"%@", jsString);
+    runJavaScriptFromString(jsString);
+}
+
+void ofxWebViewInterfaceJavaScript::touchAuthFailed() {
+    NSString *jsString = [NSString stringWithFormat:@"%s.authenticateSessionForUser(null);", securityNamespace.c_str()];
+    NSLog(@"%@", jsString);
+    runJavaScriptFromString(jsString);
 }
 

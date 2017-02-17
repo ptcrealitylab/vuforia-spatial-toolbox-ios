@@ -431,6 +431,12 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
             currentMemory = tempMemory;
         }
     }
+    
+    if (reqstring == "authenticateTouch") {
+        cout << "authenticateTouch";
+        interface.promptForTouch();
+    }
+    
 }
 
 //--------------------------------------------------------------
