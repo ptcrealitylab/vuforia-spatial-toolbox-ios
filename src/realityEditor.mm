@@ -43,7 +43,7 @@ void realityEditor::setup() {
     clearSkyState = XML.getValue("SETUP:CLEARSKY", 0);
     instantState = XML.getValue("SETUP:INSTANT", 1);
     externalState = XML.getValue("SETUP:EXTERNAL", "");
-    retailState = XML.getValue("SETUP:RETAIL", 0);
+    realityState = XML.getValue("SETUP:REALITY", 0);
 
     int numDragTags = XMLTargets.getNumTags("target");
     cout << numDragTags;
@@ -250,7 +250,7 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
                                  extTrackingState,
                                  clearSkyState,
                                  instantState,
-                                 externalState.c_str(), retailState];
+                                 externalState.c_str(), realityState];
         interface.runJavaScriptFromString(stateSender);
         
         NSString *deviceSender = [NSString stringWithFormat:@"%s.setDeviceName(\"%s\")",
@@ -312,7 +312,7 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
                                  clearSkyState,
                                  instantState,
                                  externalState.c_str(),
-                                 retailState];
+                                 realityState];
         interface.runJavaScriptFromString(stateSender);
 
     }
@@ -352,14 +352,14 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
         cout << "editor.xml saved to app documents folder";
     }
     
-    if (reqstring == "retailOn") {
-        XML.setValue("SETUP:RETAIL", 1);
+    if (reqstring == "realityOn") {
+        XML.setValue("SETUP:REALITY", 1);
         XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
         cout << "editor.xml saved to app documents folder";
         
     }
-    if (reqstring == "retailOff") {
-        XML.setValue("SETUP:RETAIL", 0);
+    if (reqstring == "realityOff") {
+        XML.setValue("SETUP:REALITY", 0);
         XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
         cout << "editor.xml saved to app documents folder";
     }
