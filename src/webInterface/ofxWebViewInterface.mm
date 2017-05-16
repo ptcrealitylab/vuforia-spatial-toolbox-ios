@@ -104,7 +104,7 @@ void ofxWebViewInterfaceJavaScript::loadURL(string url) {
 
 void ofxWebViewInterfaceJavaScript::loadLocalFile(string filename) {
     NSString *_filename = [NSString stringWithCString:filename.c_str() encoding:[NSString defaultCStringEncoding]];
-    NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:_filename ofType:@"html" inDirectory:@"editor_private"]];
+    NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:_filename ofType:@"html" inDirectory:@"userinterface"]];
     
     if (wkOn) {
         [wkWebViewInstance loadRequest:[NSURLRequest requestWithURL:url]];
