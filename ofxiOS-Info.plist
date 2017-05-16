@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDisplayName</key>
-	<string>Real Private</string>
+	<string>Reality Editor</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
@@ -23,11 +23,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.6</string>
+	<string>2.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.6</string>
+	<string>2.0</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -37,8 +37,12 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Bluetooth might be used for Object Connectivity</string>
 	<key>NSCameraUsageDescription</key>
-	<string>The Camera is needed for AR</string>
+	<string>Camera access is required for AR</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo library might be used for targets.</string>
 	<key>UIApplicationExitsOnSuspend</key>
 	<true/>
 	<key>UIInterfaceOrientation</key>
