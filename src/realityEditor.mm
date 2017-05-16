@@ -1,7 +1,7 @@
 #include "realityEditor.h"
 
 
-static const string kLicenseKey = "***REMOVED***";
+static const string kLicenseKey = "";
 
 static const string networkNamespace = "realityEditor.network";
 static const string deviceNamespace = "realityEditor.device";
@@ -12,7 +12,7 @@ static const string memoryNamespace = "realityEditor.gui.memory";
 //--------------------------------------------------------------
 void realityEditor::setup() {
 
-    numbersToMuch = 100;
+    numbersToMuch = 500;
 
     ofSetFrameRate(60);
     ofSetVerticalSync(false);
@@ -152,10 +152,7 @@ void realityEditor::setup() {
     Vuforia.setCameraPixelsFlag(true);
     Vuforia.setMaxNumOfMarkers(5);
     Vuforia.setup();
-
-
-
-
+    
     if(extTrackingState){
         ofxVuforia & Vuforia = *ofxVuforia::getInstance();
         Vuforia.startExtendedTracking();
@@ -1144,9 +1141,16 @@ void realityEditor::renderJavascript() {
 // utilities for rendering the conditions of the download process.
 void realityEditor::cons() {
     NSLog(@">>cons");
-    for (int i = 0; i < nameCount.size(); i++) {
+   /* for (int i = 0; i < nameCount.size(); i++) {
         NSLog(@"%s %s %s %s, name: %s version: %s  check: %s", nameCount[i][4].c_str(), nameCount[i][5].c_str(), nameCount[i][6].c_str(), nameCount[i][7].c_str(), nameCount[i][0].c_str(),nameCount[i][2].c_str(),nameCount[i][3].c_str());
+    }*/
+    
+    int i = 0;
+    
+    if( nameCount.size()>0){
+   i= nameCount.size()-1;
     }
+       NSLog(@"%s %s %s %s, name: %s version: %s  check: %s", nameCount[i][4].c_str(), nameCount[i][5].c_str(), nameCount[i][6].c_str(), nameCount[i][7].c_str(), nameCount[i][0].c_str(),nameCount[i][2].c_str(),nameCount[i][3].c_str());
     
 }
 
