@@ -3,12 +3,9 @@
 
 #public Interface interface
 /bin/data/interfaceData
-/bin/data/interfaceDataPhD
-/bin/data/interfaceDataPhD copy
-/bin/data/interfaceDataPhD__
-/bin/data/editor_PHD
 /bin/data/editor_private
 /bin/data/editor
+/bin/data/userinterface
 
 # osx directory files
 .DS_Store
