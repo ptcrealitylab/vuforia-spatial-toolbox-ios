@@ -970,15 +970,14 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					../../../addons/ofxQCAR/libs/QCAR/include,
+					../../../addons/ofxJSON/libs/jsoncpp/include,
 				);
 				INFOPLIST_FILE = "ofxiOS-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/valentin/Downloads/openFrameworks-Apothecary-0.9.0-All/addons/ofxQCAR/libs/QCAR/lib/arm",
+					../../../addons/ofxJSON/libs/jsoncpp/include,
 					../../../addons/ofxQCAR/libs/QCAR/lib/arm,
-					/Users/valentin/Dropbox,
-					"(MIT)/--git--node/of_0_9_64Bit/addons/ofxQCAR/libs/QCAR/lib/arm",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
@@ -986,7 +985,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxQCAR/libs/QCAR/include $(OF_CORE_HEADERS)";
+				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxQCAR/libs/QCAR/include $(OF_CORE_HEADERS) ../../../addons/ofxJSON/libs/jsoncpp/include";
 				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Debug;
@@ -1011,15 +1010,14 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					../../../addons/ofxQCAR/libs/QCAR/include,
+					../../../addons/ofxJSON/libs/jsoncpp/include,
 				);
 				INFOPLIST_FILE = "ofxiOS-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/valentin/Downloads/openFrameworks-Apothecary-0.9.0-All/addons/ofxQCAR/libs/QCAR/lib/arm",
+					../../../addons/ofxJSON/libs/jsoncpp/include,
 					../../../addons/ofxQCAR/libs/QCAR/lib/arm,
-					/Users/valentin/Dropbox,
-					"(MIT)/--git--node/of_0_9_64Bit/addons/ofxQCAR/libs/QCAR/lib/arm",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
@@ -1027,7 +1025,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxQCAR/libs/QCAR/include $(OF_CORE_HEADERS)";
+				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxQCAR/libs/QCAR/include $(OF_CORE_HEADERS) ../../../addons/ofxJSON/libs/jsoncpp/include";
 				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Release;
