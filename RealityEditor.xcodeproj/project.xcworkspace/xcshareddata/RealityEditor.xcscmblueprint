@@ -14,7 +14,7 @@
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "6B478701120EA7939C13DE74AC015889B3C905F3" : "..\/..\/..",
     "A6D63C8D0F437ECA3207DE2F745A730F9F410998" : "..\/..\/addons\/ofxQCAR",
-    "699BEA2634E82CF4B34F491C571DB46B219DFD4B" : "RealityEditor_Private\/",
+    "699BEA2634E82CF4B34F491C571DB46B219DFD4B" : "realityeditor-ios\/",
     "5FF8C2E46F7066F9B4732218965E6B1299FE38A2" : "HybridEditor\/bin\/data\/interfaceData\/",
     "5DB7C332A3A89035E93556A2A38BF414005BA671" : "..\/..\/addons\/ofxJSON"
   },

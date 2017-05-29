@@ -48,7 +48,7 @@
 
 //#include "ofMain.h"
 //#include "ofxiPhoneExtras.h"
-#include "ofxVuforia.h"
+#include "ofxQCAR.h"
 #include "ofxWebViewInterface.h"
 #include "ofxUIWebViewDelegate.h"
 

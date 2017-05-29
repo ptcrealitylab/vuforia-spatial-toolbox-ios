@@ -61,7 +61,7 @@
 #include "Poco/StreamCopier.h"
 #include "Poco/Timespan.h"
 #include "ImagePartSource.h"
-#include "VuforiaState.h"
+#include "QCARState.h"
 
 using namespace std;
 using namespace Poco;
@@ -69,14 +69,14 @@ using namespace Poco::Net;
 
 class MemoryUploader : public Poco::Runnable {
 public:
-    MemoryUploader(string _objId, string _ip, shared_ptr<VuforiaState> _memory);
+    MemoryUploader(string _objId, string _ip, shared_ptr<QCARState> _memory);
     virtual void run();
     bool done;
 private:
     // See also realityEditor.h thumbnailWidth and thumbnailHeight
     const int thumbnailWidth = 134;
     const int thumbnailHeight = 75;
-    shared_ptr<VuforiaState> memory;
+    shared_ptr<QCARState> memory;
     string ip, objId;
     
 };

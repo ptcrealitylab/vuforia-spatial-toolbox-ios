@@ -1,5 +1,3 @@
-# idea editing tools
-.idea
 
 #public Interface interface
 /bin/data/interfaceData
@@ -34,3 +32,6 @@ xcuserdata/
 *.moved-aside
 *.xccheckout
 *.xcscmblueprint
+
+# IDEA config files
+.idea/

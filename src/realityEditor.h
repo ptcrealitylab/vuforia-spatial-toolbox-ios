@@ -50,15 +50,15 @@
 #include "ofxiOS.h"
 #include "ofxiOSExtras.h"
 
-#include "ofxVuforia.h"
+#include "ofxQCAR.h"
 #include "ofxJSON.h"
 #include "ofxNetwork.h"
 #include "ofxXmlSettings.h"
 
-#import <Vuforia/CameraCalibration.h>
-#import <Vuforia/CameraDevice.h>
-#import <Vuforia/Tool.h>
-#import <Vuforia/Matrices.h>
+#import <QCAR/CameraCalibration.h>
+#import <QCAR/CameraDevice.h>
+#import <QCAR/Tool.h>
+#import <QCAR/Matrices.h>
 
 #include "ofxWebViewInterface.h"
 
@@ -67,10 +67,10 @@
 #include "Poco/URI.h"
 
 #include "ImagePartSource.h"
-#include "VuforiaState.h"
+#include "QCARState.h"
 #include "MemoryUploader.h"
 
-class realityEditor : public ofxVuforia_App, ofxWebViewDelegateCpp /*ofxWKWebViewDelegateCpp, ofxUIWebViewDelegateCpp*/ {
+class realityEditor : public ofxQCAR_App, ofxWebViewDelegateCpp /*ofxWKWebViewDelegateCpp, ofxUIWebViewDelegateCpp*/ {
 public:
     void setup();
 
@@ -110,8 +110,8 @@ public:
     ofxWebViewInterfaceJavaScript interface;
 
     void handleCustomRequest(NSString *request, NSURL *url);
-    virtual void VuforiaInitARDone(NSError *error);
-    bool vuforiaInitARDone = false;
+    virtual void qcarInitARDone(NSError *error);
+    bool qCARInitARDone = false;
 
     ofxJSONElement json;
     bool waitUntil;
@@ -141,9 +141,9 @@ public:
     vector<ofMatrix4x4> matrixTemp;
     vector<string> nameTemp;
 
-    shared_ptr<VuforiaState> currentMemory = nullptr;
+    shared_ptr<QCARState> currentMemory = nullptr;
 
-    vector<Vuforia::DataSet *>  datasetList;
+    vector<QCAR::DataSet *>  datasetList;
 
     float matrixOld = 0.0;
 
@@ -157,7 +157,7 @@ public:
     ofImage imgInterface, imgObject;
     // NSMutableString *stringforTransform;
 
-    //vector<ofxVuforia_Marker>tempMarker;
+    //vector<ofxQCAR_Marker>tempMarker;
 
     NSString *pMatrix;
 
@@ -196,7 +196,7 @@ public:
     ofBuffer buff;
 
     // The memory that will be made permanent by memorize() or thrown away by clearMemory()
-    shared_ptr<VuforiaState> tempMemory;
+    shared_ptr<QCARState> tempMemory;
 
     // A thread pool used for executing memory uploading off the main thread
     Poco::ThreadPool memoryThreadPool;
@@ -210,8 +210,8 @@ public:
     const int thumbnailHeight = 112;
 
     ofImage getCameraImage();
-    void sendThumbnail(shared_ptr<VuforiaState> memory);
-    void uploadMemory(shared_ptr<VuforiaState> memory);
+    void sendThumbnail(shared_ptr<QCARState> memory);
+    void uploadMemory(shared_ptr<QCARState> memory);
     NSString* convertImageToBase64(ofImage image);
     bool getDataFromReq(string req, string reqName, string* data);
 

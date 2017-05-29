@@ -47,7 +47,7 @@
 #include "realityEditor.h"
 
 
-static const string kLicenseKey = "";
+static const string kLicenseKey = "ADD_________________________YOUR_________________________OWN_________________________VUFORIA_________________________KEY_________________________HERE________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________";
 
 static const string networkNamespace = "realityEditor.network";
 static const string deviceNamespace = "realityEditor.device";
@@ -189,23 +189,23 @@ void realityEditor::setup() {
      [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), file] error:NULL];
      }*/
 
-    // initialize vuforia
-    ofxVuforia & Vuforia = *ofxVuforia::getInstance();
-    Vuforia.setLicenseKey(kLicenseKey); // ADD YOUR APPLICATION LICENSE KEY HERE.
-    Vuforia.addMarkerDataPath("target.xml");
-    Vuforia.autoFocusOn();
-    Vuforia.setOrientation(OFX_Vuforia_ORIENTATION_LANDSCAPE_LEFT);
-    Vuforia.setCameraPixelsFlag(true);
-    Vuforia.setMaxNumOfMarkers(5);
-    Vuforia.setup();
+    // initialize QCAR
+    ofxQCAR & QCAR = *ofxQCAR::getInstance();
+    QCAR.setLicenseKey(kLicenseKey); // ADD YOUR APPLICATION LICENSE KEY HERE.
+    QCAR.addMarkerDataPath("target.xml");
+    QCAR.autoFocusOn();
+    QCAR.setOrientation(OFX_QCAR_ORIENTATION_LANDSCAPE);
+    QCAR.setCameraPixelsFlag(true);
+    QCAR.setMaxNumOfMarkers(5);
+    QCAR.setup();
     
     if(extTrackingState){
-        ofxVuforia & Vuforia = *ofxVuforia::getInstance();
-        Vuforia.startExtendedTracking();
+        ofxQCAR & QCAR = *ofxQCAR::getInstance();
+        QCAR.startExtendedTracking();
         extendedTracking = true;
     }else{
-        ofxVuforia & Vuforia = *ofxVuforia::getInstance();
-        Vuforia.stopExtendedTracking();
+        ofxQCAR & QCAR = *ofxQCAR::getInstance();
+        QCAR.stopExtendedTracking();
         extendedTracking = false;
 
     }
@@ -277,7 +277,7 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
             // here is where we need to write the permanent link saving mechanism
         }
 
-        if (vuforiaInitARDone) {
+        if (qCARInitARDone) {
             sendProjectionMatrix();
         }
 
@@ -422,8 +422,8 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
 
 
     if (reqstring == "extendedTrackingOn") {
-        ofxVuforia & Vuforia = *ofxVuforia::getInstance();
-        Vuforia.startExtendedTracking();
+        ofxQCAR & QCAR = *ofxQCAR::getInstance();
+        QCAR.startExtendedTracking();
         extendedTracking = true;
 
         XML.setValue("SETUP:TRACKING", 1);
@@ -433,8 +433,8 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
     }
 
     if (reqstring == "extendedTrackingOff") {
-        ofxVuforia & Vuforia = *ofxVuforia::getInstance();
-        Vuforia.stopExtendedTracking();
+        ofxQCAR & QCAR = *ofxQCAR::getInstance();
+        QCAR.stopExtendedTracking();
         extendedTracking = false;
 
         XML.setValue("SETUP:TRACKING", 0);
@@ -445,7 +445,7 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
     if (reqstring == "createMemory") {
         if (nameTemp.size() > 0) {
             ofLog() << "createMemory " << nameTemp[0];
-            tempMemory = make_shared<VuforiaState>(getCameraImage(), matrixTemp, nameTemp);
+            tempMemory = make_shared<QCARState>(getCameraImage(), matrixTemp, nameTemp);
             sendThumbnail(tempMemory);
         }
     }
@@ -512,7 +512,7 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
         if (dataStr != "") {
             ofLog() << "With data " << dataStr;
             ofxJSONElement memoryInfo;
-            VuforiaState* memory = new VuforiaState();
+            QCARState* memory = new QCARState();
             memoryInfo.parse(dataStr);
             memory->name.push_back(memoryInfo["id"].asString());
             ofMatrix4x4 matrix;
@@ -521,7 +521,7 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
             }
             memory->matrix.push_back(matrix);
             memory->image.allocate(1, 1, OF_IMAGE_GRAYSCALE);
-            currentMemory = shared_ptr<VuforiaState>(memory);
+            currentMemory = shared_ptr<QCARState>(memory);
         } else {
             currentMemory = tempMemory;
         }
@@ -635,32 +635,32 @@ void realityEditor::update() {
         }
 
 
-        ofxVuforia &Vuforia = *ofxVuforia::getInstance();
+        ofxQCAR &QCAR = *ofxQCAR::getInstance();
 
         //
-        Vuforia.update();
-        //Vuforia->mutex.lock();
+        QCAR.update();
+        //QCAR->mutex.lock();
 
         if (!currentMemory) {
             matrixTemp.clear();
             nameTemp.clear();
-            //Vuforia->mutex.lock();
-            // tempMarker = Vuforia->markersFound;
+            //QCAR->mutex.lock();
+            // tempMarker = QCAR->markersFound;
 
-            for (int i = 0; i < Vuforia.numOfMarkersFound(); i++) {
-                matrixTemp.push_back(Vuforia.getMarker(i).modelViewMatrix);
-                nameTemp.push_back(Vuforia.getMarker(i).markerName);
+            for (int i = 0; i < QCAR.numOfMarkersFound(); i++) {
+                matrixTemp.push_back(QCAR.getMarker(i).modelViewMatrix);
+                nameTemp.push_back(QCAR.getMarker(i).markerName);
             }
         } else {
             matrixTemp = currentMemory->matrix;
             nameTemp = currentMemory->name;
         }
 
-        //Vuforia->mutex.unlock();
+        //QCAR->mutex.unlock();
 
 
         if (waitUntil) {
-            if (Vuforia.numOfMarkersFound() > 0 && !currentMemory) {
+            if (QCAR.numOfMarkersFound() > 0 && !currentMemory) {
 
                 if (matrixOld == matrixTemp[0]._mat[0][0]) {
                     updateSwitch = false;
@@ -684,7 +684,7 @@ void realityEditor::update() {
             //     if(!updateSwitch)
 
 
-            // update vuforia
+            // update QCAR
 
             // download targets from the objects asynchronus.
             // we need to make sure that all processes work together using a central array of status signals.
@@ -711,8 +711,8 @@ void realityEditor::draw() {
 
 
 
-    ofxVuforia & Vuforia = *ofxVuforia::getInstance();
-    // cout << Vuforia.VuforiaInitTrackers() << "\t"
+    ofxQCAR & QCAR = *ofxQCAR::getInstance();
+    // cout << QCAR.QCARInitTrackers() << "\t"
 
     if (waitUntil) {
         // run the messages that process the javascrip view.
@@ -720,7 +720,7 @@ void realityEditor::draw() {
         // render the interface
 
         if (!currentMemory) {
-            Vuforia.drawBackground();
+            QCAR.drawBackground();
         } else {
             currentMemory->image.draw(0, 0, ofGetWidth(), ofGetHeight());
         }
@@ -904,9 +904,9 @@ void realityEditor::downloadTargets() {
             for (int i = 0; i < nameCount.size(); i++) {
                 if (nameCount[i][0] == json["id"].asString()) {
                     
-                    ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+                    ofxQCAR & QCAR = *ofxQCAR::getInstance();
                     if(datasetList.size()>0)
-                    Vuforia.removeExtraTarget(datasetList[i]);
+                    QCAR.removeExtraTarget(datasetList[i]);
                     
                     datasetHolder = i;
                     
@@ -1004,7 +1004,7 @@ void realityEditor::downloadTargets() {
             // process the dictonary addon
             else if (loadrunner == "a") {
                 string tmpDir([NSTemporaryDirectory() UTF8String]);
-                ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+                ofxQCAR & QCAR = *ofxQCAR::getInstance();
                 
                 cout <<"--------------------";
                 cout <<nameCount[i][0];
@@ -1013,11 +1013,11 @@ void realityEditor::downloadTargets() {
                 if(nameCount[i][w] == "a"){
                     
                     if(datasetHolder ==100000){
-                        datasetList.push_back(Vuforia.addExtraTarget(tmpDir + nameCount[i][0] + ".xml"));
+                        datasetList.push_back(QCAR.addExtraTarget(tmpDir + nameCount[i][0] + ".xml"));
                         
                     } else {
                         if(datasetList.size()>0){
-                        datasetList[datasetHolder]=(Vuforia.addExtraTarget(tmpDir + nameCount[i][0] + ".xml"));
+                        datasetList[datasetHolder]=(QCAR.addExtraTarget(tmpDir + nameCount[i][0] + ".xml"));
                         datasetHolder =100000;
                         }
                     }
@@ -1071,8 +1071,8 @@ void realityEditor::downloadTargets() {
                 NSLog(@">>adding target");
                 
                 if(extendedTracking){
-                    ofxVuforia & Vuforia = *ofxVuforia::getInstance();
-                    Vuforia.startExtendedTracking();
+                    ofxQCAR & QCAR = *ofxQCAR::getInstance();
+                    QCAR.startExtendedTracking();
                 }
                 cons();
                 loadrunner = "w";
@@ -1085,8 +1085,8 @@ void realityEditor::downloadTargets() {
     stop2:;
 }
 
-void realityEditor::VuforiaInitARDone(NSError *error) {
-    vuforiaInitARDone = true;
+void realityEditor::qcarInitARDone(NSError *error) {
+    qCARInitARDone = true;
     sendProjectionMatrix();
 }
 
@@ -1114,8 +1114,8 @@ NSString* realityEditor::stringFromMatrix(ofMatrix4x4 mat) {
 void realityEditor::sendProjectionMatrix() {
     float nearPlane = 2;
     float farPlane = 2000;
-    const Vuforia::CameraCalibration& cameraCalibration = Vuforia::CameraDevice::getInstance().getCameraCalibration();
-    Vuforia::Matrix44F projectionMatrix = Vuforia::Tool::getProjectionGL(cameraCalibration, nearPlane, farPlane);
+    const QCAR::CameraCalibration& cameraCalibration = QCAR::CameraDevice::getInstance().getCameraCalibration();
+    QCAR::Matrix44F projectionMatrix = QCAR::Tool::getProjectionGL(cameraCalibration, nearPlane, farPlane);
 
     ofMatrix4x4 projMatrix = ofMatrix4x4(projectionMatrix.data);
     NSString* code = [NSString stringWithFormat:@"%s.setProjectionMatrix(%@);", arNamespace.c_str(), stringFromMatrix(projMatrix)];
@@ -1201,19 +1201,19 @@ void realityEditor::cons() {
 }
 
 void realityEditor::deviceOrientationChanged(int newOrientation){
-    // ofxVuforia & Vuforia = *ofxVuforia::getInstance();
+    // ofxQCAR & QCAR = *ofxQCAR::getInstance();
     
     
     if(newOrientation == 4){
         //  ofSetOrientation((ofOrientation)newOrientation);
-        //   Vuforia.setOrientation(OFX_Vuforia_ORIENTATION_LANDSCAPE_RIGHT);
+        //   QCAR.setOrientation(OFX_QCAR_ORIENTATION_LANDSCAPE_RIGHT);
         
     }
     
     if(newOrientation == 3){
         // ofSetOrientation((ofOrientation)newOrientation);
         
-        //  Vuforia.setOrientation(OFX_Vuforia_ORIENTATION_LANDSCAPE_LEFT);
+        //  QCAR.setOrientation(OFX_QCAR_ORIENTATION_LANDSCAPE_LEFT);
     }
 }
 
@@ -1252,7 +1252,7 @@ ofImage realityEditor::getCameraImage() {
     return cameraImage;
 }
 
-void realityEditor::sendThumbnail(shared_ptr<VuforiaState> memory) {
+void realityEditor::sendThumbnail(shared_ptr<QCARState> memory) {
     ofImage thumbnail;
     thumbnail.clone(memory->image);
     thumbnail.resize(thumbnailWidth, thumbnailHeight);
@@ -1271,7 +1271,7 @@ string realityEditor::getName(string objectId) {
     return objectId.substr(0,objectId.length() - 12);
 }
 
-void realityEditor::uploadMemory(shared_ptr<VuforiaState> memory) {
+void realityEditor::uploadMemory(shared_ptr<QCARState> memory) {
     ofLog() << "memory 1: " << memory.get();
     if (memory->name.size() > 1 || memory->name.size() == 0) {
         ofLog() << "Bailing because we want exactly one marker";
@@ -1331,7 +1331,7 @@ void realityEditor::unfreeze() {
 }
 
 void realityEditor::freeze() {
-    currentMemory = shared_ptr<VuforiaState>(new VuforiaState(getCameraImage(), matrixTemp, nameTemp));
+    currentMemory = shared_ptr<QCARState>(new QCARState(getCameraImage(), matrixTemp, nameTemp));
 }
 
 /**
@@ -1353,8 +1353,8 @@ bool realityEditor::getDataFromReq(string req, string requestName, string* data)
 
 //--------------------------------------------------------------
 void realityEditor::exit() {
-    ofxVuforia & Vuforia = *ofxVuforia::getInstance();
-    Vuforia.exit();
+    ofxQCAR & QCAR = *ofxQCAR::getInstance();
+    QCAR.exit();
 }
 
 
