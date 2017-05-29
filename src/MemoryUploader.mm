@@ -8,7 +8,7 @@
 
 #include "MemoryUploader.h"
 
-MemoryUploader::MemoryUploader(string _objId, string _ip, shared_ptr<VuforiaState> _memory) {
+MemoryUploader::MemoryUploader(string _objId, string _ip, shared_ptr<QCARState> _memory) {
     objId = _objId;
     ip = _ip;
     memory = _memory;

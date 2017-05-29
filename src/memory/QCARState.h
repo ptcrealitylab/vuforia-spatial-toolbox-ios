@@ -44,19 +44,19 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef VuforiaState_h
-#define VuforiaState_h
+#ifndef QCARState_h
+#define QCARState_h
 
-class VuforiaState {
+class QCARState {
 public:
     
-    VuforiaState(ofImage _image, vector<ofMatrix4x4> _matrix, vector<string> _name) {
+    QCARState(ofImage _image, vector<ofMatrix4x4> _matrix, vector<string> _name) {
         image = _image;
         matrix = _matrix;
         name = _name;
     }
     
-    VuforiaState() {
+    QCARState() {
     }
     
     ofImage image;
@@ -64,4 +64,4 @@ public:
     vector<string> name;
 };
 
-#endif /* VuforiaState_h */
+#endif /* QCARState_h */
