@@ -49,11 +49,11 @@
 
 static const string kLicenseKey = "ADD_________________________YOUR_________________________OWN_________________________VUFORIA_________________________KEY_________________________HERE________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________";
 
-static const string networkNamespace = "realityEditor.network";
-static const string deviceNamespace = "realityEditor.device";
-static const string arNamespace = "realityEditor.gui.ar";
-static const string drawNamespace = "realityEditor.gui.ar.draw";
-static const string memoryNamespace = "realityEditor.gui.memory";
+ string networkNamespace = "realityEditor.network";
+ string deviceNamespace = "realityEditor.device";
+ string arNamespace = "realityEditor.gui.ar";
+ string drawNamespace = "realityEditor.gui.ar.draw";
+ string memoryNamespace = "realityEditor.gui.memory";
 
 //--------------------------------------------------------------
 void realityEditor::setup() {
@@ -360,6 +360,15 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
 
     }
 
+    if (reqstring == "oldUI") {
+        networkNamespace = "this";
+        deviceNamespace = "this";
+        arNamespace = "this";
+        drawNamespace = "this";
+        memoryNamespace = "this";
+    }
+    
+    
     if (reqstring == "freeze") {
         freeze();
     }
