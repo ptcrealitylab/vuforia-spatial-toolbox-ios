@@ -106,6 +106,7 @@
 		511FEEFE1E09F15000BB06AB /* MemoryUploader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MemoryUploader.mm; path = memory/MemoryUploader.mm; sourceTree = "<group>"; };
 		511FEEFF1E09F15000BB06AB /* QCARState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QCARState.h; path = memory/QCARState.h; sourceTree = "<group>"; };
 		51BA97581EDC6FC60041A67F /* QCAR_assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = QCAR_assets; sourceTree = "<group>"; };
+		51C8797B1EE8472E008FA005 /* vuforiaKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vuforiaKey.h; sourceTree = "<group>"; };
 		5326AEA710A23A0500278DE6 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		5D4278CC1E4E5CBC009F8A5D /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
@@ -776,6 +777,7 @@
 				E4D8936B11527B74007E1F53 /* main.mm */,
 				E4D8936D11527B74007E1F53 /* realityEditor.mm */,
 				E4D8936C11527B74007E1F53 /* realityEditor.h */,
+				51C8797B1EE8472E008FA005 /* vuforiaKey.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
