@@ -45,9 +45,9 @@
  */
 
 #include "realityEditor.h"
+#include "vuforiaKey.h"
 
-
-static const string kLicenseKey = "ADD_________________________YOUR_________________________OWN_________________________VUFORIA_________________________KEY_________________________HERE________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________";
+string kLicenseKey = vuforiaKey;
 
  string networkNamespace = "realityEditor.network";
  string deviceNamespace = "realityEditor.device";

@@ -5,6 +5,9 @@
 /bin/data/editor
 /bin/data/userinterface
 
+#key files
+vuforiaKey.h
+
 # osx directory files
 .DS_Store
 
@@ -35,3 +38,5 @@ xcuserdata/
 
 # IDEA config files
 .idea/
+
+src/vuforiaKey.h
