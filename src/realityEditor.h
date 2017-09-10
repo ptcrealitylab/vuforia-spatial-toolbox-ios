@@ -84,6 +84,8 @@ public:
 
     void renderJavascript();
 
+    bool processSingleHeartBeat(string udpMessage);
+
     void downloadTargets();
 
     void cons();
@@ -114,6 +116,7 @@ public:
     bool qCARInitARDone = false;
 
     ofxJSONElement json;
+      ofxJSONElement allObjectJSON;
     bool waitUntil;
     bool onlyOnce;
     bool waitGUI;
@@ -175,6 +178,9 @@ public:
       int realityState = 0;
     int instantState = 1;
     string externalState = "";
+      string discoveryState = "";
+    bool tcpDiscovery = false;
+
 
     bool sendAccelerationData = false;
 

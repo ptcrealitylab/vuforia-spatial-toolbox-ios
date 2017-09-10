@@ -89,7 +89,9 @@ void realityEditor::setup() {
     clearSkyState = XML.getValue("SETUP:CLEARSKY", 0);
     instantState = XML.getValue("SETUP:INSTANT", 1);
     externalState = XML.getValue("SETUP:EXTERNAL", "");
+    discoveryState = XML.getValue("SETUP:DISCOVERY", "");
     realityState = XML.getValue("SETUP:REALITY", 0);
+
 
     int numDragTags = XMLTargets.getNumTags("target");
     cout << numDragTags;
@@ -215,18 +217,42 @@ void realityEditor::setup() {
 
     interface.initializeWithCustomDelegate(this);
 
-    if(externalState !=""){
+
+    if(discoveryState !=""){
+
+        cout << "activate object discovery server: " << externalState;
+         tcpDiscovery = false;
+
+
+
+
+
+        if (discoveryState.rfind("http://", 0) != 0 && discoveryState != "http")
+        {
+            discoveryState = "http://"+discoveryState;
+            tcpDiscovery = true;
+        } else if (discoveryState.rfind("http://", 0) == 0 || discoveryState.rfind("https://", 0) == 0){
+            tcpDiscovery = true;
+        }
+
+
+    }
+
+
+
+    if(externalState !="" && externalState !="http"){
 
         cout << "loading interface from: " << externalState;
         
        
-    
-        if (externalState.rfind("http://", 0) != 0)
+
+        if (externalState.rfind("http://", 0) != 0 && externalState != "http")
         {
             externalState = "http://"+externalState;
         }
 
-       
+
+
         interface.loadURL(externalState.c_str());
         interface.activateView();
         haveChangedUIwithURL = 500;
@@ -287,13 +313,13 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
 
         // if the message is reload then the interface reloads and all objects are resent to the editor
         
-        NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, %d, \"%s\", %d)",
+        NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, %d, \"%s\",\"%s\", %d)",
                                  deviceNamespace.c_str(),
                                  developerState,
                                  extTrackingState,
                                  clearSkyState,
                                  instantState,
-                                 externalState.c_str(), realityState];
+                                 externalState.c_str(), discoveryState.c_str(), realityState];
         interface.runJavaScriptFromString(stateSender);
         
         NSString *deviceSender = [NSString stringWithFormat:@"%s.setDeviceName(\"%s\")",
@@ -331,7 +357,7 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
         if(externalState !=""){
             interface.deactivateView();
             
-            if (externalState.rfind("http://", 0) != 0)
+            if (externalState.rfind("http://", 0) != 0 && externalState != "http")
             {
                 externalState = "http://"+externalState;
             }
@@ -348,13 +374,14 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
 
 
         //reloader = true;
-        NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, %d, \"%s\", %d)",
+        NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, %d, \"%s\", \"%s\", %d)",
                                  deviceNamespace.c_str(),
                                  developerState,
                                  extTrackingState,
                                  clearSkyState,
                                  instantState,
                                  externalState.c_str(),
+                                discoveryState.c_str(),
                                  realityState];
         interface.runJavaScriptFromString(stateSender);
 
@@ -481,7 +508,7 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
             cout << reloadURL.c_str();
 
             
-            if (reloadURL.rfind("http://", 0) != 0)
+            if (reloadURL.rfind("http://", 0) != 0 && reloadURL !="http")
             {
                 reloadURL = "http://"+reloadURL;
             }
@@ -500,7 +527,77 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
 
             interface.activateView();
         }
+
     }
+
+
+
+    if (getDataFromReq(reqstring, "setDiscovery", &reqData)) {
+        cout << "got the discovery URL";
+        string discoveryURL = reqData;
+        ofLog() << "this is the new URL:" << discoveryURL <<":";
+
+        if(discoveryURL !=""){
+
+            tcpDiscovery = false;
+
+            cout << "this has been loaded from the webuI --------------------------''''''''######################## ::  ";
+            cout << discoveryURL.c_str();
+            cout << "    ::: this has been loaded from the webuI --------------------------''''''''########################  ";
+
+
+
+            if (discoveryURL.rfind("http://", 0) != 0 && discoveryURL != "http")
+            {
+                discoveryURL = "http://"+discoveryURL;
+                 tcpDiscovery = true;
+            } else if (discoveryURL.rfind("http://", 0) == 0 || discoveryURL.rfind("https://", 0) == 0){
+                tcpDiscovery = true;
+            }
+
+
+
+            if(tcpDiscovery == true){
+
+
+                cout << "######################## ::  ";
+                cout << discoveryURL.c_str();
+                cout << "    :::########################  ";
+
+
+
+                XML.setValue("SETUP:DISCOVERY", discoveryURL);
+                XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+                cout << "editor.xml saved to app documents folder";
+
+                discoveryState =discoveryURL;
+
+                    cout << "OBJECTDISCOVERY";
+
+                // HERE IS WHERE DISOVERY SHOULD BE INITIALIZED
+                // OBJECTDISCOVERY
+
+                ofLoadURLAsync(discoveryState + "/allObjects", "allObjects");
+
+            }
+
+
+
+        }
+
+    }
+
+    if (reqstring == "removeDiscovery") {
+
+           tcpDiscovery = false;
+           XML.setValue("SETUP:DISCOVERY", "");
+            XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+           discoveryState ="";
+
+               cout << "removed discovery";
+
+    }
+
 
     if (reqstring == "memorize") {
         this->memorize();
@@ -586,7 +683,33 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
             }
 
         }
-    } else {
+    } else if (response.status == 200 && response.request.name == "allObjects"){
+
+        cout << response.data;
+
+
+        allObjectJSON.parse(response.data);
+
+        cout << allObjectJSON.size();
+
+
+        for (Json::ArrayIndex i = 0; i < allObjectJSON.size(); ++i)
+        {
+            if(allObjectJSON.isArray()){
+                 processSingleHeartBeat(allObjectJSON[i].toStyledString());
+            } else {
+                    cout << "no heardbeat found";
+            }
+        }
+
+
+
+        //OBJECTRESPONSE
+
+        //processSingleHeartBeat(udpMessage)
+
+    }
+    else {
 
         // in case the file does not work out, this is the message to call.
         string loadrunner = "";
@@ -641,6 +764,18 @@ void realityEditor::update() {
             udpConnection2.Close();
 
             onlyOnce = false;
+
+            if(tcpDiscovery){
+
+                cout << "OBJECTDISCOVERY";
+
+                // HERE IS WHERE DISCOVERY NEEDS TO HAPPEN
+                // OBJECTDISCOVERY
+
+                ofLoadURLAsync(discoveryState + "/allObjects", "allObjects");
+
+            }
+
         }
 
 
@@ -697,6 +832,16 @@ void realityEditor::update() {
 
             // download targets from the objects asynchronus.
             // we need to make sure that all processes work together using a central array of status signals.
+
+            // check if udp message
+            while (udpConnection.Receive(udpMessage, 256) > 0) {
+                if(!processSingleHeartBeat(udpMessage))
+                {break;};
+            }
+
+
+
+
             downloadTargets();
 
         }
@@ -776,208 +921,209 @@ void realityEditor::draw() {
 
 }
 
-void realityEditor::downloadTargets() {
-    string loadrunner = "";
-    // file handling
+bool realityEditor::processSingleHeartBeat(string message) {
 
-    // check if udp message
-    while (udpConnection.Receive(udpMessage, 256) > 0) {
-        //NSLog(@">>downloads");
-        string message = udpMessage;
-        nameExists = false;
+    //NSLog(@">>downloads");
+    nameExists = false;
 
-        // ofLog() << "Received udp message " << message;
+    // ofLog() << "Received udp message " << message;
 
-        // if message is a valid heartbeat do the following
-        if (!json.parse(message.c_str()) || json["id"].empty() || json["ip"].empty()) {
-            
-            //this calls an action
-            if (!json["action"].empty()) {
-                NSString *jsString4 = [NSString stringWithFormat:@"%s.onAction('%s')",
-                                       networkNamespace.c_str(),
-                                       json["action"].toStyledString().c_str()];
-                // JSON with these newline characters results in unexpected EOF error when trying to send to the javascript
-                NSString *jsStringWithoutNewlines = [[jsString4 componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
-                interface.runJavaScriptFromString(jsStringWithoutNewlines);
-                NSLog(@"%@", jsStringWithoutNewlines);
-                goto stop2;
-                break;
-                
-            } else {
-            
-                nameExists = true;
-                NSLog(@">>udp message is not a object ping");
-                NSLog(@"%s", json["id"].toStyledString().c_str());
-                goto stop2;
-                break;
-            }
-        }
-        
-        if(json["ip"].asString().size()<7){
-            NSLog(@">>ip was wrong");
-            nameExists = true;
-            goto stop2;
-            break;
-        }
+    // if message is a valid heartbeat do the following
+    if (!json.parse(message.c_str()) || json["id"].empty() || json["ip"].empty()) {
 
-        string nameJson = "";
-        // NSLog(@">>got something");
+        //this calls an action
+        if (!json["action"].empty()) {
+            NSString *jsString4 = [NSString stringWithFormat:@"%s.onAction('%s')",
+                                                             networkNamespace.c_str(),
+                                                             json["action"].toStyledString().c_str()];
+            // JSON with these newline characters results in unexpected EOF error when trying to send to the javascript
+            NSString *jsStringWithoutNewlines = [[jsString4 componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
+            interface.runJavaScriptFromString(jsStringWithoutNewlines);
+            NSLog(@"%@", jsStringWithoutNewlines);
+            return false;
 
-        // if the id is valid then check if the name is already in the array.
-        // todo check for checksum!
-
-
-        if(!json["tcs"].asString().empty()){
-
-            for (int i = 0; i < nameCount.size(); i++) {
-
-                if(nameCount[i][3].c_str() == json["tcs"].asString()){
-                    nameExists = true;
-                    goto stop2;
-                    break;
-                }
-                
-            }
         } else {
-            for (int i = 0; i < nameCount.size(); i++) {
-                if (nameCount[i][0] == json["id"].asString()) {
-                    nameExists = true;
-                    goto stop2;
-                    break;
-                };
-            };
-            
+
+            nameExists = true;
+            NSLog(@">>udp message is not a object ping");
+            NSLog(@"%s", json["id"].toStyledString().c_str());
+            return false;
         }
-        targetExists = false;
-        if (nameExists == false) {
-            
-            int numDragTags = XMLTargets.getNumTags("target");
-            
-            if(numDragTags > 0){
-                
-                for(int i = 0; i< numDragTags; i++){
-                    
-                    string id_ = XMLTargets.getValue("target:id", "", i);
-                    string ip_ = XMLTargets.getValue("target:ip", "", i);
-                    string vn_ = XMLTargets.getValue("target:vn", "0", i);
-                    string tcs_ = XMLTargets.getValue("target:tcs", "0", i);
-                    
-                    if(id_ == json["id"].asString() &&
-                       tcs_  == json["tcs"].asString() &&
-                       tcs_  != "0"){
-                        
-                        crc32reset();
-                        
-                        // this is reproducing the checksom from the actual files.
-                        // if the files are corrupt and not matching with the server version then it forces a new download.
-                        
-                        string tmpDir([NSTemporaryDirectory() UTF8String]);
-                        
-                        buff = ofBufferFromFile(tmpDir + id_ + ".jpg");
-                        crc32(buff.getData(),buff.size());
-                        buff = ofBufferFromFile(tmpDir + id_ + ".xml");
-                        crc32(buff.getData(),buff.size());
-                        buff = ofBufferFromFile(tmpDir + id_ + ".dat");
-                        
-                        if(itob62(crc32(buff.getData(),buff.size())) == tcs_){
-                            targetExists = true;
-                      
+    }
+
+    if(json["ip"].asString().size()<7){
+        NSLog(@">>ip was wrong");
+        nameExists = true;
+
+        return false;
+    }
+
+    string nameJson = "";
+    // NSLog(@">>got something");
+
+    // if the id is valid then check if the name is already in the array.
+    // todo check for checksum!
+
+
+    if(!json["tcs"].asString().empty()){
+
+        for (int i = 0; i < nameCount.size(); i++) {
+
+            if(nameCount[i][3].c_str() == json["tcs"].asString()){
+                nameExists = true;
+                return false;
+            }
+
+        }
+    } else {
+        for (int i = 0; i < nameCount.size(); i++) {
+            if (nameCount[i][0] == json["id"].asString()) {
+                nameExists = true;
+                return false;
+            };
+        };
+
+    }
+    targetExists = false;
+    if (nameExists == false) {
+
+        int numDragTags = XMLTargets.getNumTags("target");
+
+        if(numDragTags > 0){
+
+            for(int i = 0; i< numDragTags; i++){
+
+                string id_ = XMLTargets.getValue("target:id", "", i);
+                string ip_ = XMLTargets.getValue("target:ip", "", i);
+                string vn_ = XMLTargets.getValue("target:vn", "0", i);
+                string tcs_ = XMLTargets.getValue("target:tcs", "0", i);
+
+                if(id_ == json["id"].asString() &&
+                        tcs_  == json["tcs"].asString() &&
+                        tcs_  != "0"){
+
+                    crc32reset();
+
+                    // this is reproducing the checksom from the actual files.
+                    // if the files are corrupt and not matching with the server version then it forces a new download.
+
+                    string tmpDir([NSTemporaryDirectory() UTF8String]);
+
+                    buff = ofBufferFromFile(tmpDir + id_ + ".jpg");
+                    crc32(buff.getData(),buff.size());
+                    buff = ofBufferFromFile(tmpDir + id_ + ".xml");
+                    crc32(buff.getData(),buff.size());
+                    buff = ofBufferFromFile(tmpDir + id_ + ".dat");
+
+                    if(itob62(crc32(buff.getData(),buff.size())) == tcs_){
+                        targetExists = true;
+
                         NSString *jsString3 = [NSString stringWithFormat:@"%s.addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
-                                               networkNamespace.c_str(),
-                                               id_.c_str(),
-                                               ip_.c_str(),
-                                               stoi(vn_.c_str()),
-                                               tcs_.c_str()];
+                                                                         networkNamespace.c_str(),
+                                                                         id_.c_str(),
+                                                                         ip_.c_str(),
+                                                                         stoi(vn_.c_str()),
+                                                                         tcs_.c_str()];
                         interface.runJavaScriptFromString(jsString3);
                         targetExists = true;
                         NSLog(@">>found double for %s",json["id"].asString().c_str());
                         break;
-                            
-                        } else {
-                            targetExists = false;
-                        }
-                        
+
+                    } else {
+                        targetExists = false;
                     }
-                    
+
                 }
-            }
-        }
-        
-        // if name is not in the array generate a new row of an array of strings. and fill them with "f" so that the software knows to process all.
-        // remember, the first cell is the full json heart beat, the second indicates the status of the dat file the 3th the status of the xml file and the last cell indicates the status of adding the files to the dictionary.
-        if (nameExists == false) {
-            
-            
-            bool yespush = true;
-            
-            for (int i = 0; i < nameCount.size(); i++) {
-                if (nameCount[i][0] == json["id"].asString()) {
-                    
-                    ofxQCAR & QCAR = *ofxQCAR::getInstance();
-                    if(datasetList.size()>0)
-                    QCAR.removeExtraTarget(datasetList[i]);
-                    
-                    datasetHolder = i;
-                    
-                    nameCount[i][0] = json["id"].asString();
-                    nameCount[i][1] = json["ip"].asString();
-                    nameCount[i][2] = json["vn"].asString();
-                    nameCount[i][3] = json["tcs"].asString();
-                    nameCount[i][4] = "f";
-                    nameCount[i][5] = "f";
-                    nameCount[i][6] = "f";
-                    nameCount[i][7] = "f";
-                    
-                    
-                    string tmpDir([NSTemporaryDirectory() UTF8String]);
-                    
-                    
-                    files_.removeFile(tmpDir + nameCount[i][0] + ".jpg");
-                    files_.removeFile(tmpDir + nameCount[i][0] + ".xml");
-                    files_.removeFile(tmpDir + nameCount[i][0] + ".dat");
-                    
-                    
-                    
-                    yespush = false;
-                    
-                };
-            };
-            
-            
-            if(yespush){
-                vector<string> row;
-                row.push_back(json["id"].asString()); //0
-                row.push_back(json["ip"].asString()); // 1
-                if(!json["vn"].empty()){                //2
-                    row.push_back(json["vn"].asString());
-                } else{
-                    row.push_back("0");
-                }
-                if(!json["tcs"].empty()){               //3
-                    row.push_back(json["tcs"].asString());
-                } else{
-                    row.push_back("0");
-                }
-                if(targetExists) {
-                    row.push_back("t");  //4
-                    row.push_back("t"); //5
-                    row.push_back("t"); //6
-                    row.push_back("a"); //7
-                } else
-                {
-                    row.push_back("f");  //4
-                    row.push_back("f"); //5
-                    row.push_back("f"); //6
-                    row.push_back("f"); //7
-                }
-                
-                nameCount.push_back(row);
-                NSLog(@">>adding new object");
-                cons();
+
             }
         }
     }
-    
+
+    // if name is not in the array generate a new row of an array of strings. and fill them with "f" so that the software knows to process all.
+    // remember, the first cell is the full json heart beat, the second indicates the status of the dat file the 3th the status of the xml file and the last cell indicates the status of adding the files to the dictionary.
+    if (nameExists == false) {
+
+
+        bool yespush = true;
+
+        for (int i = 0; i < nameCount.size(); i++) {
+            if (nameCount[i][0] == json["id"].asString()) {
+
+                ofxQCAR & QCAR = *ofxQCAR::getInstance();
+                if(datasetList.size()>0)
+                    QCAR.removeExtraTarget(datasetList[i]);
+
+                datasetHolder = i;
+
+                nameCount[i][0] = json["id"].asString();
+                nameCount[i][1] = json["ip"].asString();
+                nameCount[i][2] = json["vn"].asString();
+                nameCount[i][3] = json["tcs"].asString();
+                nameCount[i][4] = "f";
+                nameCount[i][5] = "f";
+                nameCount[i][6] = "f";
+                nameCount[i][7] = "f";
+
+
+                string tmpDir([NSTemporaryDirectory() UTF8String]);
+
+
+                files_.removeFile(tmpDir + nameCount[i][0] + ".jpg");
+                files_.removeFile(tmpDir + nameCount[i][0] + ".xml");
+                files_.removeFile(tmpDir + nameCount[i][0] + ".dat");
+
+
+
+                yespush = false;
+
+            };
+        };
+
+
+        if(yespush){
+            vector<string> row;
+            row.push_back(json["id"].asString()); //0
+            row.push_back(json["ip"].asString()); // 1
+            if(!json["vn"].empty()){                //2
+                row.push_back(json["vn"].asString());
+            } else{
+                row.push_back("0");
+            }
+            if(!json["tcs"].empty()){               //3
+                row.push_back(json["tcs"].asString());
+            } else{
+                row.push_back("0");
+            }
+            if(targetExists) {
+                row.push_back("t");  //4
+                row.push_back("t"); //5
+                row.push_back("t"); //6
+                row.push_back("a"); //7
+            } else
+            {
+                row.push_back("f");  //4
+                row.push_back("f"); //5
+                row.push_back("f"); //6
+                row.push_back("f"); //7
+            }
+
+            nameCount.push_back(row);
+            NSLog(@">>adding new object");
+            cons();
+        }
+    }
+
+    return true;
+}
+
+
+
+
+
+void realityEditor::downloadTargets() {
+    string loadrunner = "";
+    // file handling
+
     // process the file downloads
     loadrunner = "";
     
