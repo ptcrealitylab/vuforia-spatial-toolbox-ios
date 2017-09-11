@@ -123,6 +123,7 @@ public:
     char udpMessage[256];
     bool nameExists = false;
     bool targetExists = false;
+     bool allTargetsExist = false;
     int numbersToMuch;
 
     string arrayList[3] = {"dat", "xml", "jpg"};

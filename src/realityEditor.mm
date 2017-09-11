@@ -45,6 +45,11 @@
  */
 
 #include "realityEditor.h"
+
+// You need a vuforia key from the vuforia developer portal (or from ofxQCAR) to compile this application.
+// you can just replace vuforiaKey with the sting of your key.
+// In that case you also want to remove #include "vuforiaKey.h".
+// vuforiaKey.h is just a file that contains a vuforia key that is not synchronized with github.
 #include "vuforiaKey.h"
 
 string kLicenseKey = vuforiaKey;
@@ -338,6 +343,7 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
 
         for (int i = 0; i < nameCount.size(); i++) {
             cout<<&nameCount[i];
+                        if(nameCount[i][0] != "allTargetsPlaceholder000000000000"){
             NSString *jsString3 = [NSString stringWithFormat:@"%s.addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
                                    networkNamespace.c_str(),
                                    nameCount[i][0].c_str(),
@@ -345,6 +351,7 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
                                    stoi(nameCount[i][2].c_str()),
                                    nameCount[i][3].c_str()];
             interface.runJavaScriptFromString(jsString3);
+                        }
             //   NSLog(@"reload interfaces");
         }
         //}
@@ -685,12 +692,23 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
         }
     } else if (response.status == 200 && response.request.name == "allObjects"){
 
-        cout << response.data;
-
+       // cout << response.data;
 
         allObjectJSON.parse(response.data);
+        if(!allObjectJSON.isArray()){ return;}
 
-        cout << allObjectJSON.size();
+        for (Json::ArrayIndex i = 0; i < allObjectJSON.size(); ++i)
+        {
+            if(allObjectJSON.isArray()){
+
+                if(allObjectJSON[i]["id"] == "allTargetsPlaceholder000000000000"){
+
+                        cout << "--+-+-+-+-+-#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.###.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.###.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.###.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.###.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.###.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.###.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.##";
+
+                    allTargetsExist = true;
+                }
+            }
+        }
 
 
         for (Json::ArrayIndex i = 0; i < allObjectJSON.size(); ++i)
@@ -709,7 +727,7 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
         //processSingleHeartBeat(udpMessage)
 
     }
-    else {
+    else if (response.status > 200 && response.status <= 600){
 
         // in case the file does not work out, this is the message to call.
         string loadrunner = "";
@@ -725,9 +743,10 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
                 }
             }
         }
-        cout << response.status << " " << response.error << endl;
+       // cout << response.status << " " << response.error << endl;
         cons();
-    }
+
+         }
 
 
 }
@@ -772,7 +791,7 @@ void realityEditor::update() {
                 // HERE IS WHERE DISCOVERY NEEDS TO HAPPEN
                 // OBJECTDISCOVERY
 
-                ofLoadURLAsync(discoveryState + "/allObjects", "allObjects");
+              ofLoadURLAsync(discoveryState + "/allObjects", "allObjects");
 
             }
 
@@ -835,7 +854,13 @@ void realityEditor::update() {
 
             // check if udp message
             while (udpConnection.Receive(udpMessage, 256) > 0) {
-                if(!processSingleHeartBeat(udpMessage))
+
+                // this makes sure that only one mode is active
+                if(discoveryState != "") continue;
+
+                if(!json.parse(udpMessage)  || json["id"].asString() == "allTargetsPlaceholder000000000000"){
+                    continue;
+                } else if(!processSingleHeartBeat(udpMessage))
                 {break;};
             }
 
@@ -1007,6 +1032,7 @@ bool realityEditor::processSingleHeartBeat(string message) {
                     // this is reproducing the checksom from the actual files.
                     // if the files are corrupt and not matching with the server version then it forces a new download.
 
+                    if(!allTargetsExist || json["id"].asString() == "allTargetsPlaceholder000000000000") {
                     string tmpDir([NSTemporaryDirectory() UTF8String]);
 
                     buff = ofBufferFromFile(tmpDir + id_ + ".jpg");
@@ -1015,9 +1041,12 @@ bool realityEditor::processSingleHeartBeat(string message) {
                     crc32(buff.getData(),buff.size());
                     buff = ofBufferFromFile(tmpDir + id_ + ".dat");
 
-                    if(itob62(crc32(buff.getData(),buff.size())) == tcs_){
+                }
+                    if(itob62(crc32(buff.getData(),buff.size())) == tcs_ && (!allTargetsExist || json["id"].asString() == "allTargetsPlaceholder000000000000")){
                         targetExists = true;
 
+
+                                    if(id_ != "allTargetsPlaceholder000000000000"){
                         NSString *jsString3 = [NSString stringWithFormat:@"%s.addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
                                                                          networkNamespace.c_str(),
                                                                          id_.c_str(),
@@ -1025,6 +1054,7 @@ bool realityEditor::processSingleHeartBeat(string message) {
                                                                          stoi(vn_.c_str()),
                                                                          tcs_.c_str()];
                         interface.runJavaScriptFromString(jsString3);
+                                    }
                         targetExists = true;
                         NSLog(@">>found double for %s",json["id"].asString().c_str());
                         break;
@@ -1049,9 +1079,13 @@ bool realityEditor::processSingleHeartBeat(string message) {
         for (int i = 0; i < nameCount.size(); i++) {
             if (nameCount[i][0] == json["id"].asString()) {
 
-                ofxQCAR & QCAR = *ofxQCAR::getInstance();
-                if(datasetList.size()>0)
-                    QCAR.removeExtraTarget(datasetList[i]);
+
+                if(!allTargetsExist || nameCount[i][0] == "allTargetsPlaceholder000000000000") {
+
+                    ofxQCAR &QCAR = *ofxQCAR::getInstance();
+                    if (datasetList.size() > 0)
+                        QCAR.removeExtraTarget(datasetList[i]);
+                }
 
                 datasetHolder = i;
 
@@ -1063,6 +1097,14 @@ bool realityEditor::processSingleHeartBeat(string message) {
                 nameCount[i][5] = "f";
                 nameCount[i][6] = "f";
                 nameCount[i][7] = "f";
+
+                 if(allTargetsExist || nameCount[i][0] != "allTargetsPlaceholder000000000000"){
+                     nameCount[i][4] = "t";
+                     nameCount[i][5] = "t";
+                     nameCount[i][6] = "t";
+                     nameCount[i][7] = "a";
+                 }
+
 
 
                 string tmpDir([NSTemporaryDirectory() UTF8String]);
@@ -1095,6 +1137,11 @@ bool realityEditor::processSingleHeartBeat(string message) {
                 row.push_back("0");
             }
             if(targetExists) {
+                row.push_back("t");  //4
+                row.push_back("t"); //5
+                row.push_back("t"); //6
+                row.push_back("a"); //7
+            } else if (allTargetsExist || json["id"].asString() != "allTargetsPlaceholder000000000000"){
                 row.push_back("t");  //4
                 row.push_back("t"); //5
                 row.push_back("t"); //6
@@ -1167,6 +1214,8 @@ void realityEditor::downloadTargets() {
                 
                 if(nameCount[i][w] == "a"){
                     
+                       if(!allTargetsExist || nameCount[i][0] == "allTargetsPlaceholder000000000000"){
+
                     if(datasetHolder ==100000){
                         datasetList.push_back(QCAR.addExtraTarget(tmpDir + nameCount[i][0] + ".xml"));
                         
@@ -1176,11 +1225,13 @@ void realityEditor::downloadTargets() {
                         datasetHolder =100000;
                         }
                     }
-                    
+                       }
                     
                     
                     cout << "this set size: "<< datasetList.size() << endl;
                     
+                      if(nameCount[i][0] != "allTargetsPlaceholder000000000000"){
+
                     NSString *jsString3 = [NSString stringWithFormat:@"%s.addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
                                            networkNamespace.c_str(),
                                            nameCount[i][0].c_str(),
@@ -1189,7 +1240,7 @@ void realityEditor::downloadTargets() {
                                            nameCount[i][3].c_str()];
                     interface.runJavaScriptFromString(jsString3);
                     
-                    
+                      }
                     
                     
                     int numDragTags2 = XMLTargets.getNumTags("target");
@@ -1348,11 +1399,11 @@ void realityEditor::cons() {
     
     int i = 0;
     
-    if( nameCount.size()>0){
+    if(nameCount.size()>0){
    i= nameCount.size()-1;
-    }
+
        NSLog(@"%s %s %s %s, name: %s version: %s  check: %s", nameCount[i][4].c_str(), nameCount[i][5].c_str(), nameCount[i][6].c_str(), nameCount[i][7].c_str(), nameCount[i][0].c_str(),nameCount[i][2].c_str(),nameCount[i][3].c_str());
-    
+      }
 }
 
 void realityEditor::deviceOrientationChanged(int newOrientation){
