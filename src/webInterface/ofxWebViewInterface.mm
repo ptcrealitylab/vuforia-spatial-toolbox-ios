@@ -72,8 +72,9 @@ void ofxWebViewInterfaceJavaScript::initialize() {
 void ofxWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxWebViewDelegateCpp *delegate) {
     // initialize the UIWebView instance
     
-    CGRect frame = CGRectMake(0, 0, ofGetWindowWidth()/[UIScreen mainScreen].scale, ofGetWindowHeight()/[UIScreen mainScreen].scale);
+    CGRect frame = CGRectMake(0, 0, ofGetWindowWidth()/[UIScreen mainScreen].scale-0.1, ofGetWindowHeight()/[UIScreen mainScreen].scale-0.1);
     
+  
     ofxWebViewDelegateObjC *delegateObjC = [[ofxWebViewDelegateObjC alloc] init];
     [delegateObjC setDelegate:delegate]; // WARNING: set to 0 when using default delegate
     
@@ -86,26 +87,21 @@ void ofxWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxWebViewDeleg
         configuration.userContentController = userContentController;
         configuration.allowsInlineMediaPlayback = YES;
         
-        
         wkWebViewInstance = [[WKWebView alloc] initWithFrame:frame configuration:configuration];
         
         // set delegate
         [wkWebViewInstance setNavigationDelegate:delegateObjC];
         [wkWebViewInstance setUIDelegate:delegateObjC];
-        
+                
         // make it transparent
         [wkWebViewInstance setOpaque:NO];
         [wkWebViewInstance setBackgroundColor:[UIColor clearColor]];
         [wkWebViewInstance.window makeKeyAndVisible];
         
-        
         // make it scrollable
         [[wkWebViewInstance scrollView] setScrollEnabled:YES];
         [[wkWebViewInstance scrollView] setBounces:NO];
-        
-        
-        
-        
+   
     } else {
         cout << "Initialized UIWebViewInterface" << endl;
         uiWebViewInstance = [[UIWebView alloc] initWithFrame:frame];
@@ -186,9 +182,13 @@ void ofxWebViewInterfaceJavaScript::toggleView() {
 void *ofxWebViewInterfaceJavaScript::runJavaScriptFromString(NSString *script) {
     if (isShowingView) {
         if (wkOn) {
-            [wkWebViewInstance evaluateJavaScript:script completionHandler:nil];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                                [wkWebViewInstance evaluateJavaScript:script completionHandler:nil];
+            });
         } else {
+               dispatch_async(dispatch_get_main_queue(), ^{
             [uiWebViewInstance stringByEvaluatingJavaScriptFromString:script];
+                           });
         }
     }
 }

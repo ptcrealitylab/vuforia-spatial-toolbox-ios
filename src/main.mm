@@ -64,7 +64,10 @@ int main() {
     settings.windowMode = OF_FULLSCREEN;
     ofCreateWindow(settings);
     
-    [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
+  // [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
+    
+    NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight];
+    [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
     
     return ofRunApp(new realityEditor);
 }
