@@ -285,6 +285,7 @@ void realityEditor::setup() {
     if(thisWindow.isRetinaEnabled()){
         screenScale =2;
     }
+    usleep(100000);
 }
 
 /**********************************************
@@ -1010,6 +1011,7 @@ bool realityEditor::processSingleHeartBeat(string message) {
 
     }
     targetExists = false;
+    string crcBuffer = "";
     if (nameExists == false) {
 
         int numDragTags = XMLTargets.getNumTags("target");
@@ -1032,7 +1034,7 @@ bool realityEditor::processSingleHeartBeat(string message) {
                     // this is reproducing the checksom from the actual files.
                     // if the files are corrupt and not matching with the server version then it forces a new download.
 
-                    if(!allTargetsExist || json["id"].asString() == "allTargetsPlaceholder000000000000") {
+                   // if(!allTargetsExist || json["id"].asString() == "allTargetsPlaceholder000000000000") {
                     string tmpDir([NSTemporaryDirectory() UTF8String]);
 
                     buff = ofBufferFromFile(tmpDir + id_ + ".jpg");
@@ -1040,9 +1042,14 @@ bool realityEditor::processSingleHeartBeat(string message) {
                     buff = ofBufferFromFile(tmpDir + id_ + ".xml");
                     crc32(buff.getData(),buff.size());
                     buff = ofBufferFromFile(tmpDir + id_ + ".dat");
+                    crcBuffer =  itob62(crc32(buff.getData(),buff.size()));
 
-                }
-                    if(itob62(crc32(buff.getData(),buff.size())) == tcs_ && (!allTargetsExist || json["id"].asString() == "allTargetsPlaceholder000000000000")){
+              //  }
+                   
+                    
+                    if(crcBuffer == tcs_ && (!allTargetsExist || json["id"].asString() != "allTargetsPlaceholder000000000000")){
+                            cout <<"allsoooneee-------";
+                        
                         targetExists = true;
 
 
@@ -1141,11 +1148,11 @@ bool realityEditor::processSingleHeartBeat(string message) {
                 row.push_back("t"); //5
                 row.push_back("t"); //6
                 row.push_back("a"); //7
-            } else if (allTargetsExist || json["id"].asString() != "allTargetsPlaceholder000000000000"){
+         /*  } else if (allTargetsExist || json["id"].asString() == "allTargetsPlaceholder000000000000"){
                 row.push_back("t");  //4
                 row.push_back("t"); //5
                 row.push_back("t"); //6
-                row.push_back("a"); //7
+                row.push_back("a"); //7*/
             } else
             {
                 row.push_back("f");  //4
@@ -1332,6 +1339,7 @@ void realityEditor::sendProjectionMatrix() {
 // generate the javascript messages
 void realityEditor::renderJavascript() {
     if (nameTemp.size() > 0) {
+       
         stringforTransform = [NSMutableString stringWithFormat:@"%s.update({", drawNamespace.c_str()];
 
         // now for all objects we add json elements indicating the name of the marker as the object name and following the model view matrix.
