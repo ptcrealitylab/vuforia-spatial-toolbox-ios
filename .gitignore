@@ -4,6 +4,7 @@
 /bin/data/editor_private
 /bin/data/editor
 /bin/data/userinterface
+/bin/data/RE-userinterface
 
 #key files
 vuforiaKey.h
