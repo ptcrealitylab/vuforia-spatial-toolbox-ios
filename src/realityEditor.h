@@ -105,6 +105,8 @@ public:
     // 7 -> state thing
     vector<vector<string> > nameCount;
     vector<vector<string> > targetsList;
+    void getVuforiaReady(string cb);
+       string functionArg[11] = {"","","","","","","","","",""};
 
     ofxWebViewInterfaceJavaScript interface;
 
@@ -235,7 +237,8 @@ public:
      void gotMemoryWarning();
      void deviceOrientationChanged(int newOrientation);*/
 
-
+string functionArgs[11] = {"","","","","","","","","",""};
+    
 };
 
 
