@@ -288,15 +288,30 @@ void realityEditor::setup() {
     usleep(100000);
 }
 
+
+
+void realityEditor::getVuforiaReady(string cb) {
+    cout << "-------------------" << "\n";
+    cout << cb << "\n";
+    cout << "-------------------" << "\n";
+    NSString *jsString44 =[NSString stringWithFormat:@"%s", cb.c_str()];
+    cout <<jsString44;
+    interface.runJavaScriptFromString(jsString44);
+}
+
 /**********************************************
  (new method for) HANDLING REQUESTS FROM JS/HTML (JS->C++)
  **********************************************/
-
 void realityEditor::handleCustomRequest(NSDictionary *messageBody) {
 //    NSDictionary* dict = message.body;
     NSLog(@"message body: %@", messageBody);
     NSString* functionName = messageBody[@"functionName"];
     string reqstring = [functionName UTF8String];
+    
+    if (reqstring == "getVuforiaReady") {
+        string callback = [(NSString*)messageBody[@"callback"] UTF8String];
+        getVuforiaReady(callback);
+    }
     
     // if the html interface is loaded kickoff will be send to the c++ code.
     if (reqstring == "kickoff") {
