@@ -76,6 +76,29 @@
     }
 }
 
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message
+{
+//    NSDictionary* dict = message.body;
+//    NSLog(@"message body: %@", dict);
+//    
+//    NSString* functionName = message.body[@"functionName"];
+    
+    if ([self delegate] != 0) {
+        [self delegate]->handleJavaScriptFunction(message.body);
+    }
+    
+//    [self.delegate performSelector:@selector(functionName)];
+    
+//    NSString *callBackString = message.body;
+//    callBackString = [@"(" stringByAppendingString:callBackString];
+//    callBackString = [callBackString stringByAppendingFormat:@")('%@');", @"Some RetString"];
+//    [message.webView evaluateJavaScript:callBackString completionHandler:^(id _Nullable obj, NSError * _Nullable error) {
+//        if (error) {
+//            NSLog(@"name = %@ error = %@",@"", error.localizedDescription);
+//        }
+//    }];
+}
+
 #pragma mark - UIWebView Delegate Methods
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request

@@ -83,6 +83,8 @@ void ofxWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxWebViewDeleg
         
         // Create the configuration with the user content controller
         WKUserContentController *userContentController = [WKUserContentController new];
+        [userContentController addScriptMessageHandler:delegateObjC name:@"realityEditor"];
+
         WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
         configuration.userContentController = userContentController;
         configuration.allowsInlineMediaPlayback = YES;
@@ -124,6 +126,7 @@ void ofxWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxWebViewDeleg
     
     
 }
+
 
 void ofxWebViewInterfaceJavaScript::loadURL(string url) {
     [[NSURLCache sharedURLCache] removeAllCachedResponses];

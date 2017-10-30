@@ -62,6 +62,8 @@ public:
      from the HTML/JS layer to the C++ layer.
      **************************************************************************/
     virtual void handleCustomRequest(NSString *request, NSURL *url) = 0;
+    virtual void handleJavaScriptFunction(NSDictionary *messageBody) = 0;
+
     
 private:
     ofxWebViewDelegateObjC *delegate;

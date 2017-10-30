@@ -68,7 +68,7 @@ void ofxWKWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxWKWebViewD
     
     // Create the user content controller and add the script to it
     WKUserContentController *userContentController = [WKUserContentController new];
-    [userContentController addScriptMessageHandler:delegateObjC name:@"ofxWKWebView"];
+    [userContentController addScriptMessageHandler:delegateObjC name:@"realityEditor"];
     
     // Create the configuration with the user content controller
     WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
