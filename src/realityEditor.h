@@ -112,6 +112,7 @@ public:
     ofxWebViewInterfaceJavaScript interface;
 
     void handleCustomRequest(NSString *request, NSURL *url);
+    void handleJavaScriptFunction(NSDictionary *messageBody);
     virtual void qcarInitARDone(NSError *error);
     bool qCARInitARDone = false;
 
