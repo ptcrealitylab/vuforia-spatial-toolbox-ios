@@ -21,7 +21,7 @@ void javaScriptInterface::adapter(string function) {
 Helper
  */
 
-string *javaScriptInterface::parseJavaScriptFunctionString(string function, string *arguments) {
+void javaScriptInterface::parseJavaScriptFunctionString(string function, string *arguments) {
 
     int functionCounter = 0;
     int argw = 0;
@@ -30,16 +30,16 @@ string *javaScriptInterface::parseJavaScriptFunctionString(string function, stri
     
     // isolate function name and separate a string with all arguments
     if ((pos = function.find("(")) != std::string::npos) {
-        arguments[argw] = function.substr(0, pos);
-        argw++;
+        arguments[0] = function.substr(0, pos);
         function.erase(0, pos + 1);
         function.erase(function.size() - 1); // erase last character
+        argw++;
     }
     // separate arguments
     for (argi = 0; argi < function.size(); argi++) {
         // check if the argument is encapsulated
-        if (function[argi] == "{"[0] || function[argi] == "["[0]) functionCounter++;
-        if (function[argi] == "}"[0] || function[argi] == "]"[0]) functionCounter--;
+        if (function[argi] == "("[0] || function[argi] == "{"[0] || function[argi] == "["[0]) functionCounter++;
+        if (function[argi] == ")"[0] || function[argi] == "}"[0] || function[argi] == "]"[0]) functionCounter--;
         if ((function[argi] == ","[0]) && (functionCounter <= 0)) {
             // check if there is a space after the comma
             arguments[argw] = function.substr(oldPos, argi - oldPos);
@@ -55,7 +55,7 @@ string *javaScriptInterface::parseJavaScriptFunctionString(string function, stri
     arguments[argw] = function.substr(oldPos, argi - oldPos);
 
   for (int i = 0; i < sizeof(arguments); i++) { cout << arguments[i] << "\n";}
-    return (arguments);
+    
 }
 
 

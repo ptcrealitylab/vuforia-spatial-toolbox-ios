@@ -295,7 +295,7 @@ void realityEditor::getVuforiaReady(string cb) {
     cout << cb << "\n";
     cout << "-------------------" << "\n";
     NSString *jsString44 =[NSString stringWithFormat:@"%s", cb.c_str()];
-    cout <<jsString44;
+    cout << " output: "<< jsString44;
     interface.runJavaScriptFromString(jsString44);
 }
 
