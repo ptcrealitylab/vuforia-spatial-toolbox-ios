@@ -47,18 +47,7 @@
 #include "ofxWebViewInterface.h"
 #include <CommonCrypto/CommonCrypto.h>
 
-#define wkOff floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_8_1
-#define wkOn floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_1
-
 static const string securityNamespace = "realityEditor.device.security";
-
-NSObject* ofxWebViewInterfaceJavaScript::getWebViewInstance() {
-    if (wkOn) {
-        return wkWebViewInstance;
-    } else {
-        return uiWebViewInstance;
-    }
-}
 
 ofxWebViewInterfaceJavaScript::ofxWebViewInterfaceJavaScript() {
     isShowingView = false;
@@ -74,57 +63,33 @@ void ofxWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxWebViewDeleg
     
     CGRect frame = CGRectMake(0, 0, ofGetWindowWidth()/[UIScreen mainScreen].scale-0.1, ofGetWindowHeight()/[UIScreen mainScreen].scale-0.1);
     
-  
     ofxWebViewDelegateObjC *delegateObjC = [[ofxWebViewDelegateObjC alloc] init];
-    [delegateObjC setDelegate:delegate]; // WARNING: set to 0 when using default delegate
+    [delegateObjC setDelegate:delegate]; // WARNING: is set to 0 when using default delegate - make sure to set delegate
     
-    if (wkOn) {
-        cout << "Initialized WKWebViewInterface" << endl;
-        
-        // Create the configuration with the user content controller
-        WKUserContentController *userContentController = [WKUserContentController new];
-        [userContentController addScriptMessageHandler:delegateObjC name:@"realityEditor"];
+    cout << "Initialized WKWebViewInterface" << endl;
+    
+    // Create the configuration with the user content controller
+    WKUserContentController *userContentController = [WKUserContentController new];
+    [userContentController addScriptMessageHandler:delegateObjC name:@"realityEditor"];
 
-        WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
-        configuration.userContentController = userContentController;
-        configuration.allowsInlineMediaPlayback = YES;
-        
-        wkWebViewInstance = [[WKWebView alloc] initWithFrame:frame configuration:configuration];
-        
-        // set delegate
-        [wkWebViewInstance setNavigationDelegate:delegateObjC];
-        [wkWebViewInstance setUIDelegate:delegateObjC];
-                
-        // make it transparent
-        [wkWebViewInstance setOpaque:NO];
-        [wkWebViewInstance setBackgroundColor:[UIColor clearColor]];
-        [wkWebViewInstance.window makeKeyAndVisible];
-        
-        // make it scrollable
-        [[wkWebViewInstance scrollView] setScrollEnabled:YES];
-        [[wkWebViewInstance scrollView] setBounces:NO];
-   
-    } else {
-        cout << "Initialized UIWebViewInterface" << endl;
-        uiWebViewInstance = [[UIWebView alloc] initWithFrame:frame];
-        
-        // set delegate to handle events
-        [uiWebViewInstance setDelegate:delegateObjC];
-        
-        // make it transparent
-        
-        [uiWebViewInstance setOpaque:NO];
-        [uiWebViewInstance setBackgroundColor:[UIColor clearColor]];
-        [uiWebViewInstance.window makeKeyAndVisible];
-        [uiWebViewInstance setAllowsInlineMediaPlayback:YES];
-        
-        // make it scrollable
-        [[uiWebViewInstance scrollView] setScrollEnabled:YES];
-        [[uiWebViewInstance scrollView] setBounces:NO];
-    }
+    WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
+    configuration.userContentController = userContentController;
+    configuration.allowsInlineMediaPlayback = YES;
     
+    wkWebViewInstance = [[WKWebView alloc] initWithFrame:frame configuration:configuration];
     
+    // set delegate
+    [wkWebViewInstance setNavigationDelegate:delegateObjC];
+    [wkWebViewInstance setUIDelegate:delegateObjC];
     
+    // make it transparent
+    [wkWebViewInstance setOpaque:NO];
+    [wkWebViewInstance setBackgroundColor:[UIColor clearColor]];
+    [wkWebViewInstance.window makeKeyAndVisible];
+    
+    // make it scrollable
+    [[wkWebViewInstance scrollView] setScrollEnabled:YES];
+    [[wkWebViewInstance scrollView] setBounces:NO];
 }
 
 
@@ -132,43 +97,26 @@ void ofxWebViewInterfaceJavaScript::loadURL(string url) {
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     NSURL *nsURL = [NSURL URLWithString:[NSString stringWithCString:url.c_str() encoding:[NSString defaultCStringEncoding]]];
     
-    if (wkOn) {
-        [wkWebViewInstance loadRequest:[NSURLRequest requestWithURL:nsURL]];
-    } else {
-        [uiWebViewInstance loadRequest:[NSURLRequest requestWithURL:nsURL]];
-    }
+    [wkWebViewInstance loadRequest:[NSURLRequest requestWithURL:nsURL]];
 }
 
 void ofxWebViewInterfaceJavaScript::loadLocalFile(string filename) {
     NSString *_filename = [NSString stringWithCString:filename.c_str() encoding:[NSString defaultCStringEncoding]];
     NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:_filename ofType:@"html" inDirectory:@"userinterface"]];
     
-    if (wkOn) {
-        [wkWebViewInstance loadRequest:[NSURLRequest requestWithURL:url]];
-    } else {
-        [uiWebViewInstance loadRequest:[NSURLRequest requestWithURL:url]];
-    }
-    
+    [wkWebViewInstance loadRequest:[NSURLRequest requestWithURL:url]];
 }
 
 void ofxWebViewInterfaceJavaScript::activateView() {
     if (!isShowingView) {
-        if (wkOn) {
-            [ofxiPhoneGetGLParentView() addSubview:wkWebViewInstance];
-        } else {
-            [ofxiPhoneGetGLParentView() addSubview:uiWebViewInstance];
-        }
+        [ofxiPhoneGetGLParentView() addSubview:wkWebViewInstance];
         isShowingView = true;
     }
 }
 
 void ofxWebViewInterfaceJavaScript::deactivateView() {
     if (isShowingView) {
-        if (wkOn) {
-            [wkWebViewInstance removeFromSuperview];
-        } else {
-            [uiWebViewInstance removeFromSuperview];
-        }
+        [wkWebViewInstance removeFromSuperview];
         isShowingView = false;
     }
 }
@@ -182,17 +130,11 @@ void ofxWebViewInterfaceJavaScript::toggleView() {
 }
 
 // relevant for sending the script
-void *ofxWebViewInterfaceJavaScript::runJavaScriptFromString(NSString *script) {
+void ofxWebViewInterfaceJavaScript::runJavaScriptFromString(NSString *script) {
     if (isShowingView) {
-        if (wkOn) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                                [wkWebViewInstance evaluateJavaScript:script completionHandler:nil];
-            });
-        } else {
-               dispatch_async(dispatch_get_main_queue(), ^{
-            [uiWebViewInstance stringByEvaluatingJavaScriptFromString:script];
-                           });
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wkWebViewInstance evaluateJavaScript:script completionHandler:nil];
+        });
     }
 }
 

@@ -48,7 +48,6 @@
 
 #include "ofMain.h"
 #include <WebKit/WebKit.h>
-#include <UIKit/UIKit.h>
 
 @class ofxWebViewDelegateObjC; // forward declaration
 
@@ -61,15 +60,13 @@ public:
      this class. Designers then define their own protocol to communicate
      from the HTML/JS layer to the C++ layer.
      **************************************************************************/
-    virtual void handleCustomRequest(NSString *request, NSURL *url) = 0;
-    virtual void handleJavaScriptFunction(NSDictionary *messageBody) = 0;
-
+    virtual void handleCustomRequest(NSDictionary *messageBody) = 0;
     
 private:
     ofxWebViewDelegateObjC *delegate;
 };
 
-@interface ofxWebViewDelegateObjC : NSObject <UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler>
+@interface ofxWebViewDelegateObjC : NSObject <WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler>
 
 @property(nonatomic, assign) ofxWebViewDelegateCpp *delegate;
 

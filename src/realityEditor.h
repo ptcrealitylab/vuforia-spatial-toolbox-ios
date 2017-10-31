@@ -70,7 +70,7 @@
 #include "QCARState.h"
 #include "MemoryUploader.h"
 
-class realityEditor : public ofxQCAR_App, ofxWebViewDelegateCpp /*ofxWKWebViewDelegateCpp, ofxUIWebViewDelegateCpp*/ {
+class realityEditor : public ofxQCAR_App, ofxWebViewDelegateCpp {
 public:
     void setup();
 
@@ -106,13 +106,9 @@ public:
     vector<vector<string> > nameCount;
     vector<vector<string> > targetsList;
 
-    //    ofxWKWebViewInterfaceJavaScript interface;
-    //    ofxUIWebViewInterfaceJavaScript interface;
-
     ofxWebViewInterfaceJavaScript interface;
 
-    void handleCustomRequest(NSString *request, NSURL *url);
-    void handleJavaScriptFunction(NSDictionary *messageBody);
+    void handleCustomRequest(NSDictionary *messageBody);
     virtual void qcarInitARDone(NSError *error);
     bool qCARInitARDone = false;
 
