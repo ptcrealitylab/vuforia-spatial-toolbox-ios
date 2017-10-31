@@ -48,68 +48,10 @@
 
 @implementation ofxWebViewDelegateObjC
 
-#pragma mark - Common Methods to UIWebView and WKWebView
-
-- (void)handleRequest:(NSURLRequest *)request {
-    BOOL isDefaultRequest = false;
-    
-    // TODO: Use pathComponents instead of host to get variables.
-    if ([[request.URL host] isEqual:@"printSomething"]) {
-        NSLog(@"Test print.\n");
-        isDefaultRequest = true;
-    }
-    
-    if (!isDefaultRequest && [self delegate] != 0) [self delegate]->handleCustomRequest([request.URL host], request.URL);
-}
-
-#pragma mark - WKWebView Delegate Methods
-
-- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
-{
-    if ([[navigationAction.request.URL scheme] isEqualToString:@"of"]) {
-        [self handleRequest: navigationAction.request];
-        // tell WKWebView NOT to load URL (instead we handle message)
-        return decisionHandler(WKNavigationActionPolicyCancel);
-    } else {
-        // tell WKWebView to load URL
-        return decisionHandler(WKNavigationActionPolicyAllow);
-    }
-}
-
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message
 {
-//    NSDictionary* dict = message.body;
-//    NSLog(@"message body: %@", dict);
-//    
-//    NSString* functionName = message.body[@"functionName"];
-    
     if ([self delegate] != 0) {
-        [self delegate]->handleJavaScriptFunction(message.body);
-    }
-    
-//    [self.delegate performSelector:@selector(functionName)];
-    
-//    NSString *callBackString = message.body;
-//    callBackString = [@"(" stringByAppendingString:callBackString];
-//    callBackString = [callBackString stringByAppendingFormat:@")('%@');", @"Some RetString"];
-//    [message.webView evaluateJavaScript:callBackString completionHandler:^(id _Nullable obj, NSError * _Nullable error) {
-//        if (error) {
-//            NSLog(@"name = %@ error = %@",@"", error.localizedDescription);
-//        }
-//    }];
-}
-
-#pragma mark - UIWebView Delegate Methods
-
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
- navigationType:(UIWebViewNavigationType)navigationType {
-    if ([[request.URL scheme] isEqual:@"of"]) {
-        [self handleRequest:request];
-        // tell UIWebView NOT to load URL (instead we handle message)
-        return NO;
-    } else {
-        // tell UIWebView to load URL
-        return YES;
+        [self delegate]->handleCustomRequest(message.body);
     }
 }
 
