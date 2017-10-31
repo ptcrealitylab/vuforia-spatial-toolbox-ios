@@ -13,11 +13,10 @@
 
 
 class javaScriptInterface {
-
     
 public:
     void adapter(string function);
-  string* parseJavaScriptFunctionString(string function, string* arguments);
+  void parseJavaScriptFunctionString(string function, string* arguments);
 private:
    
     size_t pos = 0;
