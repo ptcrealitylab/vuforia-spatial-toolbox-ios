@@ -105,9 +105,55 @@ public:
     // 7 -> state thing
     vector<vector<string> > nameCount;
     vector<vector<string> > targetsList;
+    string functionArg[11] = {"","","","","","","","","",""};
+    
+    // new javascript API endpoints
+    void getDeviceReady(string cb);
     void getVuforiaReady(string cb);
-       string functionArg[11] = {"","","","","","","","","",""};
-
+    void addNewMarker(string markerName, string cb);
+    void getProjectionMatrix(string cb);
+    void getMatrixStream(string cb);
+    void getScreenshot(string size, string cb);
+    void setPause();
+    void setResume();
+    void getUDPMessages(string cb);
+    void sendUDPMessage(string message);
+    void getFileExists(string fileName, string cb);
+    void downloadFile(string fileName, string cb);
+    void getFilesExist(vector<string> fileNameArray, string cb);
+    void getChecksum(vector<string> fileNameArray, string cb);
+    void setStorage(string storageID, string message);
+    void getStorage(string storageID, string cb);
+    void startSpeechRecording();
+    void stopSpeechRecording();
+    void getWords(string cb);
+    // old requests
+    void kickoff();
+    void reload();
+    void oldUI();
+    void freeze();
+    void unfreeze();
+    void sendAccelerationData();
+    void developerOn();
+    void developerOff();
+    void clearSkyOn();
+    void clearSkyOff();
+    void realityOn();
+    void realityOff();
+    void instantOn();
+    void instantOff();
+    void extendedTrackingOn();
+    void extendedTrackingOff();
+    void createMemory();
+    void clearMemory();
+    void loadNewUI(string reloadURL);
+    void setDiscovery(string discoveryURL);
+    void removeDiscovery();
+    void memorize();
+    void remember(string dataStr);
+    void authenticateTouch();
+    
+    
     ofxWebViewInterfaceJavaScript interface;
 
     void handleCustomRequest(NSDictionary *messageBody);
@@ -182,7 +228,7 @@ public:
     bool tcpDiscovery = false;
 
 
-    bool sendAccelerationData = false;
+    bool shouldSendAccelerationData = false;
 
     ofVec3f accel;
     ofVec2f orientation;
@@ -208,9 +254,9 @@ public:
     Poco::ThreadPool memoryThreadPool;
     shared_ptr<MemoryUploader> memoryUploader;
 
-    void memorize();
-    void unfreeze();
-    void freeze();
+//    void memorize();
+//    void unfreeze();
+//    void freeze();
 
     const int thumbnailWidth = 200;
     const int thumbnailHeight = 112;
