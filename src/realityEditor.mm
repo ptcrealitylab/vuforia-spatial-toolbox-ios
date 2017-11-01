@@ -288,17 +288,12 @@ void realityEditor::setup() {
     usleep(100000);
 }
 
-
-
-
-
-
+#pragma mark - Routes to handle function calls from JavaScript
 
 /**********************************************
  (new method for) HANDLING REQUESTS FROM JS/HTML (JS->C++)
  **********************************************/
 void realityEditor::handleCustomRequest(NSDictionary *messageBody) {
-//    NSDictionary* dict = message.body;
     NSLog(@"message body: %@", messageBody);
     
     string functionName = [messageBody[@"functionName"] UTF8String];
@@ -461,18 +456,11 @@ void realityEditor::handleCustomRequest(NSDictionary *messageBody) {
         
     } else if (functionName == "authenticateTouch") {
         authenticateTouch();
-        
     }
-    
-//    if (reqstring == "remember") {
-//
-//        NSString* data = messageBody[@"data"];
-//        string dataStr = [data UTF8String];
-//    }
-    
 }
 
 #pragma mark - START OF Functions Called From JavaScript
+#pragma mark -
 
 void realityEditor::getDeviceReady(string cb){   }
 void realityEditor::getVuforiaReady(string cb) {
@@ -821,7 +809,7 @@ void realityEditor::authenticateTouch() {
 }
 
 #pragma mark - END OF Functions Called From JavaScript
-
+#pragma mark -
 
 //--------------------------------------------------------------
 // reponder for the asychronus file loader.
