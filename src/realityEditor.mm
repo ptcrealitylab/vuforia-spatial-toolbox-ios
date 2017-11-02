@@ -221,7 +221,7 @@ void realityEditor::setup() {
 
 
     interface.initializeWithCustomDelegate(this);
-
+    speechInterface.initializeWithCustomDelegate(this);
 
     if(discoveryState !=""){
 
@@ -286,6 +286,19 @@ void realityEditor::setup() {
         screenScale =2;
     }
     usleep(100000);
+}
+
+#pragma mark - Speech Recognition
+
+void realityEditor::handleIncomingSpeech(std::string bestTranscription) {
+    cout << "realityEditor did receive speech: " << bestTranscription << endl;
+    
+    if (!speechCallback.empty()) {
+        NSString *jsString44 =[NSString stringWithFormat:@"%s", speechCallback.c_str()];
+        cout << " output: "<< jsString44;
+        interface.runJavaScriptFromString(jsString44);
+    }
+    
 }
 
 #pragma mark - Routes to handle function calls from JavaScript
@@ -376,8 +389,8 @@ void realityEditor::handleCustomRequest(NSDictionary *messageBody) {
     } else if (functionName == "stopSpeechRecording") {
         stopSpeechRecording();
         
-    } else if (functionName == "getWords") {
-        getWords(cb);
+    } else if (functionName == "addSpeechListener") {
+        addSpeechListener(cb);
         
     }
     /***** OLD REQUESTS *****/
@@ -463,6 +476,7 @@ void realityEditor::handleCustomRequest(NSDictionary *messageBody) {
 #pragma mark -
 
 void realityEditor::getDeviceReady(string cb){   }
+
 void realityEditor::getVuforiaReady(string cb) {
     cout << "-------------------" << "\n";
     cout << cb << "\n";
@@ -471,6 +485,7 @@ void realityEditor::getVuforiaReady(string cb) {
     cout << " output: "<< jsString44;
     interface.runJavaScriptFromString(jsString44);
 }
+
 void realityEditor::addNewMarker(string markerName, string cb){   }
 void realityEditor::getProjectionMatrix(string cb){   }
 void realityEditor::getMatrixStream(string cb){   }
@@ -485,10 +500,22 @@ void realityEditor::getFilesExist(vector<string> fileNameArray, string cb){   }
 void realityEditor::getChecksum(vector<string> fileNameArray, string cb){   }
 void realityEditor::setStorage(string storageID, string message){   }
 void realityEditor::getStorage(string storageID, string cb){   }
-void realityEditor::startSpeechRecording(){   }
-void realityEditor::stopSpeechRecording(){   }
-void realityEditor::getWords(string cb){   }
 
+void realityEditor::startSpeechRecording(){
+    speechInterface.startRecording();
+}
+
+void realityEditor::stopSpeechRecording(){
+    speechCallback = "";
+    speechInterface.stopRecording();
+}
+
+void realityEditor::addSpeechListener(string cb){
+    speechCallback = cb;
+    cout << "-------------------" << "\n";
+    cout << "set speechCallback: " << speechCallback << "\n";
+    cout << "-------------------" << "\n";
+}
 
 /***** OLD REQUESTS *****/
 
