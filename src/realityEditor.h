@@ -61,6 +61,7 @@
 #import <QCAR/Matrices.h>
 
 #include "ofxWebViewInterface.h"
+#include "SpeechInterface.h"
 
 #include "Poco/Base64Encoder.h"
 #include "Poco/ThreadPool.h"
@@ -70,7 +71,7 @@
 #include "QCARState.h"
 #include "MemoryUploader.h"
 
-class realityEditor : public ofxQCAR_App, ofxWebViewDelegateCpp {
+class realityEditor : public ofxQCAR_App, ofxWebViewDelegateCpp, SpeechDelegateCpp {
 public:
     void setup();
 
@@ -105,7 +106,6 @@ public:
     // 7 -> state thing
     vector<vector<string> > nameCount;
     vector<vector<string> > targetsList;
-    string functionArg[11] = {"","","","","","","","","",""};
     
     // new javascript API endpoints
     void getDeviceReady(string cb);
@@ -126,7 +126,7 @@ public:
     void getStorage(string storageID, string cb);
     void startSpeechRecording();
     void stopSpeechRecording();
-    void getWords(string cb);
+    void addSpeechListener(string cb);
     // old requests
     void kickoff();
     void reload();
@@ -153,22 +153,26 @@ public:
     void remember(string dataStr);
     void authenticateTouch();
     
+    SpeechInterfaceCpp speechInterface;
+    void handleIncomingSpeech(std::string bestTranscription);
     
-    ofxWebViewInterfaceJavaScript interface;
+    string speechCallback;
 
+    ofxWebViewInterfaceJavaScript interface;
     void handleCustomRequest(NSDictionary *messageBody);
+    
     virtual void qcarInitARDone(NSError *error);
     bool qCARInitARDone = false;
 
     ofxJSONElement json;
-      ofxJSONElement allObjectJSON;
+    ofxJSONElement allObjectJSON;
     bool waitUntil;
     bool onlyOnce;
     bool waitGUI;
     char udpMessage[256];
     bool nameExists = false;
     bool targetExists = false;
-     bool allTargetsExist = false;
+    bool allTargetsExist = false;
     int numbersToMuch;
 
     string arrayList[3] = {"dat", "xml", "jpg"};
@@ -221,10 +225,10 @@ public:
     int developerState = 0;
     int extTrackingState = 0;
     int clearSkyState = 0;
-      int realityState = 0;
+    int realityState = 0;
     int instantState = 1;
     string externalState = "";
-      string discoveryState = "";
+    string discoveryState = "";
     bool tcpDiscovery = false;
 
 
@@ -254,10 +258,6 @@ public:
     Poco::ThreadPool memoryThreadPool;
     shared_ptr<MemoryUploader> memoryUploader;
 
-//    void memorize();
-//    void unfreeze();
-//    void freeze();
-
     const int thumbnailWidth = 200;
     const int thumbnailHeight = 112;
 
@@ -282,8 +282,6 @@ public:
      void gotFocus();
      void gotMemoryWarning();
      void deviceOrientationChanged(int newOrientation);*/
-
-string functionArgs[11] = {"","","","","","","","","",""};
     
 };
 

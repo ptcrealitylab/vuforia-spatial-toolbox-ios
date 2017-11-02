@@ -10,6 +10,8 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
+		436CC0641FAA24D40021BA20 /* SpeechInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 436CC0621FAA24D40021BA20 /* SpeechInterface.mm */; };
+		436CC0661FAA25820021BA20 /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 436CC0651FAA25810021BA20 /* Speech.framework */; };
 		511FEF001E09F15000BB06AB /* ImagePartSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 511FEEFC1E09F15000BB06AB /* ImagePartSource.mm */; };
 		511FEF011E09F15000BB06AB /* MemoryUploader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 511FEEFE1E09F15000BB06AB /* MemoryUploader.mm */; };
 		51BA97591EDC6FC60041A67F /* QCAR_assets in Resources */ = {isa = PBXBuildFile; fileRef = 51BA97581EDC6FC60041A67F /* QCAR_assets */; };
@@ -96,6 +98,10 @@
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* ofxiOS_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiOS_Prefix.pch; sourceTree = "<group>"; };
+		436CC05B1FA905C00021BA20 /* vuforiaKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vuforiaKey.h; sourceTree = "<group>"; };
+		436CC0621FAA24D40021BA20 /* SpeechInterface.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = SpeechInterface.mm; sourceTree = "<group>"; };
+		436CC0631FAA24D40021BA20 /* SpeechInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpeechInterface.h; sourceTree = "<group>"; };
+		436CC0651FAA25810021BA20 /* Speech.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Speech.framework; path = System/Library/Frameworks/Speech.framework; sourceTree = SDKROOT; };
 		511FEEFB1E09F15000BB06AB /* ImagePartSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImagePartSource.h; path = memory/ImagePartSource.h; sourceTree = "<group>"; };
 		511FEEFC1E09F15000BB06AB /* ImagePartSource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ImagePartSource.mm; path = memory/ImagePartSource.mm; sourceTree = "<group>"; };
 		511FEEFD1E09F15000BB06AB /* MemoryUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MemoryUploader.h; path = memory/MemoryUploader.h; sourceTree = "<group>"; };
@@ -158,7 +164,6 @@
 		A7DE8BBD1BCB397B00CC1525 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		A7DE8BBF1BCB397B00CC1525 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		A7DE8BC01BCB397B00CC1525 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
-		A7EA8A1F1F9FAA0800688BBD /* vuforiaKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vuforiaKey.h; sourceTree = SOURCE_ROOT; };
 		A7EA8A761F9FBD2400688BBD /* VideoBackgroundTextureInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VideoBackgroundTextureInfo.h; path = ../../../qcar/include/QCAR/VideoBackgroundTextureInfo.h; sourceTree = "<group>"; };
 		A7EA8A771F9FBD2500688BBD /* Eyewear.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Eyewear.h; path = ../../../qcar/include/QCAR/Eyewear.h; sourceTree = "<group>"; };
 		A7EA8A781F9FBD2500688BBD /* QCAR_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QCAR_iOS.h; path = ../../../qcar/include/QCAR/QCAR_iOS.h; sourceTree = "<group>"; };
@@ -259,6 +264,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				436CC0661FAA25820021BA20 /* Speech.framework in Frameworks */,
 				5D4278CD1E4E5CBC009F8A5D /* LocalAuthentication.framework in Frameworks */,
 				A7BC537A1AFBC54C00B7D2C2 /* WebKit.framework in Frameworks */,
 				A720E48D1AFB3C9000B29F68 /* CoreMotion.framework in Frameworks */,
@@ -343,9 +349,19 @@
 			name = "core frameworks";
 			sourceTree = "<group>";
 		};
+		436CC0611FAA247E0021BA20 /* speechAPI */ = {
+			isa = PBXGroup;
+			children = (
+				436CC0631FAA24D40021BA20 /* SpeechInterface.h */,
+				436CC0621FAA24D40021BA20 /* SpeechInterface.mm */,
+			);
+			path = speechAPI;
+			sourceTree = "<group>";
+		};
 		5D4278CB1E4E5CBC009F8A5D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				436CC0651FAA25810021BA20 /* Speech.framework */,
 				5D4278CC1E4E5CBC009F8A5D /* LocalAuthentication.framework */,
 			);
 			name = Frameworks;
@@ -698,10 +714,11 @@
 				511FEEFE1E09F15000BB06AB /* MemoryUploader.mm */,
 				511FEEFF1E09F15000BB06AB /* QCARState.h */,
 				A704BEDD1AFB44BF00E97FDC /* webInterface */,
+				436CC0611FAA247E0021BA20 /* speechAPI */,
 				E4D8936B11527B74007E1F53 /* main.mm */,
 				E4D8936D11527B74007E1F53 /* realityEditor.mm */,
 				E4D8936C11527B74007E1F53 /* realityEditor.h */,
-				A7EA8A1F1F9FAA0800688BBD /* vuforiaKey.h */,
+				436CC05B1FA905C00021BA20 /* vuforiaKey.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -838,6 +855,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A7DE8BC41BCB397B00CC1525 /* ofxXmlSettings.cpp in Sources */,
+				436CC0641FAA24D40021BA20 /* SpeechInterface.mm in Sources */,
 				A7BBB00B1C95FBDA000AFAB6 /* ofxQCAR_ViewController.mm in Sources */,
 				511FEF001E09F15000BB06AB /* ImagePartSource.mm in Sources */,
 				A7DE8BC31BCB397B00CC1525 /* tinyxmlparser.cpp in Sources */,
