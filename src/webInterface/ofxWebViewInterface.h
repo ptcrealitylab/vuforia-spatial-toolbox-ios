@@ -55,21 +55,20 @@
 #include <LocalAuthentication/LocalAuthentication.h>
 
 /**
- ofxUIWebViewInterface interfaces with EXACTLY ONE UIWebView instance.
+ ofxWebViewInterface interfaces with EXACTLY ONE WKWebView instance.
  
- ofxUIWebViewInterface supports 2-way communication with the HTML page it is rendering:
+ ofxWebViewInterface supports 2-way communication with the HTML page it is rendering:
  
  1. Application -> HTML/JS:
  runJavaScriptFromString(NSString* script)
  
  2. HTML/JS -> Application:
- shouldStartLoadWithRequest() of the DELEGATE will be called whenever
- window.location.href = "OF://<address>" is run in the javascript.
+ handleCustomRequest(NSDictionary* messageBody) of the DELEGATE will be called whenever
+ window.webkit.messageHandlers.realityEditor.postMessage({functionName: ""});
  
  Therefore, the protocol is up to the interface programmer to define by defining a SUBCLASS of the
- ofxUIWebViewDelegate.
+ ofxWebViewDelegate.
  */
-@class UIWebViewMultiInteractable;
 
 class ofxWebViewInterfaceJavaScript {
     
@@ -95,10 +94,7 @@ public:
     void toggleView();
     
     /** 4. Running JS code */
-    void *runJavaScriptFromString(NSString *script);
-    
-    // object returned is a UIWebView or a WKWebView depending on the OS version
-    NSObject *getWebViewInstance();
+    void runJavaScriptFromString(NSString *script);
     
     // tells the iOS system to ask for touch security
     //    void promptForTouch(std::function<void(bool)> &callback);
@@ -107,16 +103,11 @@ public:
 private:
     bool isShowingView;
     
-    // use if iOS version is less than 9.0
-    UIWebView *uiWebViewInstance;
-    // use if iOS version is at least 9.0
     WKWebView *wkWebViewInstance;
     
     ofAppiOSWindow thisWindow =  *ofxiPhoneGetOFWindow();
     int screenScale = 1;
-    
-    bool shouldUseWKWebView();
-    
+        
     // touch security methods
     void touchAuthSucceeded();
     void touchAuthFailed();
