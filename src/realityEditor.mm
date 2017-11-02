@@ -221,7 +221,7 @@ void realityEditor::setup() {
 
 
     interface.initializeWithCustomDelegate(this);
-
+    speechInterface.initializeWithCustomDelegate(this);
 
     if(discoveryState !=""){
 
@@ -288,63 +288,284 @@ void realityEditor::setup() {
     usleep(100000);
 }
 
+#pragma mark - Speech Recognition
+
+void realityEditor::handleIncomingSpeech(std::string bestTranscription) {
+    cout << "realityEditor did receive speech: " << bestTranscription << endl;
+    
+    if (!speechCallback.empty()) {
+        NSString *jsString44 =[NSString stringWithFormat:@"%s", speechCallback.c_str()];
+        cout << " output: "<< jsString44;
+        interface.runJavaScriptFromString(jsString44);
+    }
+    
+}
+
+#pragma mark - Routes to handle function calls from JavaScript
+
 /**********************************************
- HANDLING REQUESTS FROM JS/HTML (JS->C++)
+ (new method for) HANDLING REQUESTS FROM JS/HTML (JS->C++)
  **********************************************/
-void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
-    string reqstring([request UTF8String]);
-
-    ofLog() << reqstring;
-    Poco::URI uri([[url absoluteString] UTF8String]);
-    ofLog() << "Handling " << uri.toString() << " aka " << reqstring;
-
-    // if the html interface is loaded kickoff will be send to the c++ code.
-    if (reqstring == "kickoff") {
-        waitUntil = true;
-        NSLog(@"kickoff");
-
-        if(haveChangedUIwithURL > 0){
-            // reloader = true;
-            changedURLOk = true;
-            // here is where we need to write the permanent link saving mechanism
-        }
-
-        if (qCARInitARDone) {
-            sendProjectionMatrix();
-        }
-
-        // help to reestablish the arrays when reloaded the interface
-        // needs some more work on getting back and forth all the different objects
-
-
-        // if the message is reload then the interface reloads and all objects are resent to the editor
+void realityEditor::handleCustomRequest(NSDictionary *messageBody) {
+    NSLog(@"message body: %@", messageBody);
+    
+    string functionName = [messageBody[@"functionName"] UTF8String];
+    NSDictionary* arguments = messageBody[@"arguments"];
+    NSString* callback = messageBody[@"callback"];
+    string cb = "";
+    if (callback != nil) {
+        cb = [callback UTF8String];
+    }
+    
+    if (functionName == "getDeviceReady") {
+        getDeviceReady(cb);
         
-        NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, %d, \"%s\",\"%s\", %d)",
-                                 deviceNamespace.c_str(),
-                                 developerState,
-                                 extTrackingState,
-                                 clearSkyState,
-                                 instantState,
-                                 externalState.c_str(), discoveryState.c_str(), realityState];
-        interface.runJavaScriptFromString(stateSender);
+    } else if (functionName == "getVuforiaReady") {
+        getVuforiaReady(cb);
+    
+    } else if (functionName == "addNewMarker") {
+        string markerName = [(NSString *)arguments[@"markerName"] UTF8String];
+        addNewMarker(markerName, cb);
         
-        NSString *deviceSender = [NSString stringWithFormat:@"%s.setDeviceName(\"%s\")",
-                                  deviceNamespace.c_str(),
-                                  ofxiOSGetDeviceRevision().c_str()];
-        interface.runJavaScriptFromString(deviceSender);
+    } else if (functionName == "getProjectionMatrix") {
+        getProjectionMatrix(cb);
+        
+    } else if (functionName == "getMatrixStream") {
+        getMatrixStream(cb);
+        
+    } else if (functionName == "getScreenshot") {
+        string size = [(NSString *)arguments[@"size"] UTF8String];
+        getScreenshot(size, cb);
+        
+    } else if (functionName == "setPause") {
+        setPause();
+        
+    } else if (functionName == "setResume") {
+        setResume();
+        
+    } else if (functionName == "getUDPMessages") {
+        getUDPMessages(cb);
+        
+    } else if (functionName == "sendUDPMessage") {
+        string message = [(NSString *)arguments[@"message"] UTF8String];
+        sendUDPMessage(message);
+        
+    } else if (functionName == "getFileExists") {
+        string fileName = [(NSString *)arguments[@"fileName"] UTF8String];
+        getFileExists(fileName, cb);
+        
+    } else if (functionName == "downloadFile") {
+        string fileName = [(NSString *)arguments[@"fileName"] UTF8String];
+        downloadFile(fileName, cb);
+        
+    } else if (functionName == "getFilesExist") {
+        vector<string> fileNameArray;
+        NSArray* fileNames = (NSArray *)arguments[@"fileNameArray"];
+        for (NSString* fileName in fileNames) {
+            fileNameArray.push_back([fileName UTF8String]);
+        }
+        getFilesExist(fileNameArray, cb);
+        
+    } else if (functionName == "getChecksum") {
+        vector<string> fileNameArray;
+        NSArray* fileNames = (NSArray *)arguments[@"fileNameArray"];
+        for (NSString* fileName in fileNames) {
+            fileNameArray.push_back([fileName UTF8String]);
+        }
+        getChecksum(fileNameArray, cb);
+        
+    } else if (functionName == "setStorage") {
+        string storageID = [(NSString *)arguments[@"storageID"] UTF8String];
+        string message = [(NSString *)arguments[@"message"] UTF8String];
+        setStorage(storageID, message);
+        
+    } else if (functionName == "getStorage") {
+        string storageID = [(NSString *)arguments[@"storageID"] UTF8String];
+        getStorage(storageID, cb);
+        
+    } else if (functionName == "startSpeechRecording") {
+        startSpeechRecording();
+        
+    } else if (functionName == "stopSpeechRecording") {
+        stopSpeechRecording();
+        
+    } else if (functionName == "addSpeechListener") {
+        addSpeechListener(cb);
+        
+    }
+    /***** OLD REQUESTS *****/
 
-        //  NSLog(stateSender);
+      else if (functionName == "kickoff") {
+        kickoff();
+        
+    } else if (functionName == "reload") {
+        reload();
+        
+    } else if (functionName == "oldUI") {
+        oldUI();
+        
+    } else if (functionName == "freeze") {
+        freeze();
+        
+    } else if (functionName == "unfreeze") {
+        unfreeze();
+        
+    } else if (functionName == "sendAccelerationData") {
+        sendAccelerationData();
+        
+    } else if (functionName == "developerOn") {
+        developerOn();
+        
+    } else if (functionName == "developerOff") {
+        developerOff();
+        
+    } else if (functionName == "clearSkyOn") {
+        clearSkyOn();
+        
+    } else if (functionName == "clearSkyOff") {
+        clearSkyOff();
+        
+    } else if (functionName == "realityOn") {
+        realityOn();
+        
+    } else if (functionName == "realityOff") {
+        realityOff();
+        
+    } else if (functionName == "instantOn") {
+        instantOn();
+        
+    } else if (functionName == "instantOff") {
+        instantOff();
+        
+    } else if (functionName == "extendedTrackingOn") {
+        extendedTrackingOn();
+        
+    } else if (functionName == "extendedTrackingOff") {
+        extendedTrackingOff();
+        
+    } else if (functionName == "createMemory") {
+        createMemory();
+        
+    } else if (functionName == "clearMemory") {
+        clearMemory();
+        
+    } else if (functionName == "loadNewUI") {
+        string reloadURL = [(NSString *)arguments[@"reloadURL"] UTF8String];
+        loadNewUI(reloadURL);
+        
+    } else if (functionName == "setDiscovery") {
+        string discoveryURL = [(NSString *)arguments[@"discoveryURL"] UTF8String];
+        setDiscovery(discoveryURL);
+        
+    } else if (functionName == "removeDiscovery") {
+        removeDiscovery();
+        
+    } else if (functionName == "memorize") {
+        memorize();
+        
+    } else if (functionName == "remember") {
+        string dataStr = [(NSString *)arguments[@"dataStr"] UTF8String];
+        remember(dataStr);
+        
+    } else if (functionName == "authenticateTouch") {
+        authenticateTouch();
+    }
+}
 
+#pragma mark - START OF Functions Called From JavaScript
+#pragma mark -
 
-        // if (reloader == true) {
+void realityEditor::getDeviceReady(string cb){   }
 
+void realityEditor::getVuforiaReady(string cb) {
+    cout << "-------------------" << "\n";
+    cout << cb << "\n";
+    cout << "-------------------" << "\n";
+    NSString *jsString44 =[NSString stringWithFormat:@"%s", cb.c_str()];
+    cout << " output: "<< jsString44;
+    interface.runJavaScriptFromString(jsString44);
+}
 
-        cout<< "---->>>---<<<---Sending reload";
+void realityEditor::addNewMarker(string markerName, string cb){   }
+void realityEditor::getProjectionMatrix(string cb){   }
+void realityEditor::getMatrixStream(string cb){   }
+void realityEditor::getScreenshot(string size, string cb){   }
+void realityEditor::setPause(){   }
+void realityEditor::setResume(){   }
+void realityEditor::getUDPMessages(string cb){   }
+void realityEditor::sendUDPMessage(string message){   }
+void realityEditor::getFileExists(string fileName, string cb){   }
+void realityEditor::downloadFile(string fileName, string cb){   }
+void realityEditor::getFilesExist(vector<string> fileNameArray, string cb){   }
+void realityEditor::getChecksum(vector<string> fileNameArray, string cb){   }
+void realityEditor::setStorage(string storageID, string message){   }
+void realityEditor::getStorage(string storageID, string cb){   }
 
+void realityEditor::startSpeechRecording(){
+    speechInterface.startRecording();
+}
 
-        for (int i = 0; i < nameCount.size(); i++) {
-            cout<<&nameCount[i];
-                        if(nameCount[i][0] != "allTargetsPlaceholder000000000000"){
+void realityEditor::stopSpeechRecording(){
+    speechCallback = "";
+    speechInterface.stopRecording();
+}
+
+void realityEditor::addSpeechListener(string cb){
+    speechCallback = cb;
+    cout << "-------------------" << "\n";
+    cout << "set speechCallback: " << speechCallback << "\n";
+    cout << "-------------------" << "\n";
+}
+
+/***** OLD REQUESTS *****/
+
+// if the html interface is loaded kickoff will be send to the c++ code.
+void realityEditor::kickoff() {
+    waitUntil = true;
+    NSLog(@"kickoff");
+    
+    if(haveChangedUIwithURL > 0){
+        // reloader = true;
+        changedURLOk = true;
+        // here is where we need to write the permanent link saving mechanism
+    }
+    
+    if (qCARInitARDone) {
+        sendProjectionMatrix();
+    }
+    
+    // help to reestablish the arrays when reloaded the interface
+    // needs some more work on getting back and forth all the different objects
+    
+    
+    // if the message is reload then the interface reloads and all objects are resent to the editor
+    
+    NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, %d, \"%s\",\"%s\", %d)",
+                             deviceNamespace.c_str(),
+                             developerState,
+                             extTrackingState,
+                             clearSkyState,
+                             instantState,
+                             externalState.c_str(), discoveryState.c_str(), realityState];
+    interface.runJavaScriptFromString(stateSender);
+    
+    NSString *deviceSender = [NSString stringWithFormat:@"%s.setDeviceName(\"%s\")",
+                              deviceNamespace.c_str(),
+                              ofxiOSGetDeviceRevision().c_str()];
+    interface.runJavaScriptFromString(deviceSender);
+    
+    //  NSLog(stateSender);
+    
+    
+    // if (reloader == true) {
+    
+    
+    cout<< "---->>>---<<<---Sending reload";
+    
+    
+    for (int i = 0; i < nameCount.size(); i++) {
+        cout<<&nameCount[i];
+        if(nameCount[i][0] != "allTargetsPlaceholder000000000000"){
             NSString *jsString3 = [NSString stringWithFormat:@"%s.addHeartbeatObject({'id':'%s','ip':'%s','vn':%i,'tcs':'%s'})",
                                    networkNamespace.c_str(),
                                    nameCount[i][0].c_str(),
@@ -352,301 +573,270 @@ void realityEditor::handleCustomRequest(NSString *request, NSURL *url) {
                                    stoi(nameCount[i][2].c_str()),
                                    nameCount[i][3].c_str()];
             interface.runJavaScriptFromString(jsString3);
-                        }
-            //   NSLog(@"reload interfaces");
         }
-        //}
-        NSLog(@"reload interfaces");
+        //   NSLog(@"reload interfaces");
     }
+    //}
+    NSLog(@"reload interfaces");
+}
 
-    if (reqstring == "reload") {
-        waitUntil = false;
-
-        if(externalState !=""){
-            interface.deactivateView();
-            
-            if (externalState.rfind("http://", 0) != 0 && externalState != "http")
-            {
-                externalState = "http://"+externalState;
-            }
-
-            interface.loadURL(externalState.c_str());
-            interface.activateView();
-        }else{
-            interface.deactivateView();
-            interface.loadLocalFile("index");
-            interface.activateView();
+void realityEditor::reload() {
+    waitUntil = false;
+    
+    if(externalState !=""){
+        interface.deactivateView();
+        
+        if (externalState.rfind("http://", 0) != 0 && externalState != "http")
+        {
+            externalState = "http://"+externalState;
         }
-
-
-
-
-        //reloader = true;
-        NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, %d, \"%s\", \"%s\", %d)",
-                                 deviceNamespace.c_str(),
-                                 developerState,
-                                 extTrackingState,
-                                 clearSkyState,
-                                 instantState,
-                                 externalState.c_str(),
-                                discoveryState.c_str(),
-                                 realityState];
-        interface.runJavaScriptFromString(stateSender);
-
-    }
-
-    if (reqstring == "oldUI") {
-        networkNamespace = "this";
-        deviceNamespace = "this";
-        arNamespace = "this";
-        drawNamespace = "this";
-        memoryNamespace = "this";
+        
+        interface.loadURL(externalState.c_str());
+        interface.activateView();
+    }else{
+        interface.deactivateView();
+        interface.loadLocalFile("index");
+        interface.activateView();
     }
     
+    //reloader = true;
+    NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, %d, \"%s\", \"%s\", %d)",
+                             deviceNamespace.c_str(),
+                             developerState,
+                             extTrackingState,
+                             clearSkyState,
+                             instantState,
+                             externalState.c_str(),
+                             discoveryState.c_str(),
+                             realityState];
+    interface.runJavaScriptFromString(stateSender);
+}
+
+void realityEditor::oldUI() {
+    networkNamespace = "this";
+    deviceNamespace = "this";
+    arNamespace = "this";
+    drawNamespace = "this";
+    memoryNamespace = "this";
+}
+
+void realityEditor::freeze() {
+    currentMemory = shared_ptr<QCARState>(new QCARState(getCameraImage(), matrixTemp, nameTemp));
+}
+
+void realityEditor::unfreeze() {
+    currentMemory = nullptr;
+}
+
+void realityEditor::sendAccelerationData() {
+    shouldSendAccelerationData = true;
+}
+
+void realityEditor::developerOn() {
+    XML.setValue("SETUP:DEVELOPER", 1);
+    XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+    cout << "editor.xml saved to app documents folder";
+}
+
+void realityEditor::developerOff() {
+    XML.setValue("SETUP:DEVELOPER", 0);
+    XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+    cout << "editor.xml saved to app documents folder";
+}
+
+void realityEditor::clearSkyOn() {
+    XML.setValue("SETUP:CLEARSKY", 1);
+    XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+    cout << "editor.xml saved to app documents folder";
+}
+
+void realityEditor::clearSkyOff() {
+    XML.setValue("SETUP:CLEARSKY", 0);
+    XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+    cout << "editor.xml saved to app documents folder";
+}
+
+void realityEditor::realityOn() {
+    XML.setValue("SETUP:REALITY", 1);
+    XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+    cout << "editor.xml saved to app documents folder";
+}
+
+void realityEditor::realityOff() {
+    XML.setValue("SETUP:REALITY", 0);
+    XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+    cout << "editor.xml saved to app documents folder";
+}
+
+void realityEditor::instantOn() {
+    XML.setValue("SETUP:INSTANT", 1);
+    XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+    cout << "editor.xml saved to app documents folder";
+}
+
+void realityEditor::instantOff() {
+    XML.setValue("SETUP:INSTANT", 0);
+    XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+    cout << "editor.xml saved to app documents folder";
+}
+
+void realityEditor::extendedTrackingOn() {
+    ofxQCAR & QCAR = *ofxQCAR::getInstance();
+    QCAR.startExtendedTracking();
+    extendedTracking = true;
     
-    if (reqstring == "freeze") {
-        freeze();
-    }
-    if (reqstring == "unfreeze") {
-        unfreeze();
-    }
-    if (reqstring == "sendAccelerationData") {
-        sendAccelerationData = true;
-    }
+    XML.setValue("SETUP:TRACKING", 1);
+    XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+    cout << "editor.xml saved to app documents folder";
+}
 
-    if (reqstring == "developerOn") {
-        XML.setValue("SETUP:DEVELOPER", 1);
-        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
-        cout << "editor.xml saved to app documents folder";
-
-    }
-    if (reqstring == "developerOff") {
-        XML.setValue("SETUP:DEVELOPER", 0);
-        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
-        cout << "editor.xml saved to app documents folder";
-    }
-
-    if (reqstring == "clearSkyOn") {
-        XML.setValue("SETUP:CLEARSKY", 1);
-        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
-        cout << "editor.xml saved to app documents folder";
-
+void realityEditor::extendedTrackingOff() {
+    ofxQCAR & QCAR = *ofxQCAR::getInstance();
+    QCAR.stopExtendedTracking();
+    extendedTracking = false;
     
+    XML.setValue("SETUP:TRACKING", 0);
+    XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+    cout << "editor.xml saved to app documents folder";
+}
+
+void realityEditor::createMemory() {
+    if (nameTemp.size() > 0) {
+        ofLog() << "createMemory " << nameTemp[0];
+        tempMemory = make_shared<QCARState>(getCameraImage(), matrixTemp, nameTemp);
+        sendThumbnail(tempMemory);
     }
-    if (reqstring == "clearSkyOff") {
-        XML.setValue("SETUP:CLEARSKY", 0);
-        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
-        cout << "editor.xml saved to app documents folder";
-    }
+}
+
+void realityEditor::clearMemory() {
+    tempMemory = nullptr;
+}
+
+void realityEditor::loadNewUI(string reloadURL) {
+    ofLog() << "this is the new URL:" << reloadURL <<":";
     
-    if (reqstring == "realityOn") {
-        XML.setValue("SETUP:REALITY", 1);
+    if(reloadURL !=""){
+        haveChangedUIwithURL = 500;
+        changedURLOk = false;
+        
+        interface.deactivateView();
+        // interface.loadLocalFile("setup","page");
+        
+        cout << "this has been loaded from the webuI";
+        cout << reloadURL.c_str();
+        
+        
+        if (reloadURL.rfind("http://", 0) != 0 && reloadURL !="http")
+        {
+            reloadURL = "http://"+reloadURL;
+        }
+        
+        interface.loadURL(reloadURL.c_str());
+        NSLog(@"%s", reloadURL.c_str());
+        
+        XML.setValue("SETUP:EXTERNAL", reloadURL);
         XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
         cout << "editor.xml saved to app documents folder";
         
-    }
-    if (reqstring == "realityOff") {
-        XML.setValue("SETUP:REALITY", 0);
-        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
-        cout << "editor.xml saved to app documents folder";
-    }
-    
-    if (reqstring == "instantOn") {
-        XML.setValue("SETUP:INSTANT", 1);
-        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
-        cout << "editor.xml saved to app documents folder";
+        externalState = reloadURL;
         
+        interface.activateView();
     }
-    if (reqstring == "instantOff") {
-        XML.setValue("SETUP:INSTANT", 0);
-        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
-        cout << "editor.xml saved to app documents folder";
-    }
+}
+
+void realityEditor::setDiscovery(string discoveryURL) {
+    ofLog() << "this is the new URL:" << discoveryURL <<":";
     
-
-
-    if (reqstring == "extendedTrackingOn") {
-        ofxQCAR & QCAR = *ofxQCAR::getInstance();
-        QCAR.startExtendedTracking();
-        extendedTracking = true;
-
-        XML.setValue("SETUP:TRACKING", 1);
-        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
-        cout << "editor.xml saved to app documents folder";
-
-    }
-
-    if (reqstring == "extendedTrackingOff") {
-        ofxQCAR & QCAR = *ofxQCAR::getInstance();
-        QCAR.stopExtendedTracking();
-        extendedTracking = false;
-
-        XML.setValue("SETUP:TRACKING", 0);
-        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
-        cout << "editor.xml saved to app documents folder";
-    }
-
-    if (reqstring == "createMemory") {
-        if (nameTemp.size() > 0) {
-            ofLog() << "createMemory " << nameTemp[0];
-            tempMemory = make_shared<QCARState>(getCameraImage(), matrixTemp, nameTemp);
-            sendThumbnail(tempMemory);
+    if(discoveryURL !=""){
+        
+        tcpDiscovery = false;
+        
+        cout << "this has been loaded from the webuI --------------------------''''''''######################## ::  ";
+        cout << discoveryURL.c_str();
+        cout << "    ::: this has been loaded from the webuI --------------------------''''''''########################  ";
+        
+        
+        
+        if (discoveryURL.rfind("http://", 0) != 0 && discoveryURL != "http")
+        {
+            discoveryURL = "http://"+discoveryURL;
+            tcpDiscovery = true;
+        } else if (discoveryURL.rfind("http://", 0) == 0 || discoveryURL.rfind("https://", 0) == 0){
+            tcpDiscovery = true;
         }
-    }
-
-    if (reqstring == "clearMemory") {
-        tempMemory = nullptr;
-    }
-
-    string reqData;
-
-    if (getDataFromReq(reqstring, "loadNewUI", &reqData)) {
-        cout << "got the URL";
-        string reloadURL = reqData;
-        ofLog() << "this is the new URL:" << reloadURL <<":";
-
-        if(reloadURL !=""){
-            haveChangedUIwithURL = 500;
-            changedURLOk = false;
-
-            interface.deactivateView();
-            // interface.loadLocalFile("setup","page");
-
-            cout << "this has been loaded from the webuI";
-            cout << reloadURL.c_str();
-
+        
+        
+        
+        if(tcpDiscovery == true){
             
-            if (reloadURL.rfind("http://", 0) != 0 && reloadURL !="http")
-            {
-                reloadURL = "http://"+reloadURL;
-            }
-
-            interface.loadURL(reloadURL.c_str());
-            NSLog(@"%s", reloadURL.c_str());
-
-            XML.setValue("SETUP:EXTERNAL", reloadURL);
+            
+            cout << "######################## ::  ";
+            cout << discoveryURL.c_str();
+            cout << "    :::########################  ";
+            
+            
+            
+            XML.setValue("SETUP:DISCOVERY", discoveryURL);
             XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
             cout << "editor.xml saved to app documents folder";
-
-            externalState =reloadURL;
-
-
-            //    interface.loadURL("http://html5test.com");
-
-            interface.activateView();
-        }
-
-    }
-
-
-
-    if (getDataFromReq(reqstring, "setDiscovery", &reqData)) {
-        cout << "got the discovery URL";
-        string discoveryURL = reqData;
-        ofLog() << "this is the new URL:" << discoveryURL <<":";
-
-        if(discoveryURL !=""){
-
-            tcpDiscovery = false;
-
-            cout << "this has been loaded from the webuI --------------------------''''''''######################## ::  ";
-            cout << discoveryURL.c_str();
-            cout << "    ::: this has been loaded from the webuI --------------------------''''''''########################  ";
-
-
-
-            if (discoveryURL.rfind("http://", 0) != 0 && discoveryURL != "http")
-            {
-                discoveryURL = "http://"+discoveryURL;
-                 tcpDiscovery = true;
-            } else if (discoveryURL.rfind("http://", 0) == 0 || discoveryURL.rfind("https://", 0) == 0){
-                tcpDiscovery = true;
-            }
-
-
-
-            if(tcpDiscovery == true){
-
-
-                cout << "######################## ::  ";
-                cout << discoveryURL.c_str();
-                cout << "    :::########################  ";
-
-
-
-                XML.setValue("SETUP:DISCOVERY", discoveryURL);
-                XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
-                cout << "editor.xml saved to app documents folder";
-
-                discoveryState =discoveryURL;
-
-                    cout << "OBJECTDISCOVERY";
-
-                // HERE IS WHERE DISOVERY SHOULD BE INITIALIZED
-                // OBJECTDISCOVERY
-
-                ofLoadURLAsync(discoveryState + "/allObjects", "allObjects");
-
-            }
-
-
-
-        }
-
-    }
-
-    if (reqstring == "removeDiscovery") {
-
-           tcpDiscovery = false;
-           XML.setValue("SETUP:DISCOVERY", "");
-            XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
-           discoveryState ="";
-
-               cout << "removed discovery";
-
-    }
-
-
-    if (reqstring == "memorize") {
-        this->memorize();
-    }
-
-    if (reqstring == "remember") {
-        ofLog() << "Is a remember";
-        Poco::URI::QueryParameters params = uri.getQueryParameters();
-        string dataStr = "";
-
-        for (pair<string, string> param : params) {
-            if (param.first == "data") {
-                dataStr = param.second;
-                break;
-            }
-        }
-
-        if (dataStr != "") {
-            ofLog() << "With data " << dataStr;
-            ofxJSONElement memoryInfo;
-            QCARState* memory = new QCARState();
-            memoryInfo.parse(dataStr);
-            memory->name.push_back(memoryInfo["id"].asString());
-            ofMatrix4x4 matrix;
-            for (int i = 0; i < 16; i++) {
-                matrix._mat[i / 4][i % 4] = memoryInfo["matrix"][i].asFloat();
-            }
-            memory->matrix.push_back(matrix);
-            memory->image.allocate(1, 1, OF_IMAGE_GRAYSCALE);
-            currentMemory = shared_ptr<QCARState>(memory);
-        } else {
-            currentMemory = tempMemory;
+            
+            discoveryState =discoveryURL;
+            
+            cout << "OBJECTDISCOVERY";
+            
+            // HERE IS WHERE DISOVERY SHOULD BE INITIALIZED
+            // OBJECTDISCOVERY
+            
+            ofLoadURLAsync(discoveryState + "/allObjects", "allObjects");
+            
         }
     }
-    
-    if (reqstring == "authenticateTouch") {
-        cout << "authenticateTouch";
-        interface.promptForTouch();
-    }
-    
 }
+
+void realityEditor::removeDiscovery() {
+    tcpDiscovery = false;
+    XML.setValue("SETUP:DISCOVERY", "");
+    XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+    discoveryState ="";
+    
+    cout << "removed discovery";
+}
+
+void realityEditor::memorize() {
+    if (!tempMemory) {
+        return;
+    }
+    uploadMemory(tempMemory);
+}
+
+void realityEditor::remember(string dataStr) {
+    ofLog() << "Is a remember";
+    
+    if (dataStr != "") {
+        ofLog() << "With data " << dataStr;
+        ofxJSONElement memoryInfo;
+        QCARState* memory = new QCARState();
+        memoryInfo.parse(dataStr);
+        memory->name.push_back(memoryInfo["id"].asString());
+        ofMatrix4x4 matrix;
+        for (int i = 0; i < 16; i++) {
+            matrix._mat[i / 4][i % 4] = memoryInfo["matrix"][i].asFloat();
+        }
+        memory->matrix.push_back(matrix);
+        memory->image.allocate(1, 1, OF_IMAGE_GRAYSCALE);
+        currentMemory = shared_ptr<QCARState>(memory);
+    } else {
+        currentMemory = tempMemory;
+    }
+}
+
+void realityEditor::authenticateTouch() {
+    cout << "authenticateTouch";
+    interface.promptForTouch();
+}
+
+#pragma mark - END OF Functions Called From JavaScript
+#pragma mark -
 
 //--------------------------------------------------------------
 // reponder for the asychronus file loader.
@@ -1363,7 +1553,7 @@ void realityEditor::renderJavascript() {
         // end of string generation.
         //   [stringforTransform appendString:@"}"];
 
-        /*  if(sendAccelerationData == true){
+        /*  if(shouldSendAccelerationData == true){
          [stringforTransform appendFormat:@",'acl':[%lf,%lf,%lf,%lf,%lf]",
          accel.x,
          accel.y,
@@ -1380,7 +1570,7 @@ void realityEditor::renderJavascript() {
     } else {
         stringforTransform = [NSMutableString stringWithFormat:@"%s.update({})", drawNamespace.c_str()];
         
-        /* if(sendAccelerationData == true){
+        /* if(shouldSendAccelerationData == true){
          [stringforTransform appendFormat:@",'acl':[%lf,%lf,%lf,%lf,%lf]",
          accel.x,
          accel.y,
@@ -1531,21 +1721,6 @@ NSString* realityEditor::convertImageToBase64(ofImage image) {
     encoder.close();
     NSString* rawBase64 = [NSString stringWithUTF8String:ss.str().c_str()];
     return [rawBase64 stringByReplacingOccurrencesOfString: @"\r\n" withString: @""];
-}
-
-void realityEditor::memorize() {
-    if (!tempMemory) {
-        return;
-    }
-    uploadMemory(tempMemory);
-}
-
-void realityEditor::unfreeze() {
-    currentMemory = nullptr;
-}
-
-void realityEditor::freeze() {
-    currentMemory = shared_ptr<QCARState>(new QCARState(getCameraImage(), matrixTemp, nameTemp));
 }
 
 /**

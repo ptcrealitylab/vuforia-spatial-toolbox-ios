@@ -10,14 +10,14 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
+		436CC0641FAA24D40021BA20 /* SpeechInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 436CC0621FAA24D40021BA20 /* SpeechInterface.mm */; };
+		436CC0661FAA25820021BA20 /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 436CC0651FAA25810021BA20 /* Speech.framework */; };
 		511FEF001E09F15000BB06AB /* ImagePartSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 511FEEFC1E09F15000BB06AB /* ImagePartSource.mm */; };
 		511FEF011E09F15000BB06AB /* MemoryUploader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 511FEEFE1E09F15000BB06AB /* MemoryUploader.mm */; };
 		51BA97591EDC6FC60041A67F /* QCAR_assets in Resources */ = {isa = PBXBuildFile; fileRef = 51BA97581EDC6FC60041A67F /* QCAR_assets */; };
 		5326AEA810A23A0500278DE6 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5326AEA710A23A0500278DE6 /* CoreLocation.framework */; };
 		53F323EB10A20EDB00E0DAE4 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */; };
 		5D4278CD1E4E5CBC009F8A5D /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D4278CC1E4E5CBC009F8A5D /* LocalAuthentication.framework */; };
-		5D4E33F91C87771400D29BC3 /* ofxWKWebViewDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D4E33F61C87771400D29BC3 /* ofxWKWebViewDelegate.mm */; };
-		5D4E33FA1C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D4E33F81C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.mm */; };
 		5DD5D1B91C90AC16001B8E53 /* ofxWebViewInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5DD5D1B81C90AC16001B8E53 /* ofxWebViewInterface.mm */; };
 		5DD5D1BC1C90AF47001B8E53 /* ofxWebViewDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5DD5D1BA1C90AF47001B8E53 /* ofxWebViewDelegate.mm */; };
 		67DFA53619F92A69003B3434 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67DFA53419F92A5E003B3434 /* Accelerate.framework */; };
@@ -27,8 +27,6 @@
 		A704BECE1AFB442300E97FDC /* ofxTCPManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A704BEA41AFB442300E97FDC /* ofxTCPManager.cpp */; };
 		A704BECF1AFB442300E97FDC /* ofxTCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A704BEA61AFB442300E97FDC /* ofxTCPServer.cpp */; };
 		A704BED01AFB442300E97FDC /* ofxUDPManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A704BEA81AFB442300E97FDC /* ofxUDPManager.cpp */; };
-		A704BEE21AFB44BF00E97FDC /* ofxUIWebViewDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = A704BEDF1AFB44BF00E97FDC /* ofxUIWebViewDelegate.mm */; };
-		A704BEE31AFB44BF00E97FDC /* ofxUIWebViewInterfaceJavaScript.mm in Sources */ = {isa = PBXBuildFile; fileRef = A704BEE11AFB44BF00E97FDC /* ofxUIWebViewInterfaceJavaScript.mm */; };
 		A720E4891AFB3C7000B29F68 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A720E4881AFB3C7000B29F68 /* SystemConfiguration.framework */; };
 		A720E48B1AFB3C8600B29F68 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A720E48A1AFB3C8600B29F68 /* Security.framework */; };
 		A720E48D1AFB3C9000B29F68 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A720E48C1AFB3C9000B29F68 /* CoreMotion.framework */; };
@@ -100,20 +98,19 @@
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* ofxiOS_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiOS_Prefix.pch; sourceTree = "<group>"; };
+		436CC05B1FA905C00021BA20 /* vuforiaKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vuforiaKey.h; sourceTree = "<group>"; };
+		436CC0621FAA24D40021BA20 /* SpeechInterface.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = SpeechInterface.mm; sourceTree = "<group>"; };
+		436CC0631FAA24D40021BA20 /* SpeechInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpeechInterface.h; sourceTree = "<group>"; };
+		436CC0651FAA25810021BA20 /* Speech.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Speech.framework; path = System/Library/Frameworks/Speech.framework; sourceTree = SDKROOT; };
 		511FEEFB1E09F15000BB06AB /* ImagePartSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImagePartSource.h; path = memory/ImagePartSource.h; sourceTree = "<group>"; };
 		511FEEFC1E09F15000BB06AB /* ImagePartSource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ImagePartSource.mm; path = memory/ImagePartSource.mm; sourceTree = "<group>"; };
 		511FEEFD1E09F15000BB06AB /* MemoryUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MemoryUploader.h; path = memory/MemoryUploader.h; sourceTree = "<group>"; };
 		511FEEFE1E09F15000BB06AB /* MemoryUploader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MemoryUploader.mm; path = memory/MemoryUploader.mm; sourceTree = "<group>"; };
 		511FEEFF1E09F15000BB06AB /* QCARState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QCARState.h; path = memory/QCARState.h; sourceTree = "<group>"; };
 		51BA97581EDC6FC60041A67F /* QCAR_assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = QCAR_assets; sourceTree = "<group>"; };
-		51C8797B1EE8472E008FA005 /* vuforiaKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vuforiaKey.h; sourceTree = "<group>"; };
 		5326AEA710A23A0500278DE6 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		5D4278CC1E4E5CBC009F8A5D /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
-		5D4E33F51C87771400D29BC3 /* ofxWKWebViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxWKWebViewDelegate.h; sourceTree = "<group>"; };
-		5D4E33F61C87771400D29BC3 /* ofxWKWebViewDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxWKWebViewDelegate.mm; sourceTree = "<group>"; };
-		5D4E33F71C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxWKWebViewInterfaceJavaScript.h; sourceTree = "<group>"; };
-		5D4E33F81C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxWKWebViewInterfaceJavaScript.mm; sourceTree = "<group>"; };
 		5D7D5D731C8F253F00DB49D6 /* ofxWebViewInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxWebViewInterface.h; sourceTree = "<group>"; };
 		5DD5D1B81C90AC16001B8E53 /* ofxWebViewInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxWebViewInterface.mm; sourceTree = "<group>"; };
 		5DD5D1BA1C90AF47001B8E53 /* ofxWebViewDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxWebViewDelegate.mm; sourceTree = "<group>"; };
@@ -135,96 +132,9 @@
 		A704BEA71AFB442300E97FDC /* ofxTCPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTCPServer.h; sourceTree = "<group>"; };
 		A704BEA81AFB442300E97FDC /* ofxUDPManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxUDPManager.cpp; sourceTree = "<group>"; };
 		A704BEA91AFB442300E97FDC /* ofxUDPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUDPManager.h; sourceTree = "<group>"; };
-		A704BEDE1AFB44BF00E97FDC /* ofxUIWebViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUIWebViewDelegate.h; sourceTree = "<group>"; };
-		A704BEDF1AFB44BF00E97FDC /* ofxUIWebViewDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxUIWebViewDelegate.mm; sourceTree = "<group>"; };
-		A704BEE01AFB44BF00E97FDC /* ofxUIWebViewInterfaceJavaScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUIWebViewInterfaceJavaScript.h; sourceTree = "<group>"; };
-		A704BEE11AFB44BF00E97FDC /* ofxUIWebViewInterfaceJavaScript.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxUIWebViewInterfaceJavaScript.mm; sourceTree = "<group>"; };
 		A720E4881AFB3C7000B29F68 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		A720E48A1AFB3C8600B29F68 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		A720E48C1AFB3C9000B29F68 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		A7BBAFA61C95FBDA000AFAB6 /* Area.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Area.h; sourceTree = "<group>"; };
-		A7BBAFA71C95FBDA000AFAB6 /* Box3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box3D.h; sourceTree = "<group>"; };
-		A7BBAFA81C95FBDA000AFAB6 /* CameraCalibration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraCalibration.h; sourceTree = "<group>"; };
-		A7BBAFA91C95FBDA000AFAB6 /* CameraDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraDevice.h; sourceTree = "<group>"; };
-		A7BBAFAA1C95FBDA000AFAB6 /* CustomViewerParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomViewerParameters.h; sourceTree = "<group>"; };
-		A7BBAFAB1C95FBDA000AFAB6 /* CylinderTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CylinderTarget.h; sourceTree = "<group>"; };
-		A7BBAFAC1C95FBDA000AFAB6 /* CylinderTargetResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CylinderTargetResult.h; sourceTree = "<group>"; };
-		A7BBAFAD1C95FBDA000AFAB6 /* DataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSet.h; sourceTree = "<group>"; };
-		A7BBAFAE1C95FBDA000AFAB6 /* Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Device.h; sourceTree = "<group>"; };
-		A7BBAFAF1C95FBDA000AFAB6 /* DeviceTrackable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceTrackable.h; sourceTree = "<group>"; };
-		A7BBAFB01C95FBDA000AFAB6 /* DeviceTrackableResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceTrackableResult.h; sourceTree = "<group>"; };
-		A7BBAFB11C95FBDA000AFAB6 /* DeviceTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceTracker.h; sourceTree = "<group>"; };
-		A7BBAFB21C95FBDA000AFAB6 /* EyeID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EyeID.h; sourceTree = "<group>"; };
-		A7BBAFB31C95FBDA000AFAB6 /* EyewearCalibrationProfileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EyewearCalibrationProfileManager.h; sourceTree = "<group>"; };
-		A7BBAFB41C95FBDA000AFAB6 /* EyewearCalibrationReading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EyewearCalibrationReading.h; sourceTree = "<group>"; };
-		A7BBAFB51C95FBDA000AFAB6 /* EyewearDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EyewearDevice.h; sourceTree = "<group>"; };
-		A7BBAFB61C95FBDA000AFAB6 /* EyewearUserCalibrator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EyewearUserCalibrator.h; sourceTree = "<group>"; };
-		A7BBAFB71C95FBDA000AFAB6 /* Frame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Frame.h; sourceTree = "<group>"; };
-		A7BBAFB81C95FBDA000AFAB6 /* GLRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLRenderer.h; sourceTree = "<group>"; };
-		A7BBAFB91C95FBDA000AFAB6 /* HandheldTransformModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HandheldTransformModel.h; sourceTree = "<group>"; };
-		A7BBAFBA1C95FBDA000AFAB6 /* HeadTransformModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeadTransformModel.h; sourceTree = "<group>"; };
-		A7BBAFBB1C95FBDA000AFAB6 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
-		A7BBAFBC1C95FBDA000AFAB6 /* ImageTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTarget.h; sourceTree = "<group>"; };
-		A7BBAFBD1C95FBDA000AFAB6 /* ImageTargetBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTargetBuilder.h; sourceTree = "<group>"; };
-		A7BBAFBE1C95FBDA000AFAB6 /* ImageTargetResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTargetResult.h; sourceTree = "<group>"; };
-		A7BBAFBF1C95FBDA000AFAB6 /* Marker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Marker.h; sourceTree = "<group>"; };
-		A7BBAFC01C95FBDA000AFAB6 /* MarkerResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarkerResult.h; sourceTree = "<group>"; };
-		A7BBAFC11C95FBDA000AFAB6 /* MarkerTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarkerTracker.h; sourceTree = "<group>"; };
-		A7BBAFC21C95FBDA000AFAB6 /* Matrices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Matrices.h; sourceTree = "<group>"; };
-		A7BBAFC31C95FBDA000AFAB6 /* Mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mesh.h; sourceTree = "<group>"; };
-		A7BBAFC41C95FBDA000AFAB6 /* MetalRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetalRenderer.h; sourceTree = "<group>"; };
-		A7BBAFC51C95FBDA000AFAB6 /* MultiTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiTarget.h; sourceTree = "<group>"; };
-		A7BBAFC61C95FBDA000AFAB6 /* MultiTargetResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiTargetResult.h; sourceTree = "<group>"; };
-		A7BBAFC71C95FBDA000AFAB6 /* NonCopyable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonCopyable.h; sourceTree = "<group>"; };
-		A7BBAFC81C95FBDA000AFAB6 /* Obb2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Obb2D.h; sourceTree = "<group>"; };
-		A7BBAFC91C95FBDA000AFAB6 /* Obb3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Obb3D.h; sourceTree = "<group>"; };
-		A7BBAFCA1C95FBDA000AFAB6 /* ObjectTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectTarget.h; sourceTree = "<group>"; };
-		A7BBAFCB1C95FBDA000AFAB6 /* ObjectTargetResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectTargetResult.h; sourceTree = "<group>"; };
-		A7BBAFCC1C95FBDA000AFAB6 /* ObjectTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectTracker.h; sourceTree = "<group>"; };
-		A7BBAFCD1C95FBDA000AFAB6 /* Prop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prop.h; sourceTree = "<group>"; };
-		A7BBAFCE1C95FBDA000AFAB6 /* PropResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropResult.h; sourceTree = "<group>"; };
-		A7BBAFCF1C95FBDA000AFAB6 /* Reconstruction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reconstruction.h; sourceTree = "<group>"; };
-		A7BBAFD01C95FBDA000AFAB6 /* ReconstructionFromTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReconstructionFromTarget.h; sourceTree = "<group>"; };
-		A7BBAFD11C95FBDA000AFAB6 /* Rectangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Rectangle.h; sourceTree = "<group>"; };
-		A7BBAFD21C95FBDA000AFAB6 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
-		A7BBAFD31C95FBDA000AFAB6 /* RenderingPrimitives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderingPrimitives.h; sourceTree = "<group>"; };
-		A7BBAFD41C95FBDA000AFAB6 /* RotationalDeviceTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RotationalDeviceTracker.h; sourceTree = "<group>"; };
-		A7BBAFD51C95FBDA000AFAB6 /* SmartTerrainBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartTerrainBuilder.h; sourceTree = "<group>"; };
-		A7BBAFD61C95FBDA000AFAB6 /* SmartTerrainTrackable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartTerrainTrackable.h; sourceTree = "<group>"; };
-		A7BBAFD71C95FBDA000AFAB6 /* SmartTerrainTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartTerrainTracker.h; sourceTree = "<group>"; };
-		A7BBAFD81C95FBDA000AFAB6 /* State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = State.h; sourceTree = "<group>"; };
-		A7BBAFD91C95FBDA000AFAB6 /* StateUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StateUpdater.h; sourceTree = "<group>"; };
-		A7BBAFDA1C95FBDA000AFAB6 /* Surface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Surface.h; sourceTree = "<group>"; };
-		A7BBAFDB1C95FBDA000AFAB6 /* SurfaceResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfaceResult.h; sourceTree = "<group>"; };
-		A7BBAFDC1C95FBDA000AFAB6 /* System.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = System.h; sourceTree = "<group>"; };
-		A7BBAFDD1C95FBDA000AFAB6 /* TargetFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TargetFinder.h; sourceTree = "<group>"; };
-		A7BBAFDE1C95FBDA000AFAB6 /* TargetSearchResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TargetSearchResult.h; sourceTree = "<group>"; };
-		A7BBAFDF1C95FBDA000AFAB6 /* TextTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextTracker.h; sourceTree = "<group>"; };
-		A7BBAFE01C95FBDA000AFAB6 /* Tool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tool.h; sourceTree = "<group>"; };
-		A7BBAFE11C95FBDA000AFAB6 /* Trackable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Trackable.h; sourceTree = "<group>"; };
-		A7BBAFE21C95FBDA000AFAB6 /* TrackableResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackableResult.h; sourceTree = "<group>"; };
-		A7BBAFE31C95FBDA000AFAB6 /* TrackableSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackableSource.h; sourceTree = "<group>"; };
-		A7BBAFE41C95FBDA000AFAB6 /* Tracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tracker.h; sourceTree = "<group>"; };
-		A7BBAFE51C95FBDA000AFAB6 /* TrackerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackerManager.h; sourceTree = "<group>"; };
-		A7BBAFE61C95FBDA000AFAB6 /* TransformModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformModel.h; sourceTree = "<group>"; };
-		A7BBAFE71C95FBDA000AFAB6 /* Type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Type.h; sourceTree = "<group>"; };
-		A7BBAFE81C95FBDA000AFAB6 /* UIGLViewProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIGLViewProtocol.h; sourceTree = "<group>"; };
-		A7BBAFE91C95FBDA000AFAB6 /* UpdateCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateCallback.h; sourceTree = "<group>"; };
-		A7BBAFEA1C95FBDA000AFAB6 /* Vectors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vectors.h; sourceTree = "<group>"; };
-		A7BBAFEB1C95FBDA000AFAB6 /* VideoBackgroundConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoBackgroundConfig.h; sourceTree = "<group>"; };
-		A7BBAFEC1C95FBDA000AFAB6 /* VideoBackgroundTextureInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoBackgroundTextureInfo.h; sourceTree = "<group>"; };
-		A7BBAFED1C95FBDA000AFAB6 /* VideoMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoMode.h; sourceTree = "<group>"; };
-		A7BBAFEE1C95FBDA000AFAB6 /* View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = View.h; sourceTree = "<group>"; };
-		A7BBAFEF1C95FBDA000AFAB6 /* ViewerParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewerParameters.h; sourceTree = "<group>"; };
-		A7BBAFF01C95FBDA000AFAB6 /* ViewerParametersList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewerParametersList.h; sourceTree = "<group>"; };
-		A7BBAFF11C95FBDA000AFAB6 /* ViewList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewList.h; sourceTree = "<group>"; };
-		A7BBAFF21C95FBDA000AFAB6 /* VirtualButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VirtualButton.h; sourceTree = "<group>"; };
-		A7BBAFF31C95FBDA000AFAB6 /* VirtualButtonResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VirtualButtonResult.h; sourceTree = "<group>"; };
-		A7BBAFF41C95FBDA000AFAB6 /* QCAR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QCAR.h; sourceTree = "<group>"; };
-		A7BBAFF51C95FBDA000AFAB6 /* QCAR_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QCAR_iOS.h; sourceTree = "<group>"; };
-		A7BBAFF61C95FBDA000AFAB6 /* Word.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Word.h; sourceTree = "<group>"; };
-		A7BBAFF71C95FBDA000AFAB6 /* WordList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WordList.h; sourceTree = "<group>"; };
-		A7BBAFF81C95FBDA000AFAB6 /* WordResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WordResult.h; sourceTree = "<group>"; };
 		A7BBAFFB1C95FBDA000AFAB6 /* libVuforia.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libVuforia.a; sourceTree = "<group>"; };
 		A7BBAFFD1C95FBDA000AFAB6 /* ofxQCAR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxQCAR.h; sourceTree = "<group>"; };
 		A7BBAFFE1C95FBDA000AFAB6 /* ofxQCAR.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxQCAR.mm; sourceTree = "<group>"; };
@@ -254,6 +164,73 @@
 		A7DE8BBD1BCB397B00CC1525 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		A7DE8BBF1BCB397B00CC1525 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		A7DE8BC01BCB397B00CC1525 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
+		A7EA8A761F9FBD2400688BBD /* VideoBackgroundTextureInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VideoBackgroundTextureInfo.h; path = ../../../qcar/include/QCAR/VideoBackgroundTextureInfo.h; sourceTree = "<group>"; };
+		A7EA8A771F9FBD2500688BBD /* Eyewear.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Eyewear.h; path = ../../../qcar/include/QCAR/Eyewear.h; sourceTree = "<group>"; };
+		A7EA8A781F9FBD2500688BBD /* QCAR_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QCAR_iOS.h; path = ../../../qcar/include/QCAR/QCAR_iOS.h; sourceTree = "<group>"; };
+		A7EA8A791F9FBD2500688BBD /* TargetFinder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TargetFinder.h; path = ../../../qcar/include/QCAR/TargetFinder.h; sourceTree = "<group>"; };
+		A7EA8A7A1F9FBD2500688BBD /* SmartTerrainTracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SmartTerrainTracker.h; path = ../../../qcar/include/QCAR/SmartTerrainTracker.h; sourceTree = "<group>"; };
+		A7EA8A7B1F9FBD2500688BBD /* TrackableResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TrackableResult.h; path = ../../../qcar/include/QCAR/TrackableResult.h; sourceTree = "<group>"; };
+		A7EA8A7C1F9FBD2500688BBD /* System.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = System.h; path = ../../../qcar/include/QCAR/System.h; sourceTree = "<group>"; };
+		A7EA8A7D1F9FBD2500688BBD /* ObjectTarget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ObjectTarget.h; path = ../../../qcar/include/QCAR/ObjectTarget.h; sourceTree = "<group>"; };
+		A7EA8A7E1F9FBD2500688BBD /* WordList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WordList.h; path = ../../../qcar/include/QCAR/WordList.h; sourceTree = "<group>"; };
+		A7EA8A7F1F9FBD2500688BBD /* CylinderTarget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CylinderTarget.h; path = ../../../qcar/include/QCAR/CylinderTarget.h; sourceTree = "<group>"; };
+		A7EA8A801F9FBD2500688BBD /* TextTracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TextTracker.h; path = ../../../qcar/include/QCAR/TextTracker.h; sourceTree = "<group>"; };
+		A7EA8A811F9FBD2500688BBD /* MultiTargetResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MultiTargetResult.h; path = ../../../qcar/include/QCAR/MultiTargetResult.h; sourceTree = "<group>"; };
+		A7EA8A821F9FBD2500688BBD /* Area.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Area.h; path = ../../../qcar/include/QCAR/Area.h; sourceTree = "<group>"; };
+		A7EA8A831F9FBD2500688BBD /* Renderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Renderer.h; path = ../../../qcar/include/QCAR/Renderer.h; sourceTree = "<group>"; };
+		A7EA8A841F9FBD2500688BBD /* Tool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Tool.h; path = ../../../qcar/include/QCAR/Tool.h; sourceTree = "<group>"; };
+		A7EA8A851F9FBD2500688BBD /* EyewearUserCalibrator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EyewearUserCalibrator.h; path = ../../../qcar/include/QCAR/EyewearUserCalibrator.h; sourceTree = "<group>"; };
+		A7EA8A861F9FBD2500688BBD /* Prop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Prop.h; path = ../../../qcar/include/QCAR/Prop.h; sourceTree = "<group>"; };
+		A7EA8A871F9FBD2600688BBD /* SurfaceResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SurfaceResult.h; path = ../../../qcar/include/QCAR/SurfaceResult.h; sourceTree = "<group>"; };
+		A7EA8A881F9FBD2600688BBD /* TrackableSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TrackableSource.h; path = ../../../qcar/include/QCAR/TrackableSource.h; sourceTree = "<group>"; };
+		A7EA8A891F9FBD2600688BBD /* TrackerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TrackerManager.h; path = ../../../qcar/include/QCAR/TrackerManager.h; sourceTree = "<group>"; };
+		A7EA8A8A1F9FBD2600688BBD /* EyewearCalibrationProfileManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EyewearCalibrationProfileManager.h; path = ../../../qcar/include/QCAR/EyewearCalibrationProfileManager.h; sourceTree = "<group>"; };
+		A7EA8A8B1F9FBD2600688BBD /* Trackable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Trackable.h; path = ../../../qcar/include/QCAR/Trackable.h; sourceTree = "<group>"; };
+		A7EA8A8C1F9FBD2600688BBD /* Type.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Type.h; path = ../../../qcar/include/QCAR/Type.h; sourceTree = "<group>"; };
+		A7EA8A8D1F9FBD2600688BBD /* DataSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DataSet.h; path = ../../../qcar/include/QCAR/DataSet.h; sourceTree = "<group>"; };
+		A7EA8A8E1F9FBD2600688BBD /* Obb3D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Obb3D.h; path = ../../../qcar/include/QCAR/Obb3D.h; sourceTree = "<group>"; };
+		A7EA8A8F1F9FBD2600688BBD /* Surface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Surface.h; path = ../../../qcar/include/QCAR/Surface.h; sourceTree = "<group>"; };
+		A7EA8A901F9FBD2600688BBD /* Marker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Marker.h; path = ../../../qcar/include/QCAR/Marker.h; sourceTree = "<group>"; };
+		A7EA8A911F9FBD2600688BBD /* UIGLViewProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UIGLViewProtocol.h; path = ../../../qcar/include/QCAR/UIGLViewProtocol.h; sourceTree = "<group>"; };
+		A7EA8A921F9FBD2600688BBD /* EyewearCalibrationReading.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EyewearCalibrationReading.h; path = ../../../qcar/include/QCAR/EyewearCalibrationReading.h; sourceTree = "<group>"; };
+		A7EA8A931F9FBD2600688BBD /* CameraCalibration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CameraCalibration.h; path = ../../../qcar/include/QCAR/CameraCalibration.h; sourceTree = "<group>"; };
+		A7EA8A941F9FBD2600688BBD /* ObjectTargetResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ObjectTargetResult.h; path = ../../../qcar/include/QCAR/ObjectTargetResult.h; sourceTree = "<group>"; };
+		A7EA8A951F9FBD2600688BBD /* Reconstruction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Reconstruction.h; path = ../../../qcar/include/QCAR/Reconstruction.h; sourceTree = "<group>"; };
+		A7EA8A961F9FBD2600688BBD /* Mesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Mesh.h; path = ../../../qcar/include/QCAR/Mesh.h; sourceTree = "<group>"; };
+		A7EA8A971F9FBD2600688BBD /* NonCopyable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NonCopyable.h; path = ../../../qcar/include/QCAR/NonCopyable.h; sourceTree = "<group>"; };
+		A7EA8A981F9FBD2600688BBD /* TargetSearchResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TargetSearchResult.h; path = ../../../qcar/include/QCAR/TargetSearchResult.h; sourceTree = "<group>"; };
+		A7EA8A991F9FBD2700688BBD /* VideoBackgroundConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VideoBackgroundConfig.h; path = ../../../qcar/include/QCAR/VideoBackgroundConfig.h; sourceTree = "<group>"; };
+		A7EA8A9A1F9FBD2700688BBD /* Vectors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Vectors.h; path = ../../../qcar/include/QCAR/Vectors.h; sourceTree = "<group>"; };
+		A7EA8A9B1F9FBD2700688BBD /* EyeID.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EyeID.h; path = ../../../qcar/include/QCAR/EyeID.h; sourceTree = "<group>"; };
+		A7EA8A9C1F9FBD2700688BBD /* MarkerTracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MarkerTracker.h; path = ../../../qcar/include/QCAR/MarkerTracker.h; sourceTree = "<group>"; };
+		A7EA8A9D1F9FBD2700688BBD /* MultiTarget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MultiTarget.h; path = ../../../qcar/include/QCAR/MultiTarget.h; sourceTree = "<group>"; };
+		A7EA8A9E1F9FBD2700688BBD /* Box3D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Box3D.h; path = ../../../qcar/include/QCAR/Box3D.h; sourceTree = "<group>"; };
+		A7EA8A9F1F9FBD2700688BBD /* SmartTerrainTrackable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SmartTerrainTrackable.h; path = ../../../qcar/include/QCAR/SmartTerrainTrackable.h; sourceTree = "<group>"; };
+		A7EA8AA01F9FBD2700688BBD /* Image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Image.h; path = ../../../qcar/include/QCAR/Image.h; sourceTree = "<group>"; };
+		A7EA8AA11F9FBD2700688BBD /* ObjectTracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ObjectTracker.h; path = ../../../qcar/include/QCAR/ObjectTracker.h; sourceTree = "<group>"; };
+		A7EA8AA21F9FBD2700688BBD /* Word.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Word.h; path = ../../../qcar/include/QCAR/Word.h; sourceTree = "<group>"; };
+		A7EA8AA31F9FBD2700688BBD /* UpdateCallback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UpdateCallback.h; path = ../../../qcar/include/QCAR/UpdateCallback.h; sourceTree = "<group>"; };
+		A7EA8AA41F9FBD2700688BBD /* VideoMode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VideoMode.h; path = ../../../qcar/include/QCAR/VideoMode.h; sourceTree = "<group>"; };
+		A7EA8AA51F9FBD2700688BBD /* Obb2D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Obb2D.h; path = ../../../qcar/include/QCAR/Obb2D.h; sourceTree = "<group>"; };
+		A7EA8AA61F9FBD2700688BBD /* PropResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PropResult.h; path = ../../../qcar/include/QCAR/PropResult.h; sourceTree = "<group>"; };
+		A7EA8AA71F9FBD2700688BBD /* Tracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Tracker.h; path = ../../../qcar/include/QCAR/Tracker.h; sourceTree = "<group>"; };
+		A7EA8AA81F9FBD2700688BBD /* VirtualButtonResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VirtualButtonResult.h; path = ../../../qcar/include/QCAR/VirtualButtonResult.h; sourceTree = "<group>"; };
+		A7EA8AA91F9FBD2700688BBD /* CameraDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CameraDevice.h; path = ../../../qcar/include/QCAR/CameraDevice.h; sourceTree = "<group>"; };
+		A7EA8AAA1F9FBD2700688BBD /* Matrices.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Matrices.h; path = ../../../qcar/include/QCAR/Matrices.h; sourceTree = "<group>"; };
+		A7EA8AAB1F9FBD2700688BBD /* ReconstructionFromTarget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ReconstructionFromTarget.h; path = ../../../qcar/include/QCAR/ReconstructionFromTarget.h; sourceTree = "<group>"; };
+		A7EA8AAC1F9FBD2800688BBD /* Rectangle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Rectangle.h; path = ../../../qcar/include/QCAR/Rectangle.h; sourceTree = "<group>"; };
+		A7EA8AAD1F9FBD2800688BBD /* SmartTerrainBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SmartTerrainBuilder.h; path = ../../../qcar/include/QCAR/SmartTerrainBuilder.h; sourceTree = "<group>"; };
+		A7EA8AAE1F9FBD2800688BBD /* ImageTargetBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ImageTargetBuilder.h; path = ../../../qcar/include/QCAR/ImageTargetBuilder.h; sourceTree = "<group>"; };
+		A7EA8AAF1F9FBD2800688BBD /* CylinderTargetResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CylinderTargetResult.h; path = ../../../qcar/include/QCAR/CylinderTargetResult.h; sourceTree = "<group>"; };
+		A7EA8AB01F9FBD2800688BBD /* ImageTarget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ImageTarget.h; path = ../../../qcar/include/QCAR/ImageTarget.h; sourceTree = "<group>"; };
+		A7EA8AB11F9FBD2800688BBD /* QCAR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QCAR.h; path = ../../../qcar/include/QCAR/QCAR.h; sourceTree = "<group>"; };
+		A7EA8AB21F9FBD2800688BBD /* MarkerResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MarkerResult.h; path = ../../../qcar/include/QCAR/MarkerResult.h; sourceTree = "<group>"; };
+		A7EA8AB31F9FBD2800688BBD /* State.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = State.h; path = ../../../qcar/include/QCAR/State.h; sourceTree = "<group>"; };
+		A7EA8AB41F9FBD2800688BBD /* StateUpdater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StateUpdater.h; path = ../../../qcar/include/QCAR/StateUpdater.h; sourceTree = "<group>"; };
+		A7EA8AB51F9FBD2800688BBD /* ImageTargetResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ImageTargetResult.h; path = ../../../qcar/include/QCAR/ImageTargetResult.h; sourceTree = "<group>"; };
+		A7EA8AB61F9FBD2800688BBD /* VirtualButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VirtualButton.h; path = ../../../qcar/include/QCAR/VirtualButton.h; sourceTree = "<group>"; };
+		A7EA8AB71F9FBD2800688BBD /* Frame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Frame.h; path = ../../../qcar/include/QCAR/Frame.h; sourceTree = "<group>"; };
+		A7EA8AB81F9FBD2800688BBD /* WordResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WordResult.h; path = ../../../qcar/include/QCAR/WordResult.h; sourceTree = "<group>"; };
 		A7F3601E1B0FC37E001E8241 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A7F360211B0FC3D7001E8241 /* Default-568h@2x~iphone_potrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x~iphone_potrait.png"; path = "bin/data/Default-568h@2x~iphone_potrait.png"; sourceTree = "<group>"; };
 		A7F360221B0FC3D7001E8241 /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x~iphone.png"; path = "bin/data/Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
@@ -287,6 +264,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				436CC0661FAA25820021BA20 /* Speech.framework in Frameworks */,
 				5D4278CD1E4E5CBC009F8A5D /* LocalAuthentication.framework in Frameworks */,
 				A7BC537A1AFBC54C00B7D2C2 /* WebKit.framework in Frameworks */,
 				A720E48D1AFB3C9000B29F68 /* CoreMotion.framework in Frameworks */,
@@ -371,45 +349,22 @@
 			name = "core frameworks";
 			sourceTree = "<group>";
 		};
+		436CC0611FAA247E0021BA20 /* speechAPI */ = {
+			isa = PBXGroup;
+			children = (
+				436CC0631FAA24D40021BA20 /* SpeechInterface.h */,
+				436CC0621FAA24D40021BA20 /* SpeechInterface.mm */,
+			);
+			path = speechAPI;
+			sourceTree = "<group>";
+		};
 		5D4278CB1E4E5CBC009F8A5D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				436CC0651FAA25810021BA20 /* Speech.framework */,
 				5D4278CC1E4E5CBC009F8A5D /* LocalAuthentication.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		5D4E33F01C87762600D29BC3 /* WKWebView */ = {
-			isa = PBXGroup;
-			children = (
-				5D4E33F51C87771400D29BC3 /* ofxWKWebViewDelegate.h */,
-				5D4E33F61C87771400D29BC3 /* ofxWKWebViewDelegate.mm */,
-				5D4E33F71C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.h */,
-				5D4E33F81C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.mm */,
-			);
-			name = WKWebView;
-			sourceTree = "<group>";
-		};
-		5D786DB41C8D2573001AFCF1 /* UIWebView */ = {
-			isa = PBXGroup;
-			children = (
-				A704BEDE1AFB44BF00E97FDC /* ofxUIWebViewDelegate.h */,
-				A704BEDF1AFB44BF00E97FDC /* ofxUIWebViewDelegate.mm */,
-				A704BEE01AFB44BF00E97FDC /* ofxUIWebViewInterfaceJavaScript.h */,
-				A704BEE11AFB44BF00E97FDC /* ofxUIWebViewInterfaceJavaScript.mm */,
-			);
-			name = UIWebView;
-			sourceTree = "<group>";
-		};
-		5DD5D1B71C90ABEB001B8E53 /* WebView */ = {
-			isa = PBXGroup;
-			children = (
-				5DD5D1BB1C90AF47001B8E53 /* ofxWebViewDelegate.h */,
-				5DD5D1BA1C90AF47001B8E53 /* ofxWebViewDelegate.mm */,
-				5D7D5D731C8F253F00DB49D6 /* ofxWebViewInterface.h */,
-				5DD5D1B81C90AC16001B8E53 /* ofxWebViewInterface.mm */,
-			);
-			name = WebView;
 			sourceTree = "<group>";
 		};
 		A704BE531AFB442300E97FDC /* ofxJSON */ = {
@@ -503,9 +458,10 @@
 		A704BEDD1AFB44BF00E97FDC /* webInterface */ = {
 			isa = PBXGroup;
 			children = (
-				5DD5D1B71C90ABEB001B8E53 /* WebView */,
-				5D786DB41C8D2573001AFCF1 /* UIWebView */,
-				5D4E33F01C87762600D29BC3 /* WKWebView */,
+				5DD5D1BB1C90AF47001B8E53 /* ofxWebViewDelegate.h */,
+				5DD5D1BA1C90AF47001B8E53 /* ofxWebViewDelegate.mm */,
+				5D7D5D731C8F253F00DB49D6 /* ofxWebViewInterface.h */,
+				5DD5D1B81C90AC16001B8E53 /* ofxWebViewInterface.mm */,
 			);
 			path = webInterface;
 			sourceTree = "<group>";
@@ -569,89 +525,73 @@
 		A7BBAFA51C95FBDA000AFAB6 /* QCAR */ = {
 			isa = PBXGroup;
 			children = (
-				A7BBAFA61C95FBDA000AFAB6 /* Area.h */,
-				A7BBAFA71C95FBDA000AFAB6 /* Box3D.h */,
-				A7BBAFA81C95FBDA000AFAB6 /* CameraCalibration.h */,
-				A7BBAFA91C95FBDA000AFAB6 /* CameraDevice.h */,
-				A7BBAFAA1C95FBDA000AFAB6 /* CustomViewerParameters.h */,
-				A7BBAFAB1C95FBDA000AFAB6 /* CylinderTarget.h */,
-				A7BBAFAC1C95FBDA000AFAB6 /* CylinderTargetResult.h */,
-				A7BBAFAD1C95FBDA000AFAB6 /* DataSet.h */,
-				A7BBAFAE1C95FBDA000AFAB6 /* Device.h */,
-				A7BBAFAF1C95FBDA000AFAB6 /* DeviceTrackable.h */,
-				A7BBAFB01C95FBDA000AFAB6 /* DeviceTrackableResult.h */,
-				A7BBAFB11C95FBDA000AFAB6 /* DeviceTracker.h */,
-				A7BBAFB21C95FBDA000AFAB6 /* EyeID.h */,
-				A7BBAFB31C95FBDA000AFAB6 /* EyewearCalibrationProfileManager.h */,
-				A7BBAFB41C95FBDA000AFAB6 /* EyewearCalibrationReading.h */,
-				A7BBAFB51C95FBDA000AFAB6 /* EyewearDevice.h */,
-				A7BBAFB61C95FBDA000AFAB6 /* EyewearUserCalibrator.h */,
-				A7BBAFB71C95FBDA000AFAB6 /* Frame.h */,
-				A7BBAFB81C95FBDA000AFAB6 /* GLRenderer.h */,
-				A7BBAFB91C95FBDA000AFAB6 /* HandheldTransformModel.h */,
-				A7BBAFBA1C95FBDA000AFAB6 /* HeadTransformModel.h */,
-				A7BBAFBB1C95FBDA000AFAB6 /* Image.h */,
-				A7BBAFBC1C95FBDA000AFAB6 /* ImageTarget.h */,
-				A7BBAFBD1C95FBDA000AFAB6 /* ImageTargetBuilder.h */,
-				A7BBAFBE1C95FBDA000AFAB6 /* ImageTargetResult.h */,
-				A7BBAFBF1C95FBDA000AFAB6 /* Marker.h */,
-				A7BBAFC01C95FBDA000AFAB6 /* MarkerResult.h */,
-				A7BBAFC11C95FBDA000AFAB6 /* MarkerTracker.h */,
-				A7BBAFC21C95FBDA000AFAB6 /* Matrices.h */,
-				A7BBAFC31C95FBDA000AFAB6 /* Mesh.h */,
-				A7BBAFC41C95FBDA000AFAB6 /* MetalRenderer.h */,
-				A7BBAFC51C95FBDA000AFAB6 /* MultiTarget.h */,
-				A7BBAFC61C95FBDA000AFAB6 /* MultiTargetResult.h */,
-				A7BBAFC71C95FBDA000AFAB6 /* NonCopyable.h */,
-				A7BBAFC81C95FBDA000AFAB6 /* Obb2D.h */,
-				A7BBAFC91C95FBDA000AFAB6 /* Obb3D.h */,
-				A7BBAFCA1C95FBDA000AFAB6 /* ObjectTarget.h */,
-				A7BBAFCB1C95FBDA000AFAB6 /* ObjectTargetResult.h */,
-				A7BBAFCC1C95FBDA000AFAB6 /* ObjectTracker.h */,
-				A7BBAFCD1C95FBDA000AFAB6 /* Prop.h */,
-				A7BBAFCE1C95FBDA000AFAB6 /* PropResult.h */,
-				A7BBAFCF1C95FBDA000AFAB6 /* Reconstruction.h */,
-				A7BBAFD01C95FBDA000AFAB6 /* ReconstructionFromTarget.h */,
-				A7BBAFD11C95FBDA000AFAB6 /* Rectangle.h */,
-				A7BBAFD21C95FBDA000AFAB6 /* Renderer.h */,
-				A7BBAFD31C95FBDA000AFAB6 /* RenderingPrimitives.h */,
-				A7BBAFD41C95FBDA000AFAB6 /* RotationalDeviceTracker.h */,
-				A7BBAFD51C95FBDA000AFAB6 /* SmartTerrainBuilder.h */,
-				A7BBAFD61C95FBDA000AFAB6 /* SmartTerrainTrackable.h */,
-				A7BBAFD71C95FBDA000AFAB6 /* SmartTerrainTracker.h */,
-				A7BBAFD81C95FBDA000AFAB6 /* State.h */,
-				A7BBAFD91C95FBDA000AFAB6 /* StateUpdater.h */,
-				A7BBAFDA1C95FBDA000AFAB6 /* Surface.h */,
-				A7BBAFDB1C95FBDA000AFAB6 /* SurfaceResult.h */,
-				A7BBAFDC1C95FBDA000AFAB6 /* System.h */,
-				A7BBAFDD1C95FBDA000AFAB6 /* TargetFinder.h */,
-				A7BBAFDE1C95FBDA000AFAB6 /* TargetSearchResult.h */,
-				A7BBAFDF1C95FBDA000AFAB6 /* TextTracker.h */,
-				A7BBAFE01C95FBDA000AFAB6 /* Tool.h */,
-				A7BBAFE11C95FBDA000AFAB6 /* Trackable.h */,
-				A7BBAFE21C95FBDA000AFAB6 /* TrackableResult.h */,
-				A7BBAFE31C95FBDA000AFAB6 /* TrackableSource.h */,
-				A7BBAFE41C95FBDA000AFAB6 /* Tracker.h */,
-				A7BBAFE51C95FBDA000AFAB6 /* TrackerManager.h */,
-				A7BBAFE61C95FBDA000AFAB6 /* TransformModel.h */,
-				A7BBAFE71C95FBDA000AFAB6 /* Type.h */,
-				A7BBAFE81C95FBDA000AFAB6 /* UIGLViewProtocol.h */,
-				A7BBAFE91C95FBDA000AFAB6 /* UpdateCallback.h */,
-				A7BBAFEA1C95FBDA000AFAB6 /* Vectors.h */,
-				A7BBAFEB1C95FBDA000AFAB6 /* VideoBackgroundConfig.h */,
-				A7BBAFEC1C95FBDA000AFAB6 /* VideoBackgroundTextureInfo.h */,
-				A7BBAFED1C95FBDA000AFAB6 /* VideoMode.h */,
-				A7BBAFEE1C95FBDA000AFAB6 /* View.h */,
-				A7BBAFEF1C95FBDA000AFAB6 /* ViewerParameters.h */,
-				A7BBAFF01C95FBDA000AFAB6 /* ViewerParametersList.h */,
-				A7BBAFF11C95FBDA000AFAB6 /* ViewList.h */,
-				A7BBAFF21C95FBDA000AFAB6 /* VirtualButton.h */,
-				A7BBAFF31C95FBDA000AFAB6 /* VirtualButtonResult.h */,
-				A7BBAFF41C95FBDA000AFAB6 /* QCAR.h */,
-				A7BBAFF51C95FBDA000AFAB6 /* QCAR_iOS.h */,
-				A7BBAFF61C95FBDA000AFAB6 /* Word.h */,
-				A7BBAFF71C95FBDA000AFAB6 /* WordList.h */,
-				A7BBAFF81C95FBDA000AFAB6 /* WordResult.h */,
+				A7EA8A821F9FBD2500688BBD /* Area.h */,
+				A7EA8A9E1F9FBD2700688BBD /* Box3D.h */,
+				A7EA8A931F9FBD2600688BBD /* CameraCalibration.h */,
+				A7EA8AA91F9FBD2700688BBD /* CameraDevice.h */,
+				A7EA8A7F1F9FBD2500688BBD /* CylinderTarget.h */,
+				A7EA8AAF1F9FBD2800688BBD /* CylinderTargetResult.h */,
+				A7EA8A8D1F9FBD2600688BBD /* DataSet.h */,
+				A7EA8A9B1F9FBD2700688BBD /* EyeID.h */,
+				A7EA8A771F9FBD2500688BBD /* Eyewear.h */,
+				A7EA8A8A1F9FBD2600688BBD /* EyewearCalibrationProfileManager.h */,
+				A7EA8A921F9FBD2600688BBD /* EyewearCalibrationReading.h */,
+				A7EA8A851F9FBD2500688BBD /* EyewearUserCalibrator.h */,
+				A7EA8AB71F9FBD2800688BBD /* Frame.h */,
+				A7EA8AA01F9FBD2700688BBD /* Image.h */,
+				A7EA8AB01F9FBD2800688BBD /* ImageTarget.h */,
+				A7EA8AAE1F9FBD2800688BBD /* ImageTargetBuilder.h */,
+				A7EA8AB51F9FBD2800688BBD /* ImageTargetResult.h */,
+				A7EA8A901F9FBD2600688BBD /* Marker.h */,
+				A7EA8AB21F9FBD2800688BBD /* MarkerResult.h */,
+				A7EA8A9C1F9FBD2700688BBD /* MarkerTracker.h */,
+				A7EA8AAA1F9FBD2700688BBD /* Matrices.h */,
+				A7EA8A961F9FBD2600688BBD /* Mesh.h */,
+				A7EA8A9D1F9FBD2700688BBD /* MultiTarget.h */,
+				A7EA8A811F9FBD2500688BBD /* MultiTargetResult.h */,
+				A7EA8A971F9FBD2600688BBD /* NonCopyable.h */,
+				A7EA8AA51F9FBD2700688BBD /* Obb2D.h */,
+				A7EA8A8E1F9FBD2600688BBD /* Obb3D.h */,
+				A7EA8A7D1F9FBD2500688BBD /* ObjectTarget.h */,
+				A7EA8A941F9FBD2600688BBD /* ObjectTargetResult.h */,
+				A7EA8AA11F9FBD2700688BBD /* ObjectTracker.h */,
+				A7EA8A861F9FBD2500688BBD /* Prop.h */,
+				A7EA8AA61F9FBD2700688BBD /* PropResult.h */,
+				A7EA8A781F9FBD2500688BBD /* QCAR_iOS.h */,
+				A7EA8AB11F9FBD2800688BBD /* QCAR.h */,
+				A7EA8A951F9FBD2600688BBD /* Reconstruction.h */,
+				A7EA8AAB1F9FBD2700688BBD /* ReconstructionFromTarget.h */,
+				A7EA8AAC1F9FBD2800688BBD /* Rectangle.h */,
+				A7EA8A831F9FBD2500688BBD /* Renderer.h */,
+				A7EA8AAD1F9FBD2800688BBD /* SmartTerrainBuilder.h */,
+				A7EA8A9F1F9FBD2700688BBD /* SmartTerrainTrackable.h */,
+				A7EA8A7A1F9FBD2500688BBD /* SmartTerrainTracker.h */,
+				A7EA8AB31F9FBD2800688BBD /* State.h */,
+				A7EA8AB41F9FBD2800688BBD /* StateUpdater.h */,
+				A7EA8A8F1F9FBD2600688BBD /* Surface.h */,
+				A7EA8A871F9FBD2600688BBD /* SurfaceResult.h */,
+				A7EA8A7C1F9FBD2500688BBD /* System.h */,
+				A7EA8A791F9FBD2500688BBD /* TargetFinder.h */,
+				A7EA8A981F9FBD2600688BBD /* TargetSearchResult.h */,
+				A7EA8A801F9FBD2500688BBD /* TextTracker.h */,
+				A7EA8A841F9FBD2500688BBD /* Tool.h */,
+				A7EA8A8B1F9FBD2600688BBD /* Trackable.h */,
+				A7EA8A7B1F9FBD2500688BBD /* TrackableResult.h */,
+				A7EA8A881F9FBD2600688BBD /* TrackableSource.h */,
+				A7EA8AA71F9FBD2700688BBD /* Tracker.h */,
+				A7EA8A891F9FBD2600688BBD /* TrackerManager.h */,
+				A7EA8A8C1F9FBD2600688BBD /* Type.h */,
+				A7EA8A911F9FBD2600688BBD /* UIGLViewProtocol.h */,
+				A7EA8AA31F9FBD2700688BBD /* UpdateCallback.h */,
+				A7EA8A9A1F9FBD2700688BBD /* Vectors.h */,
+				A7EA8A991F9FBD2700688BBD /* VideoBackgroundConfig.h */,
+				A7EA8A761F9FBD2400688BBD /* VideoBackgroundTextureInfo.h */,
+				A7EA8AA41F9FBD2700688BBD /* VideoMode.h */,
+				A7EA8AB61F9FBD2800688BBD /* VirtualButton.h */,
+				A7EA8AA81F9FBD2700688BBD /* VirtualButtonResult.h */,
+				A7EA8AA21F9FBD2700688BBD /* Word.h */,
+				A7EA8A7E1F9FBD2500688BBD /* WordList.h */,
+				A7EA8AB81F9FBD2800688BBD /* WordResult.h */,
 			);
 			path = QCAR;
 			sourceTree = "<group>";
@@ -774,10 +714,11 @@
 				511FEEFE1E09F15000BB06AB /* MemoryUploader.mm */,
 				511FEEFF1E09F15000BB06AB /* QCARState.h */,
 				A704BEDD1AFB44BF00E97FDC /* webInterface */,
+				436CC0611FAA247E0021BA20 /* speechAPI */,
 				E4D8936B11527B74007E1F53 /* main.mm */,
 				E4D8936D11527B74007E1F53 /* realityEditor.mm */,
 				E4D8936C11527B74007E1F53 /* realityEditor.h */,
-				51C8797B1EE8472E008FA005 /* vuforiaKey.h */,
+				436CC05B1FA905C00021BA20 /* vuforiaKey.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -813,7 +754,7 @@
 				LastUpgradeCheck = 0600;
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
-						DevelopmentTeam = CR8PE59E35;
+						DevelopmentTeam = 398X473C9S;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Maps.iOS = {
@@ -913,8 +854,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D4E33FA1C87771400D29BC3 /* ofxWKWebViewInterfaceJavaScript.mm in Sources */,
 				A7DE8BC41BCB397B00CC1525 /* ofxXmlSettings.cpp in Sources */,
+				436CC0641FAA24D40021BA20 /* SpeechInterface.mm in Sources */,
 				A7BBB00B1C95FBDA000AFAB6 /* ofxQCAR_ViewController.mm in Sources */,
 				511FEF001E09F15000BB06AB /* ImagePartSource.mm in Sources */,
 				A7DE8BC31BCB397B00CC1525 /* tinyxmlparser.cpp in Sources */,
@@ -922,7 +863,6 @@
 				A704BEC91AFB442300E97FDC /* jsoncpp.cpp in Sources */,
 				A7DE8BC11BCB397B00CC1525 /* tinyxml.cpp in Sources */,
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
-				A704BEE31AFB44BF00E97FDC /* ofxUIWebViewInterfaceJavaScript.mm in Sources */,
 				A704BED01AFB442300E97FDC /* ofxUDPManager.cpp in Sources */,
 				A704BECE1AFB442300E97FDC /* ofxTCPManager.cpp in Sources */,
 				5DD5D1B91C90AC16001B8E53 /* ofxWebViewInterface.mm in Sources */,
@@ -930,13 +870,11 @@
 				511FEF011E09F15000BB06AB /* MemoryUploader.mm in Sources */,
 				A7BBB00C1C95FBDA000AFAB6 /* ofxVuforiaSession.mm in Sources */,
 				A7BBB0091C95FBDA000AFAB6 /* ofxQCAR.mm in Sources */,
-				A704BEE21AFB44BF00E97FDC /* ofxUIWebViewDelegate.mm in Sources */,
 				A7BBB00A1C95FBDA000AFAB6 /* ofxQCAR_EAGLView.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* realityEditor.mm in Sources */,
 				A704BECB1AFB442300E97FDC /* ofxJSONElement.cpp in Sources */,
 				5DD5D1BC1C90AF47001B8E53 /* ofxWebViewDelegate.mm in Sources */,
 				A704BECF1AFB442300E97FDC /* ofxTCPServer.cpp in Sources */,
-				5D4E33F91C87771400D29BC3 /* ofxWKWebViewDelegate.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -959,7 +897,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = CR8PE59E35;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 398X473C9S;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -973,13 +912,15 @@
 					"$(OF_CORE_HEADERS)",
 					../../../addons/ofxQCAR/libs/QCAR/include,
 					../../../addons/ofxJSON/libs/jsoncpp/include,
+					../../../addons/ofxQCAR/libs/QCAR/include/QCAR,
 				);
 				INFOPLIST_FILE = "ofxiOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../../../addons/ofxJSON/libs/jsoncpp/include,
 					../../../addons/ofxQCAR/libs/QCAR/lib/arm,
+					../../../addons/ofxQCAR/libs/QCAR/include/QCAR,
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
@@ -987,7 +928,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxQCAR/libs/QCAR/include $(OF_CORE_HEADERS) ../../../addons/ofxJSON/libs/jsoncpp/include";
+				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxQCAR/libs/QCAR/include $(OF_CORE_HEADERS) ../../../addons/ofxJSON/libs/jsoncpp/include ../../../addons/ofxQCAR/libs/QCAR/include/QCAR";
 				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Debug;
@@ -999,7 +940,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = CR8PE59E35;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 398X473C9S;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1013,13 +955,15 @@
 					"$(OF_CORE_HEADERS)",
 					../../../addons/ofxQCAR/libs/QCAR/include,
 					../../../addons/ofxJSON/libs/jsoncpp/include,
+					../../../addons/ofxQCAR/libs/QCAR/include/QCAR,
 				);
 				INFOPLIST_FILE = "ofxiOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../../../addons/ofxJSON/libs/jsoncpp/include,
 					../../../addons/ofxQCAR/libs/QCAR/lib/arm,
+					../../../addons/ofxQCAR/libs/QCAR/include/QCAR,
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
@@ -1027,7 +971,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxQCAR/libs/QCAR/include $(OF_CORE_HEADERS) ../../../addons/ofxJSON/libs/jsoncpp/include";
+				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxQCAR/libs/QCAR/include $(OF_CORE_HEADERS) ../../../addons/ofxJSON/libs/jsoncpp/include ../../../addons/ofxQCAR/libs/QCAR/include/QCAR";
 				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Release;
@@ -1040,7 +984,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COMPRESS_PNG_FILES = NO;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1069,7 +1013,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COMPRESS_PNG_FILES = NO;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_DYNAMIC_NO_PIC = NO;
