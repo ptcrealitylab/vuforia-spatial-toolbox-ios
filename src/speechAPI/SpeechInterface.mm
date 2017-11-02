@@ -12,6 +12,14 @@ void SpeechInterfaceCpp::initializeWithCustomDelegate(SpeechDelegateCpp *delegat
     [speechInterfaceObjC setDelegate:delegate];
 }
 
+void SpeechInterfaceCpp::startRecording() {
+    [speechInterfaceObjC startRecording];
+}
+
+void SpeechInterfaceCpp::stopRecording() {
+    [speechInterfaceObjC stopRecording];
+}
+
 @implementation SpeechInterfaceObjC
 {
     SFSpeechRecognizer* speechRecognizer;
