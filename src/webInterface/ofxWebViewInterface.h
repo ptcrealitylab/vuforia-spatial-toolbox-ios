@@ -100,6 +100,8 @@ public:
     //    void promptForTouch(std::function<void(bool)> &callback);
     void promptForTouch();
     
+    void clearCache();
+    
 private:
     bool isShowingView;
     
