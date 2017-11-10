@@ -48,7 +48,8 @@
 #define ImagePartSource_h
 
 #include "ofMain.h"
-#include "ofxiOs.h"
+//#include "ofxiOs.h"
+#include "ofxiOS.h"
 #include "Poco/Net/Net.h"
 #include "Poco/Net/PartSource.h"
 
