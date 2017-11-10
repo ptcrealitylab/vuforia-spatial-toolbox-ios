@@ -1533,8 +1533,8 @@ NSString* realityEditor::stringFromMatrix(ofMatrix4x4 mat) {
 void realityEditor::sendProjectionMatrix() {
     float nearPlane = 2;
     float farPlane = 2000;
-    const QCAR::CameraCalibration& cameraCalibration = QCAR::CameraDevice::getInstance().getCameraCalibration();
-    QCAR::Matrix44F projectionMatrix = QCAR::Tool::getProjectionGL(cameraCalibration, nearPlane, farPlane);
+    const Vuforia::CameraCalibration& cameraCalibration = Vuforia::CameraDevice::getInstance().getCameraCalibration();
+    Vuforia::Matrix44F projectionMatrix = Vuforia::Tool::getProjectionGL(cameraCalibration, nearPlane, farPlane);
 
     ofMatrix4x4 projMatrix = ofMatrix4x4(projectionMatrix.data);
     NSString* code = [NSString stringWithFormat:@"%s.setProjectionMatrix(%@);", arNamespace.c_str(), stringFromMatrix(projMatrix)];
