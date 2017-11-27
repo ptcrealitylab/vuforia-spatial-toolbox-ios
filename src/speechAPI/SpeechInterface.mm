@@ -66,7 +66,8 @@ void SpeechInterfaceCpp::stopRecording() {
 - (void) startRecording
 {
     if (recognitionTask) {
-        [self stopRecording];
+        NSLog(@"Already Recording!");
+        return;
     }
     
     NSError* error;
@@ -86,11 +87,13 @@ void SpeechInterfaceCpp::stopRecording() {
             NSLog(@"RESULT: %@", result.bestTranscription.formattedString);
             isFinal = !result.isFinal;
         }
-        if (error) {
-            [audioEngine stop];
-            [inputNode removeTapOnBus:0];
-            recognitionRequest = nil;
-            recognitionTask = nil;
+        if (error != nil) {
+            NSLog(@"Cancelling due to error");
+//            [audioEngine stop];
+//            [inputNode removeTapOnBus:0];
+//            recognitionRequest = nil;
+//            recognitionTask = nil;
+            [self restartRecordingDueToError];
         }
     }];
     
@@ -105,18 +108,52 @@ void SpeechInterfaceCpp::stopRecording() {
     
 }
 
+- (void)restartRecordingDueToError {
+    NSLog(@"Restart!");
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if(audioEngine.isRunning){
+            [audioEngine.inputNode removeTapOnBus:0];
+            [audioEngine.inputNode reset];
+            [audioEngine stop];
+        }
+        if (recognitionRequest != nil) {
+            [recognitionRequest endAudio];
+        }
+        if (recognitionTask != nil) {
+            if (!recognitionTask.isCancelled) {
+                [recognitionTask cancel];
+            }
+        }
+        recognitionRequest = nil;
+        recognitionTask = nil;
+        
+        [self startRecording];
+    });
+}
+
 -(void)stopRecording {
     dispatch_async(dispatch_get_main_queue(), ^{
         if(audioEngine.isRunning){
             [audioEngine.inputNode removeTapOnBus:0];
             [audioEngine.inputNode reset];
             [audioEngine stop];
-            [recognitionRequest endAudio];
-            [recognitionTask cancel];
-            recognitionTask = nil;
-            recognitionRequest = nil;
         }
+        if (recognitionRequest != nil) {
+            [recognitionRequest endAudio];
+        }
+        if (recognitionTask != nil) {
+            if (!recognitionTask.isCancelled) {
+                [recognitionTask cancel];
+            }
+        }
+        recognitionRequest = nil;
+        recognitionTask = nil;
     });
+    
+//    if (audioEngine.isRunning) {
+//        [audioEngine stop];
+//        [recognitionRequest endAudio];
+//    }
 }
 
 #pragma mark - SFSpeechRecognizerDelegate Delegate Methods

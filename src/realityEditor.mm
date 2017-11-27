@@ -292,13 +292,15 @@ void realityEditor::setup() {
 
 void realityEditor::handleIncomingSpeech(std::string bestTranscription) {
     cout << "realityEditor did receive speech: " << bestTranscription << endl;
-    
     if (!speechCallback.empty()) {
-        NSString *jsString44 =[NSString stringWithFormat:@"%s", speechCallback.c_str()];
-        cout << " output: "<< jsString44;
-        interface.runJavaScriptFromString(jsString44);
+        NSString *jsString =[NSString stringWithFormat:@"%s", speechCallback.c_str()];
+        NSString *arg1String =[NSString stringWithFormat:@"'%s'", bestTranscription.c_str()];
+
+        NSString *jsStringWithArgs = [jsString stringByReplacingOccurrencesOfString:@"__ARG1__" withString:arg1String];
+        
+        cout << " output: "<< jsStringWithArgs;
+        interface.runJavaScriptFromString(jsStringWithArgs);
     }
-    
 }
 
 #pragma mark - Routes to handle function calls from JavaScript
@@ -469,7 +471,11 @@ void realityEditor::handleCustomRequest(NSDictionary *messageBody) {
         
     } else if (functionName == "authenticateTouch") {
         authenticateTouch();
+    
+    } else if (functionName == "clearCache") {
+        clearCache();
     }
+    
 }
 
 #pragma mark - START OF Functions Called From JavaScript
@@ -540,13 +546,19 @@ void realityEditor::kickoff() {
     
     // if the message is reload then the interface reloads and all objects are resent to the editor
     
-    NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, %d, \"%s\",\"%s\", %d)",
+    // always reset speech recording to off when loading app (prevents bug)
+    int speechState = 0;
+    
+    NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, %d, %d, \"%s\", \"%s\", %d)",
                              deviceNamespace.c_str(),
                              developerState,
                              extTrackingState,
                              clearSkyState,
                              instantState,
-                             externalState.c_str(), discoveryState.c_str(), realityState];
+                             speechState,
+                             externalState.c_str(),
+                             discoveryState.c_str(),
+                             realityState];
     interface.runJavaScriptFromString(stateSender);
     
     NSString *deviceSender = [NSString stringWithFormat:@"%s.setDeviceName(\"%s\")",
@@ -833,6 +845,10 @@ void realityEditor::remember(string dataStr) {
 void realityEditor::authenticateTouch() {
     cout << "authenticateTouch";
     interface.promptForTouch();
+}
+
+void realityEditor::clearCache() {
+    interface.clearCache();
 }
 
 #pragma mark - END OF Functions Called From JavaScript

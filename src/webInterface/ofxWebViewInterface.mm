@@ -142,6 +142,18 @@ ofxWebViewInterfaceJavaScript::~ofxWebViewInterfaceJavaScript() {
     
 }
 
+#pragma mark - Debugging
+
+void ofxWebViewInterfaceJavaScript::clearCache() {
+    NSSet *dataTypes = [NSSet setWithArray:@[WKWebsiteDataTypeDiskCache,
+                                             WKWebsiteDataTypeMemoryCache,
+                                             ]];
+    [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:dataTypes
+                                               modifiedSince:[NSDate dateWithTimeIntervalSince1970:0]
+                                           completionHandler:^{
+                                           }];
+}
+
 #pragma mark - Touch Security
 
 void ofxWebViewInterfaceJavaScript::promptForTouch() {
