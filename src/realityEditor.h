@@ -153,6 +153,8 @@ public:
     void remember(string dataStr);
     void authenticateTouch();
     
+    void clearCache();
+    
     SpeechInterfaceCpp speechInterface;
     void handleIncomingSpeech(std::string bestTranscription);
     
