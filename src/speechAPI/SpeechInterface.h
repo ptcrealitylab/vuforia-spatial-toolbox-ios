@@ -32,7 +32,7 @@ private:
 };
 
 // a member of the speech interface C++ class, this can be accessed to directly interact with speech APIs
-@interface SpeechInterfaceObjC : NSObject <SFSpeechRecognizerDelegate>
+@interface SpeechInterfaceObjC : NSObject <SFSpeechRecognizerDelegate, SFSpeechRecognitionTaskDelegate>
 
 @property(nonatomic, assign) SpeechDelegateCpp *delegate;
 - (void) startRecording;

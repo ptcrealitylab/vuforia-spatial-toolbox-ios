@@ -77,28 +77,20 @@ void SpeechInterfaceCpp::stopRecording() {
     [audioSession setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error];
     
     recognitionRequest = [[SFSpeechAudioBufferRecognitionRequest alloc] init];
-    AVAudioInputNode* inputNode = audioEngine.inputNode;
-    recognitionRequest.shouldReportPartialResults = YES;
-    // TODO: can start this with a delegate instead of handler, maybe make realityEditor the delegate
-    recognitionTask = [speechRecognizer recognitionTaskWithRequest:recognitionRequest resultHandler:^(SFSpeechRecognitionResult * _Nullable result, NSError * _Nullable error) {
-        BOOL isFinal = NO;
-        if (result) {
-            self.delegate->handleIncomingSpeech([result.bestTranscription.formattedString UTF8String]);
-            NSLog(@"RESULT: %@", result.bestTranscription.formattedString);
-            isFinal = !result.isFinal;
-        }
-        if (error != nil) {
-            NSLog(@"Cancelling due to error");
-//            [audioEngine stop];
-//            [inputNode removeTapOnBus:0];
-//            recognitionRequest = nil;
-//            recognitionTask = nil;
-            [self restartRecordingDueToError];
-        }
-    }];
+    AVAudioInputNode* inputNode = [audioEngine inputNode];
     
-    AVAudioFormat* recordingFormat = [inputNode outputFormatForBus:0];
-    [inputNode installTapOnBus:0 bufferSize:1024 format:recordingFormat block:^(AVAudioPCMBuffer * _Nonnull buffer, AVAudioTime * _Nonnull when) {
+    if (recognitionRequest == nil) {
+        NSLog(@"Unable to created a SFSpeechAudioBufferRecognitionRequest object");
+    }
+    
+    if (inputNode == nil) {
+        NSLog(@"Unable to created a inputNode object");
+    }
+    
+    recognitionRequest.shouldReportPartialResults = YES;
+    recognitionTask = [speechRecognizer recognitionTaskWithRequest:recognitionRequest delegate:self];
+    
+    [inputNode installTapOnBus:0 bufferSize:4096 format:[inputNode outputFormatForBus:0] block:^(AVAudioPCMBuffer *buffer, AVAudioTime *when){
         [recognitionRequest appendAudioPCMBuffer:buffer];
     }];
     
@@ -106,29 +98,6 @@ void SpeechInterfaceCpp::stopRecording() {
     [audioEngine startAndReturnError:&error];
     NSLog(@"Say something – I'm listening!");
     
-}
-
-- (void)restartRecordingDueToError {
-    NSLog(@"Restart!");
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if(audioEngine.isRunning){
-            [audioEngine.inputNode removeTapOnBus:0];
-            [audioEngine.inputNode reset];
-            [audioEngine stop];
-        }
-        if (recognitionRequest != nil) {
-            [recognitionRequest endAudio];
-        }
-        if (recognitionTask != nil) {
-            if (!recognitionTask.isCancelled) {
-                [recognitionTask cancel];
-            }
-        }
-        recognitionRequest = nil;
-        recognitionTask = nil;
-        
-        [self startRecording];
-    });
 }
 
 -(void)stopRecording {
@@ -149,11 +118,6 @@ void SpeechInterfaceCpp::stopRecording() {
         recognitionRequest = nil;
         recognitionTask = nil;
     });
-    
-//    if (audioEngine.isRunning) {
-//        [audioEngine stop];
-//        [recognitionRequest endAudio];
-//    }
 }
 
 #pragma mark - SFSpeechRecognizerDelegate Delegate Methods
@@ -161,5 +125,27 @@ void SpeechInterfaceCpp::stopRecording() {
 - (void)speechRecognizer:(SFSpeechRecognizer *)speechRecognizer availabilityDidChange:(BOOL)available {
     NSLog(@"Availability: %d", available);
 }
+
+#pragma mark - SFSpeechRecognitionTaskDelegate Delegate Methods
+
+- (void)speechRecognitionTask:(SFSpeechRecognitionTask *)task didFinishRecognition:(SFSpeechRecognitionResult *)recognitionResult
+{
+    NSLog(@"speechRecognitionTask:(SFSpeechRecognitionTask *)task didFinishRecognition");
+    
+    NSLog(@"Best Transcription: %@", recognitionResult.bestTranscription);
+    
+    if ([recognitionResult isFinal]) {
+        [audioEngine stop];
+        [audioEngine.inputNode removeTapOnBus:0];
+        recognitionTask = nil;
+        recognitionResult = nil;
+    }
+}
+
+ - (void)speechRecognitionTask:(SFSpeechRecognitionTask *)task didHypothesizeTranscription:(SFTranscription *)transcription {
+     NSString * translatedString = [transcription formattedString];
+     NSLog(@"%@", translatedString);
+     self.delegate->handleIncomingSpeech([translatedString UTF8String]);
+ }
 
 @end
