@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDisplayName</key>
-	<string>Reality Editor</string>
+	<string>Editor 3.0.1</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleIcons~ipad</key>
 	<dict/>
 	<key>CFBundleIdentifier</key>
-	<string>org.ptc.editor</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -41,8 +41,12 @@
 	<string>Bluetooth might be used for Object Connectivity</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera access is required for AR</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app uses your microphone to control the world around you with your speech.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Photo library might be used for targets.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>This app uses Speech recognition to transform your spoken words into text.</string>
 	<key>UIApplicationExitsOnSuspend</key>
 	<true/>
 	<key>UIInterfaceOrientation</key>
@@ -57,9 +61,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This app uses your microphone to control the world around you with your speech.</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>This app uses Speech recognition to transform your spoken words into text.</string>
 </dict>
 </plist>
