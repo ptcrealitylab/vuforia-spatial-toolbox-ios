@@ -95,6 +95,8 @@ void realityEditor::setup() {
     instantState = XML.getValue("SETUP:INSTANT", 1);
     externalState = XML.getValue("SETUP:EXTERNAL", "");
     discoveryState = XML.getValue("SETUP:DISCOVERY", "");
+      zoneText = XML.getValue("SETUP:ZONETEXT", "");
+    zoneState =XML.getValue("SETUP:ZONE", 0);
     realityState = XML.getValue("SETUP:REALITY", 0);
 
 
@@ -445,6 +447,16 @@ void realityEditor::handleCustomRequest(NSDictionary *messageBody) {
     } else if (functionName == "extendedTrackingOff") {
         extendedTrackingOff();
         
+    } else if (functionName == "zoneText") {
+          zoneText = [(NSString *)arguments[@"zoneText"] UTF8String];
+        XML.setValue("SETUP:ZONETEXT", zoneText);
+        XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+        cout << "editor.xml saved to app documents folder";
+        
+    } else if (functionName == "zoneOn") {
+   zoneOn();
+    } else if (functionName == "zoneOff") {
+    zoneOff();
     } else if (functionName == "createMemory") {
         createMemory();
         
@@ -549,7 +561,7 @@ void realityEditor::kickoff() {
     // always reset speech recording to off when loading app (prevents bug)
     int speechState = 0;
     
-    NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, %d, %d, \"%s\", \"%s\", %d)",
+    NSString *stateSender = [NSString stringWithFormat:@"%s.setStates(%d, %d, %d, %d, %d, \"%s\", \"%s\", %d,\"%s\", %d )",
                              deviceNamespace.c_str(),
                              developerState,
                              extTrackingState,
@@ -558,7 +570,7 @@ void realityEditor::kickoff() {
                              speechState,
                              externalState.c_str(),
                              discoveryState.c_str(),
-                             realityState];
+                             realityState, zoneText.c_str(), zoneState];
     interface.runJavaScriptFromString(stateSender);
     
     NSString *deviceSender = [NSString stringWithFormat:@"%s.setDeviceName(\"%s\")",
@@ -690,6 +702,20 @@ void realityEditor::instantOff() {
     XML.setValue("SETUP:INSTANT", 0);
     XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
     cout << "editor.xml saved to app documents folder";
+}
+
+void realityEditor::zoneOn() {
+    XML.setValue("SETUP:ZONE", 1);
+    XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+    cout << "editor.xml saved to app documents folder";
+    zoneState = 1;
+}
+
+void realityEditor::zoneOff() {
+    XML.setValue("SETUP:ZONE", 0);
+    XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+    cout << "editor.xml saved to app documents folder";
+    zoneState = 0;
 }
 
 void realityEditor::extendedTrackingOn() {
@@ -1154,7 +1180,7 @@ void realityEditor::draw() {
 }
 
 bool realityEditor::processSingleHeartBeat(string message) {
-
+    
     //NSLog(@">>downloads");
     nameExists = false;
 
@@ -1162,7 +1188,7 @@ bool realityEditor::processSingleHeartBeat(string message) {
 
     // if message is a valid heartbeat do the following
     if (!json.parse(message.c_str()) || json["id"].empty() || json["ip"].empty()) {
-
+        
         //this calls an action
         if (!json["action"].empty()) {
             NSString *jsString4 = [NSString stringWithFormat:@"%s.onAction('%s')",
@@ -1182,6 +1208,17 @@ bool realityEditor::processSingleHeartBeat(string message) {
             return false;
         }
     }
+    
+    // Support for zone.
+    // If an object is not part of the same zone, it will not be recognized by the editor.
+    if(!json["zone"].empty()){
+        if(zoneText != "" && zoneState == 1){
+            if(json["zone"].asString() != zoneText) {
+                return false;
+            }
+        }
+    }
+    
 
     if(json["ip"].asString().size()<7){
         NSLog(@">>ip was wrong");
