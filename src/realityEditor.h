@@ -142,6 +142,8 @@ public:
     void realityOff();
     void instantOn();
     void instantOff();
+    void zoneOn();
+    void zoneOff();
     void extendedTrackingOn();
     void extendedTrackingOff();
     void createMemory();
@@ -229,8 +231,11 @@ public:
     int clearSkyState = 0;
     int realityState = 0;
     int instantState = 1;
+    
     string externalState = "";
     string discoveryState = "";
+     string zoneText = "";
+      int zoneState = 0;
     bool tcpDiscovery = false;
 
 
