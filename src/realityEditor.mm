@@ -457,6 +457,8 @@ void realityEditor::handleCustomRequest(NSDictionary *messageBody) {
    zoneOn();
     } else if (functionName == "zoneOff") {
     zoneOff();
+    } else if (functionName == "tap") {
+        tap();
     } else if (functionName == "createMemory") {
         createMemory();
         
@@ -716,6 +718,19 @@ void realityEditor::zoneOff() {
     XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
     cout << "editor.xml saved to app documents folder";
     zoneState = 0;
+}
+
+void realityEditor::tap() {
+    if([[UIDevice currentDevice].model isEqualToString:@"iPhone"])
+    {
+        AudioServicesPlaySystemSound (1519); //works ALWAYS as of this post
+    }
+    else
+    {
+        // Not an iPhone, so doesn't have vibrate
+        // play the less annoying tick noise or one of your own
+        AudioServicesPlayAlertSound (1105);
+    }
 }
 
 void realityEditor::extendedTrackingOn() {
@@ -1087,14 +1102,17 @@ void realityEditor::update() {
 
             // check if udp message
             while (udpConnection.Receive(udpMessage, 256) > 0) {
-
+                
                 // this makes sure that only one mode is active
                 if(discoveryState != "") continue;
 
                 if(!json.parse(udpMessage)  || json["id"].asString() == "allTargetsPlaceholder000000000000"){
                     continue;
                 } else if(!processSingleHeartBeat(udpMessage))
-                {break;};
+                {
+                    
+            
+                    break;};
             }
 
 
