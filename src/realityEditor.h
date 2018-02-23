@@ -144,6 +144,7 @@ public:
     void instantOff();
     void zoneOn();
     void zoneOff();
+    void tap();
     void extendedTrackingOn();
     void extendedTrackingOff();
     void createMemory();

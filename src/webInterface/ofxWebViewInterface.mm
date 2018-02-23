@@ -75,6 +75,8 @@ void ofxWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxWebViewDeleg
     WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
     configuration.userContentController = userContentController;
     configuration.allowsInlineMediaPlayback = YES;
+    configuration.mediaPlaybackRequiresUserAction = NO;
+    configuration.requiresUserActionForMediaPlayback = NO;
     
     wkWebViewInstance = [[WKWebView alloc] initWithFrame:frame configuration:configuration];
     
@@ -86,10 +88,13 @@ void ofxWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxWebViewDeleg
     [wkWebViewInstance setOpaque:NO];
     [wkWebViewInstance setBackgroundColor:[UIColor clearColor]];
     [wkWebViewInstance.window makeKeyAndVisible];
+ 
     
     // make it scrollable
     [[wkWebViewInstance scrollView] setScrollEnabled:YES];
     [[wkWebViewInstance scrollView] setBounces:NO];
+    
+
 }
 
 
