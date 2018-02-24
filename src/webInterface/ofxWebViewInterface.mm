@@ -91,7 +91,7 @@ void ofxWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxWebViewDeleg
  
     
     // make it scrollable
-    [[wkWebViewInstance scrollView] setScrollEnabled:YES];
+    [[wkWebViewInstance scrollView] setScrollEnabled:NO];
     [[wkWebViewInstance scrollView] setBounces:NO];
     
 
