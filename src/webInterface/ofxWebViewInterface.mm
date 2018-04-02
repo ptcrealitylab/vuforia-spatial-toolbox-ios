@@ -94,9 +94,16 @@ void ofxWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxWebViewDeleg
     [[wkWebViewInstance scrollView] setScrollEnabled:NO];
     [[wkWebViewInstance scrollView] setBounces:NO];
     
-
+    // create a static server with the interface as early as possible to reduce waiting time on start
+    [WebServerManager sharedManager];
 }
 
+void ofxWebViewInterfaceJavaScript::loadInterfaceFromLocalServer() {
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    NSURL* serverURL = [[WebServerManager sharedManager] getServerURL];
+
+    [wkWebViewInstance loadRequest:[NSURLRequest requestWithURL:serverURL]];
+}
 
 void ofxWebViewInterfaceJavaScript::loadURL(string url) {
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
