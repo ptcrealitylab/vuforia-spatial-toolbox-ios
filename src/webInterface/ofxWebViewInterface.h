@@ -52,6 +52,7 @@
 #include <WebKit/WebKit.h>
 #include <UIKit/UIKit.h>
 #include "ofxWebViewDelegate.h"
+#include "WebServerManager.h"
 #include <LocalAuthentication/LocalAuthentication.h>
 
 /**
@@ -83,6 +84,8 @@ public:
     
     /** 2. Load a URL or a local file to the webview */
     void loadURL(string url);
+    
+    void loadInterfaceFromLocalServer();
     
     void loadLocalFile(string path);
     

@@ -270,7 +270,8 @@ void realityEditor::setup() {
          INITIALIZING THE INTERFACE
          **********************************************/
 
-        interface.loadLocalFile("index");
+//        interface.loadLocalFile("index");
+        interface.loadInterfaceFromLocalServer();
         //   interface.loadURL("http://html5test.com");
 
         interface.activateView();
@@ -621,7 +622,8 @@ void realityEditor::reload() {
         interface.activateView();
     }else{
         interface.deactivateView();
-        interface.loadLocalFile("index");
+//        interface.loadLocalFile("index");
+        interface.loadInterfaceFromLocalServer();
         interface.activateView();
     }
     
@@ -1180,7 +1182,8 @@ void realityEditor::draw() {
                 cout << "could not find UI at URL possition";
 
                 interface.deactivateView();
-                interface.loadLocalFile("index");
+//                interface.loadLocalFile("index");
+                interface.loadInterfaceFromLocalServer();
                 interface.activateView();
 
             }

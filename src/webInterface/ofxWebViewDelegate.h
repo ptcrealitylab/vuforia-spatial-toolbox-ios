@@ -66,7 +66,7 @@ private:
     ofxWebViewDelegateObjC *delegate;
 };
 
-@interface ofxWebViewDelegateObjC : NSObject <WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler>
+@interface ofxWebViewDelegateObjC : NSObject <WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler> 
 
 @property(nonatomic, assign) ofxWebViewDelegateCpp *delegate;
 
