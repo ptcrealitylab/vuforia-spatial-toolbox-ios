@@ -47,6 +47,8 @@
 #include "ofxWebViewInterface.h"
 #include <CommonCrypto/CommonCrypto.h>
 
+#define IS_IOS11orHIGHER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.0)
+
 static const string securityNamespace = "realityEditor.device.security";
 
 ofxWebViewInterfaceJavaScript::ofxWebViewInterfaceJavaScript() {
@@ -61,7 +63,13 @@ void ofxWebViewInterfaceJavaScript::initialize() {
 void ofxWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxWebViewDelegateCpp *delegate) {
     // initialize the UIWebView instance
     
-    CGRect frame = CGRectMake(0, 0, ofGetWindowWidth()/[UIScreen mainScreen].scale-0.1, ofGetWindowHeight()/[UIScreen mainScreen].scale-0.1);
+//    CGRect frame = CGRectMake(0, 0, ofGetWindowWidth()/[UIScreen mainScreen].scale-0.1, ofGetWindowHeight()/[UIScreen mainScreen].scale-0.1);
+    CGFloat xOffset = 0;
+    #ifdef IS_IOS11orHIGHER
+        UILayoutGuide* layoutGuide = [[UIApplication sharedApplication] keyWindow].safeAreaLayoutGuide;
+        xOffset = layoutGuide.layoutFrame.origin.x;
+    #endif
+    CGRect frame = CGRectMake(-1 * xOffset, 0, xOffset + ofGetWindowWidth()/[UIScreen mainScreen].scale-0.1/* - xOffset*/, ofGetWindowHeight()/[UIScreen mainScreen].scale-0.1);
     
     ofxWebViewDelegateObjC *delegateObjC = [[ofxWebViewDelegateObjC alloc] init];
     [delegateObjC setDelegate:delegate]; // WARNING: is set to 0 when using default delegate - make sure to set delegate
