@@ -85,7 +85,7 @@ public:
 
     void renderJavascript();
 
-    bool processSingleHeartBeat(string udpMessage);
+    bool processSingleHeartBeat(string udpMessage, string address);
 
     void downloadTargets();
 

@@ -964,7 +964,7 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
         for (Json::ArrayIndex i = 0; i < allObjectJSON.size(); ++i)
         {
             if(allObjectJSON.isArray()){
-                 processSingleHeartBeat(allObjectJSON[i].toStyledString());
+                 processSingleHeartBeat(allObjectJSON[i].toStyledString(), allObjectJSON[i]["ip"].toStyledString());
             } else {
                     cout << "no heardbeat found";
             }
@@ -1104,22 +1104,26 @@ void realityEditor::update() {
 
             // check if udp message
             while (udpConnection.Receive(udpMessage, 256) > 0) {
+                string address;
+                int port;
+                udpConnection.GetRemoteAddr(address, port);
+                cout <<address << " " <<port << "\n";
+             
                 
                 // this makes sure that only one mode is active
                 if(discoveryState != "") continue;
 
                 if(!json.parse(udpMessage)  || json["id"].asString() == "allTargetsPlaceholder000000000000"){
                     continue;
-                } else if(!processSingleHeartBeat(udpMessage))
+                } else if(!processSingleHeartBeat(udpMessage,address))
                 {
                     
             
                     break;};
             }
 
-
-
-
+              // cout <<json<< "\n";
+            
             downloadTargets();
 
         }
@@ -1200,7 +1204,7 @@ void realityEditor::draw() {
 
 }
 
-bool realityEditor::processSingleHeartBeat(string message) {
+bool realityEditor::processSingleHeartBeat(string message, string address) {
     
     //NSLog(@">>downloads");
     nameExists = false;
@@ -1208,7 +1212,7 @@ bool realityEditor::processSingleHeartBeat(string message) {
     // ofLog() << "Received udp message " << message;
 
     // if message is a valid heartbeat do the following
-    if (!json.parse(message.c_str()) || json["id"].empty() || json["ip"].empty()) {
+    if (!json.parse(message.c_str()) || json["id"].empty() || address == "") {
         
         //this calls an action
         if (!json["action"].empty()) {
@@ -1241,7 +1245,7 @@ bool realityEditor::processSingleHeartBeat(string message) {
     }
     
 
-    if(json["ip"].asString().size()<7){
+    if(address.size()<7){
         NSLog(@">>ip was wrong");
         nameExists = true;
 
@@ -1361,7 +1365,7 @@ bool realityEditor::processSingleHeartBeat(string message) {
                 datasetHolder = i;
 
                 nameCount[i][0] = json["id"].asString();
-                nameCount[i][1] = json["ip"].asString();
+                nameCount[i][1] = address;
                 nameCount[i][2] = json["vn"].asString();
                 nameCount[i][3] = json["tcs"].asString();
                 nameCount[i][4] = "f";
@@ -1396,7 +1400,7 @@ bool realityEditor::processSingleHeartBeat(string message) {
         if(yespush){
             vector<string> row;
             row.push_back(json["id"].asString()); //0
-            row.push_back(json["ip"].asString()); // 1
+            row.push_back(address); // 1
             if(!json["vn"].empty()){                //2
                 row.push_back(json["vn"].asString());
             } else{
