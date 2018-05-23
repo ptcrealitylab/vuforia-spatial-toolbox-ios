@@ -55,10 +55,10 @@
 #include "ofxNetwork.h"
 #include "ofxXmlSettings.h"
 
-#import <QCAR/CameraCalibration.h>
-#import <QCAR/CameraDevice.h>
-#import <QCAR/Tool.h>
-#import <QCAR/Matrices.h>
+#import <Vuforia/CameraCalibration.h>
+#import <Vuforia/CameraDevice.h>
+#import <Vuforia/Tool.h>
+#import <Vuforia/Matrices.h>
 
 #include "ofxWebViewInterface.h"
 #include "SpeechInterface.h"
@@ -201,7 +201,7 @@ public:
 
     shared_ptr<QCARState> currentMemory = nullptr;
 
-    vector<QCAR::DataSet *>  datasetList;
+    vector<Vuforia::DataSet *>  datasetList;
 
     float matrixOld = 0.0;
 
