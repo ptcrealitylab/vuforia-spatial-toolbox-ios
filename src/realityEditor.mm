@@ -1761,14 +1761,14 @@ void realityEditor::uploadMemory(shared_ptr<QCARState> memory) {
     }
     ofLog() << "memory 2: " << memory.get();
 
-    string objName = getName(memory->name[0]);
+    string objectId = memory->name[0];
 
     string ip;
     string id;
     bool found = false;
     for (vector<string> info : nameCount) {
-        string infoName = getName(info[0]); // object id
-        if (objName == infoName) {
+        string infoId = info[0];
+        if (objectId == infoId) {
             id = info[0];
             ip = info[1];
             found = true;
