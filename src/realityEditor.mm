@@ -1107,7 +1107,7 @@ void realityEditor::update() {
                 string address;
                 int port;
                 udpConnection.GetRemoteAddr(address, port);
-                cout <<address << " " <<port << "\n";
+               // cout <<address << " " <<port << "\n";
              
                 
                 // this makes sure that only one mode is active
