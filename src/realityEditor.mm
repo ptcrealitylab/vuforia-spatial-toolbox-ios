@@ -63,7 +63,7 @@ string kLicenseKey = vuforiaKey;
 //--------------------------------------------------------------
 void realityEditor::setup() {
 
-    numbersToMuch = 500;
+    numbersToMuch = 500; // maximum number of markers the system can load at once
 
     ofSetFrameRate(60);
     ofSetVerticalSync(false);
@@ -95,10 +95,9 @@ void realityEditor::setup() {
     instantState = XML.getValue("SETUP:INSTANT", 1);
     externalState = XML.getValue("SETUP:EXTERNAL", "");
     discoveryState = XML.getValue("SETUP:DISCOVERY", "");
-      zoneText = XML.getValue("SETUP:ZONETEXT", "");
+    zoneText = XML.getValue("SETUP:ZONETEXT", "");
     zoneState =XML.getValue("SETUP:ZONE", 0);
     realityState = XML.getValue("SETUP:REALITY", 0);
-
 
     int numDragTags = XMLTargets.getNumTags("target");
     cout << numDragTags;
@@ -295,15 +294,9 @@ void realityEditor::setup() {
 
 void realityEditor::handleIncomingSpeech(std::string bestTranscription) {
     cout << "realityEditor did receive speech: " << bestTranscription << endl;
-    if (!speechCallback.empty()) {
-        NSString *jsString =[NSString stringWithFormat:@"%s", speechCallback.c_str()];
-        NSString *arg1String =[NSString stringWithFormat:@"'%s'", bestTranscription.c_str()];
-
-        NSString *jsStringWithArgs = [jsString stringByReplacingOccurrencesOfString:@"__ARG1__" withString:arg1String];
-        
-        cout << " output: "<< jsStringWithArgs;
-        interface.runJavaScriptFromString(jsStringWithArgs);
-    }
+    
+    NSString *transcriptionString = [NSString stringWithFormat:@"'%s'", bestTranscription.c_str()];
+    callJavaScriptCallback(speechCallback, transcriptionString);
 }
 
 #pragma mark - Routes to handle function calls from JavaScript
@@ -409,12 +402,6 @@ void realityEditor::handleCustomRequest(NSDictionary *messageBody) {
     } else if (functionName == "oldUI") {
         oldUI();
         
-    } else if (functionName == "freeze") {
-        freeze();
-        
-    } else if (functionName == "unfreeze") {
-        unfreeze();
-        
     } else if (functionName == "sendAccelerationData") {
         sendAccelerationData();
         
@@ -496,41 +483,244 @@ void realityEditor::handleCustomRequest(NSDictionary *messageBody) {
 #pragma mark - START OF Functions Called From JavaScript
 #pragma mark -
 
+void realityEditor::callJavaScriptCallback(string cb) {
+    if (!cb.empty()) {
+        NSString *jsString = [NSString stringWithFormat:@"%s", cb.c_str()];
+        cout << " output: " << jsString.UTF8String;
+        interface.runJavaScriptFromString(jsString);
+    }
+}
+
+void realityEditor::callJavaScriptCallback(string cb, NSString *arg1) {
+    if (!cb.empty()) {
+        NSString *jsString =[NSString stringWithFormat:@"%s", cb.c_str()];
+        NSString *jsStringWithArgs = [jsString stringByReplacingOccurrencesOfString:@"__ARG1__" withString:arg1];
+        cout << " output: "<< jsStringWithArgs.UTF8String;
+        interface.runJavaScriptFromString(jsStringWithArgs);
+    }
+}
+
+// TODO: implement callback with 2 arguments if ever needed
+//void realityEditor::callJavaScriptCallback(string cb, NSString *arg1, NSString *arg2) {}
+
+// check if vuforia is ready and fires a callback once that’s the case
 void realityEditor::getDeviceReady(string cb){   }
 
+// response with a callback that indicates the device name
 void realityEditor::getVuforiaReady(string cb) {
     cout << "-------------------" << "\n";
     cout << cb << "\n";
     cout << "-------------------" << "\n";
-    NSString *jsString44 =[NSString stringWithFormat:@"%s", cb.c_str()];
-    cout << " output: "<< jsString44;
-    interface.runJavaScriptFromString(jsString44);
+    
+    callJavaScriptCallback(cb);
 }
 
-void realityEditor::addNewMarker(string markerName, string cb){   }
-void realityEditor::getProjectionMatrix(string cb){   }
-void realityEditor::getMatrixStream(string cb){   }
-void realityEditor::getScreenshot(string size, string cb){   }
-void realityEditor::setPause(){   }
-void realityEditor::setResume(){   }
-void realityEditor::getUDPMessages(string cb){   }
-void realityEditor::sendUDPMessage(string message){   }
-void realityEditor::getFileExists(string fileName, string cb){   }
-void realityEditor::downloadFile(string fileName, string cb){   }
-void realityEditor::getFilesExist(vector<string> fileNameArray, string cb){   }
-void realityEditor::getChecksum(vector<string> fileNameArray, string cb){   }
-void realityEditor::setStorage(string storageID, string message){   }
-void realityEditor::getStorage(string storageID, string cb){   }
+// adds a new marker and fires a callback with error or success
+void realityEditor::addNewMarker(string markerName, string cb){
+    ofxQCAR & QCAR = *ofxQCAR::getInstance();
+    string tmpDir([NSTemporaryDirectory() UTF8String]);
+    
+    Vuforia::DataSet * addedSet = QCAR.addExtraTarget(tmpDir + markerName + ".xml");
+    datasetList.push_back(addedSet);
+    
+    // if there's a callback to the editor, pass back true or false depending on if it successfully loads the new marker
+    bool success = addedSet->getTrackable(0) != nil;
+    NSString *successString = @"false";
+    if (success) {
+        successString = @"true";
+    }
+    
+    callJavaScriptCallback(cb, successString);
+}
 
+// gets the projection matrix
+void realityEditor::getProjectionMatrix(string cb){
+    float nearPlane = 2;
+    float farPlane = 2000;
+    const Vuforia::CameraCalibration& cameraCalibration = Vuforia::CameraDevice::getInstance().getCameraCalibration();
+    Vuforia::Matrix44F projectionMatrix = Vuforia::Tool::getProjectionGL(cameraCalibration, nearPlane, farPlane);
+    ofMatrix4x4 projMatrix = ofMatrix4x4(projectionMatrix.data);
+    NSString* projectionMatrixString = stringFromMatrix(projMatrix);
+    
+    callJavaScriptCallback(cb, projectionMatrixString);
+}
+
+// callback for all markers and matrices that are found
+void realityEditor::getMatrixStream(string cb){
+    matrixStreamCallback = cb; // this gets used in the update loop
+}
+
+// the callback will have a screenshot with base64. Size can be S,M,L
+void realityEditor::getScreenshot(string size, string cb){   }
+
+// pauses the tracker
+void realityEditor::setPause(){
+    currentMemory = shared_ptr<QCARState>(new QCARState(getCameraImage(), matrixTemp, nameTemp));
+}
+
+// resumes the tracker
+void realityEditor::setResume(){
+    currentMemory = nullptr;
+}
+
+// everytime there is a new message the callback is called.
+void realityEditor::getUDPMessages(string cb){
+    udpCallback = cb; // this gets used in the UDP listener
+}
+
+// sends out a message over UDP broadcast.
+void realityEditor::sendUDPMessage(string message){
+    udpConnection2.Create();
+    udpConnection2.SetEnableBroadcast(true);
+    udpConnection2.Connect("255.255.255.255", 52316);
+    udpConnection2.Send(message.c_str(), int(message.length()));
+    udpConnection2.Close();
+}
+
+// boolean response if a file exists.
+// Files are saved and encoded by converting all non alpha-numeric characters before the
+// last path component into "-" characters, and separating the last path component from
+// the rest with a "*" character.
+void realityEditor::getFileExists(string fileName, string cb){
+    
+    NSString* fileNameString = [NSString stringWithFormat:@"%s", fileName.c_str()];
+    NSString* beforeLastPathComponent = [fileNameString stringByDeletingLastPathComponent];
+    // replaces all non alpha-numeric characters with "-"
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[^a-zA-Z0-9_]+" options:0 error:nil];
+    beforeLastPathComponent = [regex stringByReplacingMatchesInString:beforeLastPathComponent options:0 range:NSMakeRange(0, beforeLastPathComponent.length) withTemplate:@"-"];
+    NSString* lastPathComponent = [fileNameString lastPathComponent];
+    fileNameString = [NSString stringWithFormat:@"%@*%@", beforeLastPathComponent, lastPathComponent];
+
+    NSString* temporaryDirectory = NSTemporaryDirectory();
+    NSString* filePath = [NSString stringWithFormat:@"%@/%@", temporaryDirectory, fileNameString];
+    
+    NSString* doesFileExist = @"false";
+    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]){
+        doesFileExist = @"true";
+    }
+
+    callJavaScriptCallback(cb, doesFileExist);
+}
+
+//downloads a file. The callback is an error or success message
+void realityEditor::downloadFile(string fileName, string cb){
+    
+    //download the file in a seperate thread.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSLog(@"Downloading Started");
+        NSString *urlToDownload = [NSString stringWithFormat:@"%s", fileName.c_str()];
+        NSURL  *url = [NSURL URLWithString:urlToDownload];
+        NSData *urlData = [NSData dataWithContentsOfURL:url]; // TODO: get an error message if this times out so we can cb(false)
+        // can use timeout by implementing something like... https://stackoverflow.com/a/29894936/1190267
+        
+        if (urlData) {
+            NSString* fileNameString = [NSString stringWithFormat:@"%s", fileName.c_str()];
+            NSString* beforeLastPathComponent = [fileNameString stringByDeletingLastPathComponent];
+            // replaces all non alpha-numeric characters with "-"
+            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[^a-zA-Z0-9_]+" options:0 error:nil];
+            beforeLastPathComponent = [regex stringByReplacingMatchesInString:beforeLastPathComponent options:0 range:NSMakeRange(0, beforeLastPathComponent.length) withTemplate:@"-"];
+            NSString* lastPathComponent = [fileNameString lastPathComponent];
+            fileNameString = [NSString stringWithFormat:@"%@*%@", beforeLastPathComponent, lastPathComponent];
+            
+            NSString* temporaryDirectory = NSTemporaryDirectory();
+            NSString  *filePath = [NSString stringWithFormat:@"%@/%@", temporaryDirectory, fileNameString];
+            
+            //saving is done on main thread
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [urlData writeToFile:filePath atomically:YES];
+                NSLog(@"File Saved !");
+                
+                callJavaScriptCallback(cb, @"true");
+            });
+        } else {
+            callJavaScriptCallback(cb, @"false");
+        }
+        
+    });
+}
+
+// boolean response if all files exists.
+void realityEditor::getFilesExist(vector<string> fileNameArray, string cb) {
+    
+    bool allExist = true;
+    
+    for (std::size_t i = 0; i < fileNameArray.size(); i++){
+        cout << fileNameArray[i] << endl;
+        string fileName = fileNameArray[i];
+        
+        NSString* fileNameString = [NSString stringWithFormat:@"%s", fileName.c_str()];
+        NSString* beforeLastPathComponent = [fileNameString stringByDeletingLastPathComponent];
+        // replaces all non alpha-numeric characters with "-"
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[^a-zA-Z0-9_]+" options:0 error:nil];
+        beforeLastPathComponent = [regex stringByReplacingMatchesInString:beforeLastPathComponent options:0 range:NSMakeRange(0, beforeLastPathComponent.length) withTemplate:@"-"];
+        NSString* lastPathComponent = [fileNameString lastPathComponent];
+        // puts a "*" between last path component and the rest, to easily reconstruct the real path
+        fileNameString = [NSString stringWithFormat:@"%@*%@", beforeLastPathComponent, lastPathComponent];
+        
+        NSString* temporaryDirectory = NSTemporaryDirectory();
+        NSString* filePath = [NSString stringWithFormat:@"%@/%@", temporaryDirectory, fileNameString]; // fileNameString
+        
+        if (![[NSFileManager defaultManager] fileExistsAtPath:filePath]){
+            allExist = false;
+            break;
+        }
+    }
+
+    NSString* doAllFilesExist = @"false";
+    if (allExist) {
+        doAllFilesExist = @"true";
+    }
+    
+    callJavaScriptCallback(cb, doAllFilesExist);
+}
+
+// returns the checksum of a group of files
+void realityEditor::getChecksum(vector<string> fileNameArray, string cb){   }
+
+//store a message on the app level for persistance
+void realityEditor::setStorage(string storageID, string message){
+    
+    XML.setValue(storageID, message);
+//    XML.setValue("SETUP:DEVELOPER", 1);
+    XML.saveFile(ofxiOSGetDocumentsDirectory() + "editor.xml" );
+    cout << "editor.xml saved to app documents folder";
+    
+}
+
+// recall the message.
+void realityEditor::getStorage(string storageID, string cb){
+
+    if( XML.loadFile(ofxiOSGetDocumentsDirectory() + "editor.xml") ){
+        cout<< "editor.xml loaded from documents folder!";
+    } else if( XML.loadFile("editor.xml") ){
+        cout << "editor.xml loaded from data folder!";
+    } else {
+        cout << "unable to load editor.xml check data/ folder";
+        return callJavaScriptCallback(cb, @"undefined");
+    }
+    
+    string storedValue = XML.getValue(storageID, "undefined"); // TODO: make this work with any data type (string, int use different getter methods)
+    
+//    developerState = XML.getValue("SETUP:DEVELOPER", 0);
+//    zoneText = XML.getValue("SETUP:ZONETEXT", "");
+    
+    NSString *storedValueString = [NSString stringWithFormat:@"'%s'", storedValue.c_str()];
+
+    callJavaScriptCallback(cb, storedValueString);
+}
+
+// starts the apple speech engine
 void realityEditor::startSpeechRecording(){
     speechInterface.startRecording();
 }
 
+// stops the speech engine
 void realityEditor::stopSpeechRecording(){
     speechCallback = "";
     speechInterface.stopRecording();
 }
 
+ //sends the recognized speech transcript (the full phrase) to the callback, but resends every time there is a new word.
 void realityEditor::addSpeechListener(string cb){
     speechCallback = cb;
     cout << "-------------------" << "\n";
@@ -646,14 +836,6 @@ void realityEditor::oldUI() {
     arNamespace = "this";
     drawNamespace = "this";
     memoryNamespace = "this";
-}
-
-void realityEditor::freeze() {
-    currentMemory = shared_ptr<QCARState>(new QCARState(getCameraImage(), matrixTemp, nameTemp));
-}
-
-void realityEditor::unfreeze() {
-    currentMemory = nullptr;
 }
 
 void realityEditor::sendAccelerationData() {
@@ -1108,18 +1290,19 @@ void realityEditor::update() {
                 int port;
                 udpConnection.GetRemoteAddr(address, port);
                // cout <<address << " " <<port << "\n";
-             
                 
+                NSString *udpMessageString = [NSString stringWithFormat:@"'%s'", udpMessage];
+                callJavaScriptCallback(udpCallback, udpMessageString);
+
                 // this makes sure that only one mode is active
                 if(discoveryState != "") continue;
 
+                // TODO: add an extra check that this is valid JSON before trying to parse, otherwise it crashes
                 if(!json.parse(udpMessage)  || json["id"].asString() == "allTargetsPlaceholder000000000000"){
                     continue;
-                } else if(!processSingleHeartBeat(udpMessage,address))
-                {
-                    
-            
-                    break;};
+                } else if(!processSingleHeartBeat(udpMessage,address)){
+                   break;
+                }
             }
 
               // cout <<json<< "\n";
@@ -1493,6 +1676,7 @@ void realityEditor::downloadTargets() {
 
                     if(datasetHolder ==100000){
                         datasetList.push_back(QCAR.addExtraTarget(tmpDir + nameCount[i][0] + ".xml"));
+                        cout << "added marker at path " << tmpDir + nameCount[i][0] + ".xml" << endl;
                         
                     } else {
                         if(datasetList.size()>0){
@@ -1606,8 +1790,11 @@ void realityEditor::sendProjectionMatrix() {
 
 // generate the javascript messages
 void realityEditor::renderJavascript() {
+    
+    NSMutableString* visibleMatrices = [NSMutableString stringWithString:@"{"];
+
     if (nameTemp.size() > 0) {
-       
+        
         stringforTransform = [NSMutableString stringWithFormat:@"%s.update({", drawNamespace.c_str()];
 
         // now for all objects we add json elements indicating the name of the marker as the object name and following the model view matrix.
@@ -1620,9 +1807,17 @@ void realityEditor::renderJavascript() {
              nameTemp[i].c_str(),
              stringFromMatrix(tempMatrix)
              ];
+            
+            [visibleMatrices appendFormat:@"'%s':%@",
+             nameTemp[i].c_str(),
+             stringFromMatrix(tempMatrix)
+             ];
+            
             // formating condition for json.
             if (i < matrixTemp.size() - 1) {
                 [stringforTransform appendString:@","];
+                
+                [visibleMatrices appendString:@","];
             }
 
 
@@ -1643,11 +1838,15 @@ void realityEditor::renderJavascript() {
          */
 
         [stringforTransform appendString:@"})"];
+        
+        [visibleMatrices appendString:@"}"];
 
 
     } else {
         stringforTransform = [NSMutableString stringWithFormat:@"%s.update({})", drawNamespace.c_str()];
         
+        visibleMatrices = [NSMutableString stringWithString:@"{}"];
+
         /* if(shouldSendAccelerationData == true){
          [stringforTransform appendFormat:@",'acl':[%lf,%lf,%lf,%lf,%lf]",
          accel.x,
@@ -1662,8 +1861,8 @@ void realityEditor::renderJavascript() {
     }
     // finally we call the dunction to update the html view.
     interface.runJavaScriptFromString(stringforTransform);
-
-
+    
+    callJavaScriptCallback(matrixStreamCallback, visibleMatrices);
 }
 
 // utilities for rendering the conditions of the download process.

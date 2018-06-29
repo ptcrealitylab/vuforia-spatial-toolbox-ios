@@ -131,8 +131,6 @@ public:
     void kickoff();
     void reload();
     void oldUI();
-    void freeze();
-    void unfreeze();
     void sendAccelerationData();
     void developerOn();
     void developerOff();
@@ -156,12 +154,17 @@ public:
     void remember(string dataStr);
     void authenticateTouch();
     
+    void callJavaScriptCallback(string cb);
+    void callJavaScriptCallback(string cb, NSString* arg1);
+    
     void clearCache();
     
     SpeechInterfaceCpp speechInterface;
     void handleIncomingSpeech(std::string bestTranscription);
     
     string speechCallback;
+    string matrixStreamCallback;
+    string udpCallback;
 
     ofxWebViewInterfaceJavaScript interface;
     void handleCustomRequest(NSDictionary *messageBody);
