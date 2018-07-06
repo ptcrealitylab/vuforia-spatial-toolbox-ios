@@ -152,6 +152,11 @@ void ofxWebViewInterfaceJavaScript::toggleView() {
 // relevant for sending the script
 void ofxWebViewInterfaceJavaScript::runJavaScriptFromString(NSString *script) {
     if (isShowingView) {
+        
+        // strip out newlines to prevent Unexpected EOF error
+        script = [script stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+        script = [script stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [wkWebViewInstance evaluateJavaScript:script completionHandler:nil];
         });
