@@ -493,7 +493,7 @@ void realityEditor::callJavaScriptCallback(string cb) {
 
 void realityEditor::callJavaScriptCallback(string cb, NSString *arg1) {
     if (!cb.empty()) {
-        NSString *jsString =[NSString stringWithFormat:@"%s", cb.c_str()];
+        NSString *jsString = [NSString stringWithFormat:@"%s", cb.c_str()];
         NSString *jsStringWithArgs = [jsString stringByReplacingOccurrencesOfString:@"__ARG1__" withString:arg1];
         cout << " output: "<< jsStringWithArgs.UTF8String;
         interface.runJavaScriptFromString(jsStringWithArgs);
@@ -551,7 +551,33 @@ void realityEditor::getMatrixStream(string cb){
 }
 
 // the callback will have a screenshot with base64. Size can be S,M,L
-void realityEditor::getScreenshot(string size, string cb){   }
+void realityEditor::getScreenshot(string size, string cb){
+    
+    ofImage screenImg = getCameraImage();
+    
+    if (size == "S") {
+        // "S" -> small (icon)
+        screenImg.resize(134, 75);
+        
+    } else if (size == "M") {
+        // "M" -> medium (3x icon)
+        screenImg.resize(402, 225);
+    }
+    
+    // leave full size when "L"
+    
+    ofBuffer buffer;
+    ofSaveImage(screenImg.getPixels(), buffer, OF_IMAGE_FORMAT_JPEG, OF_IMAGE_QUALITY_BEST);
+    
+    stringstream ss;
+    Poco::Base64Encoder b64enc(ss);
+    b64enc << buffer;
+    
+    string encodedImageBase64 = ss.str();
+    NSString* encodedScreenshotString = [NSString stringWithFormat:@"'%s'", encodedImageBase64.c_str()];
+    
+    callJavaScriptCallback(cb, encodedScreenshotString);
+}
 
 // pauses the tracker
 void realityEditor::setPause(){
