@@ -6,6 +6,9 @@
 /bin/data/userinterface
 /bin/data/RE-userinterface
 
+#documentation
+/bin/data/docs_generated/
+
 #key files
 vuforiaKey.h
 
