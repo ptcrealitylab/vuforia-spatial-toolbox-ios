@@ -67,6 +67,40 @@ void realityEditor::setup() {
 
     ofSetFrameRate(60);
     ofSetVerticalSync(false);
+//
+//    bRecord = false;
+//    bRecordChanged = false;
+//    bRecordReadyToStart = false;
+//
+    videoWriter.setup(ofGetWidth(), ofGetHeight());
+    
+//    NSString * docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+//    NSString * docVideoPath = [docPath stringByAppendingPathComponent:@"/video.mov"];
+//    videoWriter.setup(ofGetWidth(), ofGetHeight(), [docVideoPath UTF8String]);
+//
+//    videoWriter.setup(ofGetWidth(), ofGetHeight(), "test.mov");
+    
+    // test................................
+//    videoWriter.setFPS(60); // when this gets set it doubles the lenght of the movie but only adds frames to the first half...
+    // ....................................
+    
+    //videoWriter.addAudioInputFromVideoPlayer(videoPlayer0);
+//    if(bRecord == true) {
+//        videoWriter.startRecording();
+//    }
+    
+    videoWriterDelegate = [[REVideoWriterDelegate alloc] init];
+    
+    __block realityEditor *blocksafeSelf = this; // https://stackoverflow.com/a/5023583/1190267
+
+    [videoWriterDelegate subscribeToVideoWriterComplete:^(NSURL *videoFileUrl) {
+        NSLog(@"realityEditor was notified of video file written to %@", videoFileUrl);
+//        void realityEditor::uploadVideo(NSURL* videoPath) {
+//        uploadVideo(videoFileUrl);
+        blocksafeSelf->uploadVideo(videoFileUrl);
+    }];
+    
+    videoWriter.setDelegate(videoWriterDelegate);
 
     // ofxAccelerometer.setup();
 
@@ -476,6 +510,14 @@ void realityEditor::handleCustomRequest(NSDictionary *messageBody) {
     
     } else if (functionName == "clearCache") {
         clearCache();
+        
+    } else if (functionName == "startVideoRecording") {
+        string objectKey = [(NSString *)arguments[@"objectKey"] UTF8String];
+        startVideoRecording(objectKey);
+        
+    } else if (functionName == "stopVideoRecording") {
+        stopVideoRecording();
+        
     }
     
 }
@@ -1102,6 +1144,17 @@ void realityEditor::clearCache() {
     interface.clearCache();
 }
 
+void realityEditor::startVideoRecording(string objectKey) {
+    bRecord = true;
+    recordingObjectKey = objectKey;
+    videoWriter.startRecording();
+}
+
+void realityEditor::stopVideoRecording() {
+    bRecord = false;
+    videoWriter.finishRecording();
+}
+
 #pragma mark - END OF Functions Called From JavaScript
 #pragma mark -
 
@@ -1212,6 +1265,13 @@ void realityEditor::urlResponse(ofHttpResponse &response) {
 
 //--------------------------------------------------------------
 void realityEditor::update() {
+    
+    videoWriter.update();
+    
+//    if(videoWriter.isRecording()) {
+//        NSLog(@"videoWriter is recording");
+//    }
+    
     if (interfaceCounter> 30) {
         // accel = ofxAccelerometer.getForce();
         // orientation = ofxAccelerometer.getOrientation();
@@ -1352,9 +1412,9 @@ void realityEditor::update() {
 //--------------------------------------------------------------
 void realityEditor::draw() {
 
-
-
-
+    if (bRecord) {
+        videoWriter.begin();
+    }
 
     ofxQCAR & QCAR = *ofxQCAR::getInstance();
     // cout << QCAR.QCARInitTrackers() << "\t"
@@ -1409,7 +1469,11 @@ void realityEditor::draw() {
         }
 
     }
-
+    
+    if (bRecord) {
+        videoWriter.end();
+        videoWriter.draw();
+    }
 
 }
 
@@ -2012,6 +2076,42 @@ void realityEditor::uploadMemory(shared_ptr<QCARState> memory) {
     }
     memoryUploader = make_shared<MemoryUploader>(id, ip, memory);
     memoryThreadPool.start(*memoryUploader);
+}
+
+void realityEditor::uploadVideo(NSURL* videoPath) {
+//    ofLog() << "memory 1: " << memory.get();
+//    if (memory->name.size() > 1 || memory->name.size() == 0) {
+//        ofLog() << "Bailing because we want exactly one marker";
+//        return;
+//    }
+//    ofLog() << "memory 2: " << memory.get();
+//
+    string objectId = recordingObjectKey; //"newObjectoM6ihpmt73q8"; //memory->name[0];
+    
+    string ip;
+    string id;
+    bool found = false;
+    for (vector<string> info : nameCount) {
+        string infoId = info[0];
+        if (objectId == infoId) {
+            id = info[0];
+            ip = info[1];
+            found = true;
+            break;
+        }
+    }
+    
+    if (!found) {
+        ofLog() << "No object found in nameCount";
+        return;
+    }
+    
+    if (videoUploader && !videoUploader->done) {
+        ofLog() << "Already processing one video upload";
+        return;
+    }
+    videoUploader = make_shared<VideoUploader>(id, ip, videoPath);
+    videoThreadPool.start(*videoUploader);
 }
 
 NSString* realityEditor::convertImageToBase64(ofImage image) {
