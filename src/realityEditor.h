@@ -71,6 +71,10 @@
 #include "QCARState.h"
 #include "MemoryUploader.h"
 
+#include "ofxiOSVideoWriter.h"
+#import "REVideoWriterDelegate.h"
+#include "VideoUploader.h"
+
 class realityEditor : public ofxQCAR_App, ofxWebViewDelegateCpp, SpeechDelegateCpp {
 public:
     void setup();
@@ -153,6 +157,8 @@ public:
     void memorize();
     void remember(string dataStr);
     void authenticateTouch();
+    void startVideoRecording(string objectKey);
+    void stopVideoRecording();
     
     void callJavaScriptCallback(string cb);
     void callJavaScriptCallback(string cb, NSString* arg1);
@@ -268,6 +274,9 @@ public:
     // A thread pool used for executing memory uploading off the main thread
     Poco::ThreadPool memoryThreadPool;
     shared_ptr<MemoryUploader> memoryUploader;
+    
+    Poco::ThreadPool videoThreadPool;
+    shared_ptr<VideoUploader> videoUploader;
 
     const int thumbnailWidth = 200;
     const int thumbnailHeight = 112;
@@ -275,6 +284,7 @@ public:
     ofImage getCameraImage();
     void sendThumbnail(shared_ptr<QCARState> memory);
     void uploadMemory(shared_ptr<QCARState> memory);
+    void uploadVideo(NSURL* videoPath);
     NSString* convertImageToBase64(ofImage image);
     bool getDataFromReq(string req, string reqName, string* data);
 
@@ -293,6 +303,25 @@ public:
      void gotFocus();
      void gotMemoryWarning();
      void deviceOrientationChanged(int newOrientation);*/
+    
+    ofxiOSVideoWriter videoWriter;
+    bool bRecord;
+    string recordingObjectKey;
+    REVideoWriterDelegate* videoWriterDelegate;
+    
+//    bool bRecordChanged;
+//    bool bRecordReadyToStart;
+//
+//    ofxiOSVideoPlayer videoPlayer0;
+//
+//    ofMesh box;
+//    ofFloatColor c1;
+//    ofFloatColor c2;
+//    ofFloatColor c3;
+//    vector<ofVec2f> points;
+//    vector<ofVec2f> pointsNew;
+//
+//    ofxToggle recordToggle;
     
 };
 

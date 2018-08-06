@@ -29,6 +29,15 @@
 		4352E93D2072A8E10024484A /* WebServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4352E93C2072A8E10024484A /* WebServerManager.m */; };
 		436CC0641FAA24D40021BA20 /* SpeechInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 436CC0621FAA24D40021BA20 /* SpeechInterface.mm */; };
 		436CC0661FAA25820021BA20 /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 436CC0651FAA25810021BA20 /* Speech.framework */; };
+		43853FD02114EB6200D11CA4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 43853FA42114EB6200D11CA4 /* README.md */; };
+		43853FD12114EB6200D11CA4 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 43853FA52114EB6200D11CA4 /* .gitignore */; };
+		43853FE42114EB6300D11CA4 /* ofxiOSVideoWriter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43853FC62114EB6200D11CA4 /* ofxiOSVideoWriter.mm */; };
+		43853FE52114EB6300D11CA4 /* VideoWriter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43853FC92114EB6200D11CA4 /* VideoWriter.mm */; };
+		43853FE62114EB6300D11CA4 /* GLVideoWriter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43853FCA2114EB6200D11CA4 /* GLVideoWriter.mm */; };
+		43853FE72114EB6300D11CA4 /* ofxiOSVideoWriter.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 43853FCC2114EB6200D11CA4 /* ofxiOSVideoWriter.jpg */; };
+		43853FE92114EE7C00D11CA4 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43853FE82114EE7C00D11CA4 /* AssetsLibrary.framework */; };
+		43853FED211537AF00D11CA4 /* REVideoWriterDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43853FEC211537AF00D11CA4 /* REVideoWriterDelegate.mm */; };
+		43853FF121153F8D00D11CA4 /* VideoUploader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43853FF021153F8D00D11CA4 /* VideoUploader.mm */; };
 		511FEF001E09F15000BB06AB /* ImagePartSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 511FEEFC1E09F15000BB06AB /* ImagePartSource.mm */; };
 		511FEF011E09F15000BB06AB /* MemoryUploader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 511FEEFE1E09F15000BB06AB /* MemoryUploader.mm */; };
 		51BA97591EDC6FC60041A67F /* QCAR_assets in Resources */ = {isa = PBXBuildFile; fileRef = 51BA97581EDC6FC60041A67F /* QCAR_assets */; };
@@ -136,6 +145,21 @@
 		436CC0621FAA24D40021BA20 /* SpeechInterface.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = SpeechInterface.mm; sourceTree = "<group>"; };
 		436CC0631FAA24D40021BA20 /* SpeechInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpeechInterface.h; sourceTree = "<group>"; };
 		436CC0651FAA25810021BA20 /* Speech.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Speech.framework; path = System/Library/Frameworks/Speech.framework; sourceTree = SDKROOT; };
+		43853FA42114EB6200D11CA4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		43853FA52114EB6200D11CA4 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		43853FC52114EB6200D11CA4 /* GLVideoWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLVideoWriter.h; sourceTree = "<group>"; };
+		43853FC62114EB6200D11CA4 /* ofxiOSVideoWriter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiOSVideoWriter.mm; sourceTree = "<group>"; };
+		43853FC72114EB6200D11CA4 /* VideoWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoWriter.h; sourceTree = "<group>"; };
+		43853FC82114EB6200D11CA4 /* ofxiOSVideoWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiOSVideoWriter.h; sourceTree = "<group>"; };
+		43853FC92114EB6200D11CA4 /* VideoWriter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VideoWriter.mm; sourceTree = "<group>"; };
+		43853FCA2114EB6200D11CA4 /* GLVideoWriter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GLVideoWriter.mm; sourceTree = "<group>"; };
+		43853FCC2114EB6200D11CA4 /* ofxiOSVideoWriter.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ofxiOSVideoWriter.jpg; sourceTree = "<group>"; };
+		43853FE82114EE7C00D11CA4 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		43853FEB211537AF00D11CA4 /* REVideoWriterDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = REVideoWriterDelegate.h; sourceTree = "<group>"; };
+		43853FEC211537AF00D11CA4 /* REVideoWriterDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = REVideoWriterDelegate.mm; sourceTree = "<group>"; };
+		43853FEE21153E1700D11CA4 /* VideoWriterDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoWriterDelegate.h; sourceTree = "<group>"; };
+		43853FEF21153F8D00D11CA4 /* VideoUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoUploader.h; sourceTree = "<group>"; };
+		43853FF021153F8D00D11CA4 /* VideoUploader.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = VideoUploader.mm; sourceTree = "<group>"; };
 		511FEEFB1E09F15000BB06AB /* ImagePartSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImagePartSource.h; path = memory/ImagePartSource.h; sourceTree = "<group>"; };
 		511FEEFC1E09F15000BB06AB /* ImagePartSource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ImagePartSource.mm; path = memory/ImagePartSource.mm; sourceTree = "<group>"; };
 		511FEEFD1E09F15000BB06AB /* MemoryUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MemoryUploader.h; path = memory/MemoryUploader.h; sourceTree = "<group>"; };
@@ -297,6 +321,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				43853FE92114EE7C00D11CA4 /* AssetsLibrary.framework in Frameworks */,
 				4352E93A2072992B0024484A /* MobileCoreServices.framework in Frameworks */,
 				4352E938207299040024484A /* CFNetwork.framework in Frameworks */,
 				4352E936207290060024484A /* libz.tbd in Frameworks */,
@@ -444,9 +469,44 @@
 			path = speechAPI;
 			sourceTree = "<group>";
 		};
+		43853FA32114EB6200D11CA4 /* ofxiOSVideoWriter */ = {
+			isa = PBXGroup;
+			children = (
+				43853FA42114EB6200D11CA4 /* README.md */,
+				43853FA52114EB6200D11CA4 /* .gitignore */,
+				43853FC42114EB6200D11CA4 /* src */,
+				43853FCB2114EB6200D11CA4 /* extras */,
+			);
+			name = ofxiOSVideoWriter;
+			path = ../../../addons/ofxiOSVideoWriter;
+			sourceTree = "<group>";
+		};
+		43853FC42114EB6200D11CA4 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				43853FC52114EB6200D11CA4 /* GLVideoWriter.h */,
+				43853FC62114EB6200D11CA4 /* ofxiOSVideoWriter.mm */,
+				43853FC72114EB6200D11CA4 /* VideoWriter.h */,
+				43853FEE21153E1700D11CA4 /* VideoWriterDelegate.h */,
+				43853FC82114EB6200D11CA4 /* ofxiOSVideoWriter.h */,
+				43853FC92114EB6200D11CA4 /* VideoWriter.mm */,
+				43853FCA2114EB6200D11CA4 /* GLVideoWriter.mm */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		43853FCB2114EB6200D11CA4 /* extras */ = {
+			isa = PBXGroup;
+			children = (
+				43853FCC2114EB6200D11CA4 /* ofxiOSVideoWriter.jpg */,
+			);
+			path = extras;
+			sourceTree = "<group>";
+		};
 		5D4278CB1E4E5CBC009F8A5D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				43853FE82114EE7C00D11CA4 /* AssetsLibrary.framework */,
 				4352E9392072992B0024484A /* MobileCoreServices.framework */,
 				4352E937207299040024484A /* CFNetwork.framework */,
 				4352E935207290060024484A /* libz.tbd */,
@@ -769,6 +829,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				43853FA32114EB6200D11CA4 /* ofxiOSVideoWriter */,
 				A7422E8B20C57182002A89DF /* ofxQCAR */,
 				A7DE8BB81BCB397B00CC1525 /* ofxXmlSettings */,
 				A704BE531AFB442300E97FDC /* ofxJSON */,
@@ -812,12 +873,16 @@
 				511FEEFC1E09F15000BB06AB /* ImagePartSource.mm */,
 				511FEEFD1E09F15000BB06AB /* MemoryUploader.h */,
 				511FEEFE1E09F15000BB06AB /* MemoryUploader.mm */,
+				43853FEF21153F8D00D11CA4 /* VideoUploader.h */,
+				43853FF021153F8D00D11CA4 /* VideoUploader.mm */,
 				511FEEFF1E09F15000BB06AB /* QCARState.h */,
 				A704BEDD1AFB44BF00E97FDC /* webInterface */,
 				436CC0611FAA247E0021BA20 /* speechAPI */,
 				E4D8936B11527B74007E1F53 /* main.mm */,
 				E4D8936D11527B74007E1F53 /* realityEditor.mm */,
 				E4D8936C11527B74007E1F53 /* realityEditor.h */,
+				43853FEB211537AF00D11CA4 /* REVideoWriterDelegate.h */,
+				43853FEC211537AF00D11CA4 /* REVideoWriterDelegate.mm */,
 				436CC05B1FA905C00021BA20 /* vuforiaKey.h */,
 			);
 			path = src;
@@ -854,7 +919,7 @@
 				LastUpgradeCheck = 0600;
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
-						DevelopmentTeam = NAKQL4P3R6;
+						DevelopmentTeam = DCHD5JFKNC;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Maps.iOS = {
@@ -911,7 +976,10 @@
 				A7BC53361AFBC39E00B7D2C2 /* object.png in Resources */,
 				A7422FD820C57183002A89DF /* Background.fragsh in Resources */,
 				A7BC533D1AFBC39E00B7D2C2 /* verdana.ttf in Resources */,
+				43853FD02114EB6200D11CA4 /* README.md in Resources */,
+				43853FD12114EB6200D11CA4 /* .gitignore in Resources */,
 				A7422FD720C57183002A89DF /* Background.vertsh in Resources */,
+				43853FE72114EB6300D11CA4 /* ofxiOSVideoWriter.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -943,7 +1011,9 @@
 				4352E93420728FDA0024484A /* GCDWebServerStreamedResponse.m in Sources */,
 				511FEF001E09F15000BB06AB /* ImagePartSource.mm in Sources */,
 				A7DE8BC31BCB397B00CC1525 /* tinyxmlparser.cpp in Sources */,
+				43853FE62114EB6300D11CA4 /* GLVideoWriter.mm in Sources */,
 				A7DE8BC21BCB397B00CC1525 /* tinyxmlerror.cpp in Sources */,
+				43853FED211537AF00D11CA4 /* REVideoWriterDelegate.mm in Sources */,
 				4352E93020728FDA0024484A /* GCDWebServerURLEncodedFormRequest.m in Sources */,
 				4352E92D20728FDA0024484A /* GCDWebServerDataRequest.m in Sources */,
 				4352E92F20728FDA0024484A /* GCDWebServerMultiPartFormRequest.m in Sources */,
@@ -951,8 +1021,10 @@
 				A7422FDB20C57183002A89DF /* ofxVuforiaSession.mm in Sources */,
 				A7DE8BC11BCB397B00CC1525 /* tinyxml.cpp in Sources */,
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
+				43853FE52114EB6300D11CA4 /* VideoWriter.mm in Sources */,
 				A704BED01AFB442300E97FDC /* ofxUDPManager.cpp in Sources */,
 				A704BECE1AFB442300E97FDC /* ofxTCPManager.cpp in Sources */,
+				43853FE42114EB6300D11CA4 /* ofxiOSVideoWriter.mm in Sources */,
 				A7422FD620C57183002A89DF /* ofxQCAR_ViewController.mm in Sources */,
 				4352E93320728FDA0024484A /* GCDWebServerFileResponse.m in Sources */,
 				5DD5D1B91C90AC16001B8E53 /* ofxWebViewInterface.mm in Sources */,
@@ -964,6 +1036,7 @@
 				A704BECB1AFB442300E97FDC /* ofxJSONElement.cpp in Sources */,
 				A7422FDA20C57183002A89DF /* ofxQCAR_EAGLView.mm in Sources */,
 				4352E92C20728FDA0024484A /* GCDWebServerResponse.m in Sources */,
+				43853FF121153F8D00D11CA4 /* VideoUploader.mm in Sources */,
 				A7422FD520C57183002A89DF /* SampleApplicationShaderUtils.m in Sources */,
 				4352E92B20728FDA0024484A /* GCDWebServerRequest.m in Sources */,
 				4352E92920728FDA0024484A /* GCDWebServerConnection.m in Sources */,
@@ -999,7 +1072,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = NAKQL4P3R6;
+				DEVELOPMENT_TEAM = DCHD5JFKNC;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = c11;
@@ -1022,7 +1095,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "$(OF_CORE_LIBS)";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ptc.editor2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ptc.editor2recording;
 				PRODUCT_NAME = openHybridEditor;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1044,7 +1117,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = NAKQL4P3R6;
+				DEVELOPMENT_TEAM = DCHD5JFKNC;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = c11;
@@ -1067,7 +1140,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "$(OF_CORE_LIBS)";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ptc.editor2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ptc.editor2recording;
 				PRODUCT_NAME = openHybridEditor;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
