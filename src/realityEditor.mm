@@ -513,10 +513,12 @@ void realityEditor::handleCustomRequest(NSDictionary *messageBody) {
         
     } else if (functionName == "startVideoRecording") {
         string objectKey = [(NSString *)arguments[@"objectKey"] UTF8String];
-        startVideoRecording(objectKey);
+        string objectMatrix = [(NSString *)arguments[@"objectMatrix"] UTF8String];
+        startVideoRecording(objectKey, objectMatrix);
         
     } else if (functionName == "stopVideoRecording") {
-        stopVideoRecording();
+        string videoId = [(NSString *)arguments[@"videoId"] UTF8String];
+        stopVideoRecording(videoId);
         
     }
     
@@ -1144,14 +1146,16 @@ void realityEditor::clearCache() {
     interface.clearCache();
 }
 
-void realityEditor::startVideoRecording(string objectKey) {
+void realityEditor::startVideoRecording(string objectKey, string objectMatrix) {
     bRecord = true;
     recordingObjectKey = objectKey;
+    recordingObjectStartMatrix = objectMatrix;
     videoWriter.startRecording();
 }
 
-void realityEditor::stopVideoRecording() {
+void realityEditor::stopVideoRecording(string videoId) {
     bRecord = false;
+    recordingObjectVideoId = videoId;
     videoWriter.finishRecording();
 }
 
@@ -2106,11 +2110,12 @@ void realityEditor::uploadVideo(NSURL* videoPath) {
         return;
     }
     
-    if (videoUploader && !videoUploader->done) {
-        ofLog() << "Already processing one video upload";
-        return;
-    }
-    videoUploader = make_shared<VideoUploader>(id, ip, videoPath);
+//    if (videoUploader && !videoUploader->done) { // TODO: was this necessary?
+//        ofLog() << "Already processing one video upload";
+//        return;
+//    }
+    
+    videoUploader = make_shared<VideoUploader>(id, ip, videoPath, recordingObjectStartMatrix, recordingObjectVideoId);
     videoThreadPool.start(*videoUploader);
 }
 
