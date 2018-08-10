@@ -157,8 +157,8 @@ public:
     void memorize();
     void remember(string dataStr);
     void authenticateTouch();
-    void startVideoRecording(string objectKey);
-    void stopVideoRecording();
+    void startVideoRecording(string objectKey, string objectMatrix);
+    void stopVideoRecording(string objectMatrix);
     
     void callJavaScriptCallback(string cb);
     void callJavaScriptCallback(string cb, NSString* arg1);
@@ -307,6 +307,8 @@ public:
     ofxiOSVideoWriter videoWriter;
     bool bRecord;
     string recordingObjectKey;
+    string recordingObjectStartMatrix;
+    string recordingObjectVideoId;
     REVideoWriterDelegate* videoWriterDelegate;
     
 //    bool bRecordChanged;

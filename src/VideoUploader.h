@@ -30,7 +30,7 @@ using namespace Poco::Net;
 
 class VideoUploader : public Poco::Runnable {
 public:
-    VideoUploader(string _objId, string _ip, NSURL* _videoPath);
+    VideoUploader(string _objId, string _ip, NSURL* _videoPath, string _startMatrix, string _videoId);
     virtual void run();
     bool done;
 private:
@@ -39,7 +39,7 @@ private:
 //    const int thumbnailHeight = 75;
 //    shared_ptr<QCARState> memory;
     NSURL* videoPath;
-    string ip, objId;
+    string ip, objId, startMatrix, videoId;
     
 };
 
