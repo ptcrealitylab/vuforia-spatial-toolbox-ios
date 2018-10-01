@@ -520,6 +520,8 @@ void realityEditor::handleCustomRequest(NSDictionary *messageBody) {
         string videoId = [(NSString *)arguments[@"videoId"] UTF8String];
         stopVideoRecording(videoId);
         
+    } else if (functionName == "focusCamera") {
+        Vuforia::CameraDevice::getInstance().setFocusMode(Vuforia::CameraDevice::FOCUS_MODE_TRIGGERAUTO);
     }
     
 }
