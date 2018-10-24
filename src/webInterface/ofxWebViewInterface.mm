@@ -47,6 +47,8 @@
 #include "ofxWebViewInterface.h"
 #include <CommonCrypto/CommonCrypto.h>
 
+#define IS_IOS11orHIGHER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.0)
+
 static const string securityNamespace = "realityEditor.device.security";
 
 ofxWebViewInterfaceJavaScript::ofxWebViewInterfaceJavaScript() {
@@ -61,7 +63,13 @@ void ofxWebViewInterfaceJavaScript::initialize() {
 void ofxWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxWebViewDelegateCpp *delegate) {
     // initialize the UIWebView instance
     
-    CGRect frame = CGRectMake(0, 0, ofGetWindowWidth()/[UIScreen mainScreen].scale-0.1, ofGetWindowHeight()/[UIScreen mainScreen].scale-0.1);
+//    CGRect frame = CGRectMake(0, 0, ofGetWindowWidth()/[UIScreen mainScreen].scale-0.1, ofGetWindowHeight()/[UIScreen mainScreen].scale-0.1);
+    CGFloat xOffset = 0;
+    #ifdef IS_IOS11orHIGHER
+        UILayoutGuide* layoutGuide = [[UIApplication sharedApplication] keyWindow].safeAreaLayoutGuide;
+        xOffset = layoutGuide.layoutFrame.origin.x;
+    #endif
+    CGRect frame = CGRectMake(-1 * xOffset, 0, xOffset + ofGetWindowWidth()/[UIScreen mainScreen].scale-0.1/* - xOffset*/, ofGetWindowHeight()/[UIScreen mainScreen].scale-0.1);
     
     ofxWebViewDelegateObjC *delegateObjC = [[ofxWebViewDelegateObjC alloc] init];
     [delegateObjC setDelegate:delegate]; // WARNING: is set to 0 when using default delegate - make sure to set delegate
@@ -94,9 +102,16 @@ void ofxWebViewInterfaceJavaScript::initializeWithCustomDelegate(ofxWebViewDeleg
     [[wkWebViewInstance scrollView] setScrollEnabled:NO];
     [[wkWebViewInstance scrollView] setBounces:NO];
     
-
+    // create a static server with the interface as early as possible to reduce waiting time on start
+    [WebServerManager sharedManager];
 }
 
+void ofxWebViewInterfaceJavaScript::loadInterfaceFromLocalServer() {
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    NSURL* serverURL = [[WebServerManager sharedManager] getServerURL];
+
+    [wkWebViewInstance loadRequest:[NSURLRequest requestWithURL:serverURL]];
+}
 
 void ofxWebViewInterfaceJavaScript::loadURL(string url) {
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
@@ -137,6 +152,11 @@ void ofxWebViewInterfaceJavaScript::toggleView() {
 // relevant for sending the script
 void ofxWebViewInterfaceJavaScript::runJavaScriptFromString(NSString *script) {
     if (isShowingView) {
+        
+        // strip out newlines to prevent Unexpected EOF error
+        script = [script stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+        script = [script stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [wkWebViewInstance evaluateJavaScript:script completionHandler:nil];
         });
