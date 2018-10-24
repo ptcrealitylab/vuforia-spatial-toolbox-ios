@@ -55,10 +55,10 @@
 #include "ofxNetwork.h"
 #include "ofxXmlSettings.h"
 
-#import <QCAR/CameraCalibration.h>
-#import <QCAR/CameraDevice.h>
-#import <QCAR/Tool.h>
-#import <QCAR/Matrices.h>
+#import <Vuforia/CameraCalibration.h>
+#import <Vuforia/CameraDevice.h>
+#import <Vuforia/Tool.h>
+#import <Vuforia/Matrices.h>
 
 #include "ofxWebViewInterface.h"
 #include "SpeechInterface.h"
@@ -70,6 +70,10 @@
 #include "ImagePartSource.h"
 #include "QCARState.h"
 #include "MemoryUploader.h"
+
+#include "ofxiOSVideoWriter.h"
+#import "REVideoWriterDelegate.h"
+#include "VideoUploader.h"
 
 class realityEditor : public ofxQCAR_App, ofxWebViewDelegateCpp, SpeechDelegateCpp {
 public:
@@ -85,7 +89,7 @@ public:
 
     void renderJavascript();
 
-    bool processSingleHeartBeat(string udpMessage);
+    bool processSingleHeartBeat(string udpMessage, string address);
 
     void downloadTargets();
 
@@ -131,8 +135,6 @@ public:
     void kickoff();
     void reload();
     void oldUI();
-    void freeze();
-    void unfreeze();
     void sendAccelerationData();
     void developerOn();
     void developerOff();
@@ -155,6 +157,11 @@ public:
     void memorize();
     void remember(string dataStr);
     void authenticateTouch();
+    void startVideoRecording(string objectKey, string objectMatrix);
+    void stopVideoRecording(string objectMatrix);
+    
+    void callJavaScriptCallback(string cb);
+    void callJavaScriptCallback(string cb, NSString* arg1);
     
     void clearCache();
     
@@ -162,6 +169,8 @@ public:
     void handleIncomingSpeech(std::string bestTranscription);
     
     string speechCallback;
+    string matrixStreamCallback;
+    string udpCallback;
 
     ofxWebViewInterfaceJavaScript interface;
     void handleCustomRequest(NSDictionary *messageBody);
@@ -201,7 +210,7 @@ public:
 
     shared_ptr<QCARState> currentMemory = nullptr;
 
-    vector<QCAR::DataSet *>  datasetList;
+    vector<Vuforia::DataSet *>  datasetList;
 
     float matrixOld = 0.0;
 
@@ -265,6 +274,9 @@ public:
     // A thread pool used for executing memory uploading off the main thread
     Poco::ThreadPool memoryThreadPool;
     shared_ptr<MemoryUploader> memoryUploader;
+    
+    Poco::ThreadPool videoThreadPool;
+    shared_ptr<VideoUploader> videoUploader;
 
     const int thumbnailWidth = 200;
     const int thumbnailHeight = 112;
@@ -272,6 +284,7 @@ public:
     ofImage getCameraImage();
     void sendThumbnail(shared_ptr<QCARState> memory);
     void uploadMemory(shared_ptr<QCARState> memory);
+    void uploadVideo(NSURL* videoPath);
     NSString* convertImageToBase64(ofImage image);
     bool getDataFromReq(string req, string reqName, string* data);
 
@@ -290,6 +303,27 @@ public:
      void gotFocus();
      void gotMemoryWarning();
      void deviceOrientationChanged(int newOrientation);*/
+    
+    ofxiOSVideoWriter videoWriter;
+    bool bRecord;
+    string recordingObjectKey;
+    string recordingObjectStartMatrix;
+    string recordingObjectVideoId;
+    REVideoWriterDelegate* videoWriterDelegate;
+    
+//    bool bRecordChanged;
+//    bool bRecordReadyToStart;
+//
+//    ofxiOSVideoPlayer videoPlayer0;
+//
+//    ofMesh box;
+//    ofFloatColor c1;
+//    ofFloatColor c2;
+//    ofFloatColor c3;
+//    vector<ofVec2f> points;
+//    vector<ofVec2f> pointsNew;
+//
+//    ofxToggle recordToggle;
     
 };
 
