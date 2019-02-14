@@ -1,4 +1,3 @@
-
 #public Interface interface
 /bin/data/interfaceData
 /bin/data/editor_private
@@ -6,15 +5,15 @@
 /bin/data/userinterface
 /bin/data/RE-userinterface
 
-#documentation
-/bin/data/docs_generated/
+#Reality Server
+RealityServer/RE-server
+RealityServer/server
 
 #key files
 vuforiaKey.h
 
 # osx directory files
-.DS_Store
-
+.DS_Store/
 
 # Xcode
 #
@@ -33,7 +32,7 @@ DerivedData/
 # !default.mode2v3
 # *.perspectivev3
 # !default.perspectivev3
-# xcuserdata/
+xcuserdata/
 
 ## Other
 # *.moved-aside
@@ -43,4 +42,12 @@ DerivedData/
 # IDEA config files
 .idea/
 
-src/vuforiaKey.h
+# We recommend against adding the Pods directory to your .gitignore. However
+# you should judge for yourself, the pros and cons are mentioned at:
+# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
+# 
+# Note: if you ignore the Pods directory, make sure to uncomment
+# `pod install` in .travis.yml
+#
+Pods/
+
