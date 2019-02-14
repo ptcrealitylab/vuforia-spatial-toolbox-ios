@@ -1,0 +1,63 @@
+/*===============================================================================
+ Copyright (c) 2017 PTC Inc. All Rights Reserved.
+ 
+ Vuforia is a trademark of PTC Inc., registered in the United States and other
+ countries.
+ ===============================================================================*/
+precision mediump float;
+
+// lighting
+uniform vec4 u_lightPos;
+uniform vec4 u_lightColor;
+
+// diffuse color
+uniform vec4 u_groupDiffuseColors[1];
+uniform vec4 u_groupAmbientColors[1];
+uniform vec4 u_groupSpecularColors[1];
+uniform float u_groupTransparency[1];
+uniform int u_groupDiffuseTextureIds[1];
+
+// normals to pass on
+varying vec3 v_normal;
+varying vec3 v_eyespaceNormal;
+
+varying vec3 v_lightDir;
+varying vec3 v_eyeVec;
+varying vec2 v_texCoord;
+
+uniform sampler2D texSampler2D;
+
+// extra information (material index)
+varying vec2 v_extra;
+
+void main() {
+    // the + 0.5 is there to avoid rounding errors when converting to an int
+    int groupIdx = int(v_extra.x);
+    vec4 ambientColor = u_groupAmbientColors[int(v_extra.x)];
+    vec4 diffuseColor = texture2D(texSampler2D, v_texCoord);
+    vec4 specularColor = u_groupSpecularColors[int(v_extra.x)]; // Groupidx does not work directly as index here
+    
+    float shininess = v_extra.y;
+    
+    vec3 N = normalize(v_eyespaceNormal);
+    vec3 E = normalize(v_eyeVec);
+    // First light
+    vec3 L = normalize(v_lightDir);
+    // Second light opposite so we can see the back with diffuse lighting
+    vec3 IL = -L;
+    
+    // Reflect the vector. Use this or reflect(incidentV, N);
+    vec3 reflectV = reflect(-L, N);
+    
+    // Get lighting terms
+    vec4 ambientTerm = u_lightColor;
+    // Add diffuse term plus inverse back lighting with attenuation pow 2
+    vec4 diffuseTerm = diffuseColor * max(dot(N, L), 0.0) + (diffuseColor * vec4(0.5)) * max(dot(N, IL), 0.0);
+    // Add specular lighting in the model it seems it has inverted normals in some modules from the model
+    vec4 specularTerm = specularColor * pow(max(dot(reflectV, E), 0.0), shininess) + specularColor * pow(max(dot(-reflectV, E), 0.0), shininess);
+    
+    // + specularTerm;// Sum of three lightings
+    vec4 colorTerm = ambientTerm + diffuseTerm;
+    colorTerm.a = 1.0;
+    gl_FragColor = colorTerm;  
+}

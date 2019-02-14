@@ -1,13 +1,22 @@
-# RealityEditor
+## One Reality App Setup Guide
 
-### Installation
+There is now a **one-reality** branch of the ios project
 
-1. Download the latest openframeworks for iOS from this address:
-http://openframeworks.cc/download/
-2. clone https://github.com/realityeditor/realityeditor-ios.git in to the apps/myApps folder.
-3. clone https://github.com/realityeditor/userinterface.git in to the bin/data folder for the realityeditor-ios app. (the realityeditor .gitignore file will ignore this second repository).
-3. clone https://github.com/realityeditor/ofxQCAR.git, and https://github.com/realityeditor/ofxJSON.git in to the open frameworks addon folder.
-4. MAKE SURE THAT YOU HAVE A VALID VUFORIA KEY (the ofxQCAR examples show some)
+- without openFrameworks
+- with a self-hosted Node.js server
 
 
-You should be able to compile the reality editor from now on.
+
+###How to set up:
+
+0. Switch to the **one-reality** branch of the RE-realityeditor-ios git repository
+
+1. Install cocoapods (like npm but for iOS frameworks) in the terminal using: `sudo gem install cocoapods`
+2. Run `pod install` in the project directory to set up the modules
+3. Open Reality Editor iOS.**xcworkspace** (not the Reality Editor iOS.**xcodeproj** file). This opens a project with all of the modules included. It will look like this:
+
+![Screen Shot 2019-02-14 at 11.52.51 AM](/Users/Benjamin/Desktop/Screen Shot 2019-02-14 at 11.52.51 AM.png)
+
+4. Open the RealityServer directory and download the **miniServerForIos** branch of the RE-server git repository into the folder. The server.js should have the path *RealityServer/RE-server/server.js*
+5. Download the **one-reality** branch of the RE-userinterface to the bin/data folder so that the index.html file has the path bin/data/userinterface/index.html
+6. Add the vuforiaKey.h file to the Reality Editor iOS directory

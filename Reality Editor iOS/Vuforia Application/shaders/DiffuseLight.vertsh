@@ -1,0 +1,57 @@
+/*===============================================================================
+Copyright (c) 2017 PTC Inc. All Rights Reserved.
+
+Vuforia is a trademark of PTC Inc., registered in the United States and other
+countries.
+===============================================================================*/
+
+// different transformation matrices
+uniform mat4 u_mvpMatrix;
+uniform mat4 u_mvMatrix;
+uniform mat4 u_normalMatrix;
+
+// lighting
+uniform vec4 u_lightPos;
+uniform vec4 u_lightColor;
+
+// position and normal of the vertices
+attribute vec4 vertexPosition;
+attribute vec3 vertexNormal;
+attribute vec2 vertexTexCoord;
+
+attribute vec2 a_vertexExtra;
+
+// normals to pass on
+varying vec3 v_normal;
+varying vec3 v_eyespaceNormal;
+
+varying vec2 v_texCoord;
+
+varying vec3 v_lightDir;
+varying vec3 v_eyeVec;
+
+// extra information (material index)
+varying vec2 v_extra;
+
+void main() {
+    
+    // extra information (index to material)
+    v_extra = a_vertexExtra;
+    
+    // normal
+    v_eyespaceNormal = vec3(u_normalMatrix * vec4(vertexNormal, 0.0));
+
+    // the vertex position
+    vec4 position = u_mvpMatrix * vertexPosition;
+
+    // light dir
+    // Add position to the light to include the device rotation
+    v_lightDir = ((u_mvMatrix * u_lightPos).xyz);
+
+    // Inverse position to have a vector pointing the eye
+    v_eyeVec = -(position.xyz);
+
+    v_texCoord = vertexTexCoord;
+
+    gl_Position = position;
+}
