@@ -73,9 +73,9 @@
 - (NSURL *)getServerURL {
     //(webServer.serverURL)?webServer.serverURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://0.0.0.0:%d", webServer.port]];
 //    if ([webServer serverURL]) {
-        return [webServer serverURL];
+   //     return [webServer "172.0"];
 //    } else {
-//        return [NSURL URLWithString:@"http://0.0.0.0:8888/"];
+     return [NSURL URLWithString:@"http://127.0.0.1:8888/"];
 //    }
 }
 
