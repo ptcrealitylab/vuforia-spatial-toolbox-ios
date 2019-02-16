@@ -25,7 +25,7 @@
 		4304598B20F7CDA800B54215 /* SampleApplicationUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4304597820F7CDA800B54215 /* SampleApplicationUtils.cpp */; };
 		4304598C20F7CDA800B54215 /* SampleAppRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4304597920F7CDA800B54215 /* SampleAppRenderer.mm */; };
 		4304599420F7D01F00B54215 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43D0355720EAC1FE00AA1039 /* WebKit.framework */; };
-		4304599520F7D02900B54215 /* Vuforia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4304595620F7C4A500B54215 /* Vuforia.framework */; };
+		4304599520F7D02900B54215 /* Vuforia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4304595620F7C4A500B54215 /* Vuforia.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		4304599620F7D02900B54215 /* Vuforia.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4304595620F7C4A500B54215 /* Vuforia.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4304599C20F7D0B300B54215 /* ImageTargetsEAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4304599B20F7D0B200B54215 /* ImageTargetsEAGLView.mm */; };
 		437B8AEC21025108006720F5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 437B8AEB21025108006720F5 /* AudioToolbox.framework */; };
@@ -36,8 +36,7 @@
 		43AD9580220E15AA00E5BB36 /* SpeechManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 43AD957F220E15AA00E5BB36 /* SpeechManager.m */; };
 		43AD9582220E172900E5BB36 /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43AD9581220E172900E5BB36 /* Speech.framework */; };
 		43AD9588221473AA00E5BB36 /* NodeRunner.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43AD9587221473AA00E5BB36 /* NodeRunner.mm */; };
-		43ADDCD12214759200E5BB36 /* RE-server in Resources */ = {isa = PBXBuildFile; fileRef = 43ADDCD02214759200E5BB36 /* RE-server */; };
-		43ADDCE02214784900E5BB36 /* NodeMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43ADDCDE2214784200E5BB36 /* NodeMobile.framework */; };
+		43ADDCE02214784900E5BB36 /* NodeMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43ADDCDE2214784200E5BB36 /* NodeMobile.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		43ADDCE12214784900E5BB36 /* NodeMobile.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43ADDCDE2214784200E5BB36 /* NodeMobile.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		43D0350E20EAC02600AA1039 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 43D0350D20EAC02600AA1039 /* AppDelegate.m */; };
 		43D0351120EAC02600AA1039 /* MainViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43D0351020EAC02600AA1039 /* MainViewController.mm */; };
@@ -47,7 +46,9 @@
 		43D0351C20EAC02600AA1039 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 43D0351B20EAC02600AA1039 /* main.m */; };
 		43D0352520EAC16B00AA1039 /* WebServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 43D0352420EAC16B00AA1039 /* WebServerManager.m */; };
 		43D0355520EAC1E200AA1039 /* REWebView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43D0355420EAC1E200AA1039 /* REWebView.mm */; };
-		50A903D69C7CC1729107CC6C /* Pods_Reality_Editor_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55AC56D1CA09AE8695064552 /* Pods_Reality_Editor_iOS.framework */; };
+		A7034E652218B056006B01A6 /* Pods_Reality_Editor_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55AC56D1CA09AE8695064552 /* Pods_Reality_Editor_iOS.framework */; };
+		A7EE6C762218853B00F60723 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7EE6C752218853B00F60723 /* Images.xcassets */; };
+		A7F7A923221755D500692858 /* RE-server in Resources */ = {isa = PBXBuildFile; fileRef = A7F7A922221755D500692858 /* RE-server */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -109,7 +110,6 @@
 		43AD9581220E172900E5BB36 /* Speech.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Speech.framework; path = System/Library/Frameworks/Speech.framework; sourceTree = SDKROOT; };
 		43AD9586221473AA00E5BB36 /* NodeRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeRunner.h; sourceTree = "<group>"; };
 		43AD9587221473AA00E5BB36 /* NodeRunner.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeRunner.mm; sourceTree = "<group>"; };
-		43ADDCD02214759200E5BB36 /* RE-server */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "RE-server"; sourceTree = "<group>"; };
 		43ADDCDE2214784200E5BB36 /* NodeMobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NodeMobile.framework; sourceTree = "<group>"; };
 		43D0350920EAC02600AA1039 /* Reality Editor iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Reality Editor iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		43D0350C20EAC02600AA1039 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -128,6 +128,9 @@
 		43D0355720EAC1FE00AA1039 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		55AC56D1CA09AE8695064552 /* Pods_Reality_Editor_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Reality_Editor_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		62FC7EC5CED3832D3BC793DC /* Pods-Reality Editor iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reality Editor iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		A7034E632218B043006B01A6 /* GCDWebServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GCDWebServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A7EE6C752218853B00F60723 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		A7F7A922221755D500692858 /* RE-server */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "RE-server"; path = "bin/data/RE-server"; sourceTree = SOURCE_ROOT; };
 		E121292531BDDE6690F2B7D0 /* Pods-Reality Editor iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reality Editor iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -136,12 +139,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7034E652218B056006B01A6 /* Pods_Reality_Editor_iOS.framework in Frameworks */,
 				43AD9582220E172900E5BB36 /* Speech.framework in Frameworks */,
 				437B8AEC21025108006720F5 /* AudioToolbox.framework in Frameworks */,
 				4304599420F7D01F00B54215 /* WebKit.framework in Frameworks */,
 				43ADDCE02214784900E5BB36 /* NodeMobile.framework in Frameworks */,
 				4304599520F7D02900B54215 /* Vuforia.framework in Frameworks */,
-				50A903D69C7CC1729107CC6C /* Pods_Reality_Editor_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,7 +212,7 @@
 		43AD958A2214740A00E5BB36 /* RealityServer */ = {
 			isa = PBXGroup;
 			children = (
-				43ADDCD02214759200E5BB36 /* RE-server */,
+				A7F7A922221755D500692858 /* RE-server */,
 			);
 			path = RealityServer;
 			sourceTree = "<group>";
@@ -249,6 +252,7 @@
 		43D0350B20EAC02600AA1039 /* Reality Editor iOS */ = {
 			isa = PBXGroup;
 			children = (
+				A7EE6C752218853B00F60723 /* Images.xcassets */,
 				43ADDCEA2215DBA400E5BB36 /* AR */,
 				43AD95852214738700E5BB36 /* NodeJS */,
 				43D0350C20EAC02600AA1039 /* AppDelegate.h */,
@@ -287,6 +291,7 @@
 		43D0355620EAC1FD00AA1039 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A7034E632218B043006B01A6 /* GCDWebServer.framework */,
 				43ADDCDE2214784200E5BB36 /* NodeMobile.framework */,
 				43AD9581220E172900E5BB36 /* Speech.framework */,
 				437B8AEB21025108006720F5 /* AudioToolbox.framework */,
@@ -334,6 +339,11 @@
 					43D0350820EAC02600AA1039 = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -364,11 +374,12 @@
 				43D0351620EAC02600AA1039 /* Assets.xcassets in Resources */,
 				4304598120F7CDA800B54215 /* Line.vertsh in Resources */,
 				4304597F20F7CDA800B54215 /* DiffuseLightMaterials.vertsh in Resources */,
-				43ADDCD12214759200E5BB36 /* RE-server in Resources */,
+				A7F7A923221755D500692858 /* RE-server in Resources */,
 				4304597A20F7CDA800B54215 /* Background.fragsh in Resources */,
 				43D0351420EAC02600AA1039 /* Main.storyboard in Resources */,
 				4304597C20F7CDA800B54215 /* DiffuseLight.fragsh in Resources */,
 				4304597E20F7CDA800B54215 /* DiffuseLightMaterials.fragsh in Resources */,
+				A7EE6C762218853B00F60723 /* Images.xcassets in Resources */,
 				4304598220F7CDA800B54215 /* Simple.fragsh in Resources */,
 				4304598420F7CDA800B54215 /* SimpleTexturedColor.fragsh in Resources */,
 				4304598320F7CDA800B54215 /* Simple.vertsh in Resources */,
@@ -393,7 +404,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "rsync -avz --exclude='.DS_Store' \"${SRCROOT}/bin/data/\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"";
+			shellScript = "rsync -avz --exclude=\".*\" \"${SRCROOT}/bin/data/\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\n";
 		};
 		43D041A520EACC2400AA1039 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -406,7 +417,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "REVEAL_APP_PATH=$(mdfind kMDItemCFBundleIdentifier=\"com.ittybittyapps.Reveal2\" | head -n 1)\nBUILD_SCRIPT_PATH=\"${REVEAL_APP_PATH}/Contents/SharedSupport/Scripts/reveal_server_build_phase.sh\"\nif [ \"${REVEAL_APP_PATH}\" -a -e \"${BUILD_SCRIPT_PATH}\" ]; then\n\"${BUILD_SCRIPT_PATH}\"\nelse\necho \"Reveal Server not loaded: Cannot find a compatible Reveal app.\"\nfi";
+			shellScript = "REVEAL_APP_PATH=$(mdfind kMDItemCFBundleIdentifier=\"com.ittybittyapps.Reveal2\" | head -n 1)\nBUILD_SCRIPT_PATH=\"${REVEAL_APP_PATH}/Contents/SharedSupport/Scripts/reveal_server_build_phase.sh\"\nif [ \"${REVEAL_APP_PATH}\" -a -e \"${BUILD_SCRIPT_PATH}\" ]; then\n\"${BUILD_SCRIPT_PATH}\"\nelse\necho \"Reveal Server not loaded: Cannot find a compatible Reveal app.\"\nfi\n";
 		};
 		5259496D4D1E9F2C474C4C73 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -414,7 +425,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
 			);
@@ -425,7 +436,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8030A2BADF7A0FC3EBC39D41 /* [CP] Check Pods Manifest.lock */ = {
@@ -549,6 +560,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				VALID_ARCHS = "arm64 arm64e";
 			};
 			name = Debug;
 		};
@@ -600,6 +612,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "arm64 arm64e";
 			};
 			name = Release;
 		};
@@ -608,16 +621,20 @@
 			baseConfigurationReference = 62FC7EC5CED3832D3BC793DC /* Pods-Reality Editor iOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3KS9B887BK;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 22B6TS6PX3;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				INFOPLIST_FILE = "Reality Editor iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -671,10 +688,11 @@
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ptc.One-Reality";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ptc.onereality-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 arm64e";
 			};
 			name = Debug;
 		};
@@ -683,16 +701,22 @@
 			baseConfigurationReference = E121292531BDDE6690F2B7D0 /* Pods-Reality Editor iOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3KS9B887BK;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 22B6TS6PX3;
 				ENABLE_BITCODE = NO;
+				ENABLE_NS_ASSERTIONS = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
 				INFOPLIST_FILE = "Reality Editor iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -746,10 +770,11 @@
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ptc.One-Reality";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ptc.onereality-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 arm64e";
 			};
 			name = Release;
 		};
