@@ -1,5 +1,5 @@
 /*===============================================================================
-Copyright 2015-2018 PTC Inc. All Rights Reserved.
+Copyright 2018 PTC Inc. All Rights Reserved.
 
 Vuforia is a trademark of PTC Inc., registered in the United States and other
 countries.

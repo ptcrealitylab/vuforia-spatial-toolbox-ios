@@ -1,5 +1,5 @@
 /*===============================================================================
-Copyright (c) 2015-2018 PTC Inc. All Rights Reserved.
+Copyright (c) 2018 PTC Inc. All Rights Reserved.
 
 Copyright (c) 2010-2014 Qualcomm Connected Experiences, Inc. All Rights Reserved.
 
@@ -67,41 +67,6 @@ public:
 
     /// Get the user data that was previously set using setUserData().
     virtual void* getUserData() const = 0;
-
-    /// Start extended tracking for this Trackable (DEPRECATED).
-    /**
-     * When extended tracking is enabled, %Vuforia is able to continue providing
-     * a pose matrix for Trackables even if the Trackable itself is no longer
-     * visible in the camera frame.
-     *
-     * Note that extended tracking may rely on device or OS-version specific
-     * features, and therefore may not be available in all situations.
-     *
-     * \returns true if successful, otherwise false.
-     * 
-     * \deprecated This method has been deprecated. It will be removed in an
-     * upcoming %Vuforia release. Use PositionalDeviceTracker if you need extended
-     * tracking functionality.
-     */
-    virtual bool startExtendedTracking() = 0;
-
-    /// Stop extended tracking for this Trackable (DEPRECATED).
-    /**
-     * \returns true if extended tracking was successfully stopped, otherwise false.
-     * 
-     * \deprecated This method has been deprecated. It will be removed in an 
-     * upcoming %Vuforia release. Use PositionalDeviceTracker if you need extended
-     * tracking functionality.
-     */
-    virtual bool stopExtendedTracking() = 0;
-
-    /// Get whether extended tracking is currently enabled for this Trackable (DEPRECATED).
-    /**
-     * \deprecated This method has been deprecated. It will be removed in an
-     * upcoming %Vuforia release. Use PositionalDeviceTracker if you need extended
-     * tracking functionality.
-     */
-    virtual bool isExtendedTrackingStarted() const = 0;
 
     virtual ~Trackable()  {}
 };

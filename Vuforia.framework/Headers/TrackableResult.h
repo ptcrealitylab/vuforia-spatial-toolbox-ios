@@ -1,5 +1,5 @@
 /*===============================================================================
-Copyright (c) 2015-2018 PTC Inc. All Rights Reserved.
+Copyright (c) 2018 PTC Inc. All Rights Reserved.
 
 Copyright (c) 2012-2014 Qualcomm Connected Experiences, Inc. All Rights Reserved.
 
@@ -63,11 +63,8 @@ public:
      * The time stamp can be used to compare different TrackableResult instances
      * for the same Trackable over time.
      *
-     * \note If the Trackable's STATUS (as returned by getStatus() is NO_POSE, this
-     * method will return 0.0.
-     *
      * \returns Time stamp for this result, in seconds since the application
-     *    startup time; or 0.0 if the Trackable's STATUS is NO_POSE.
+     *    startup time.
      **/
     virtual double getTimeStamp() const = 0;
 
@@ -90,6 +87,7 @@ public:
         NORMAL,                          ///< Status is normal, ie not \ref NO_POSE or \ref LIMITED.
         UNKNOWN,                         ///< Unknown reason for the tracking status.
         INITIALIZING,                    ///< The tracking system is currently initializing.
+        RELOCALIZING,                    ///< The tracking system is currently relocalizing.
         EXCESSIVE_MOTION,                ///< The device is moving too fast.
         INSUFFICIENT_FEATURES            ///< There are insufficient features available in the scene.
     };
@@ -112,16 +110,13 @@ public:
      * TrackableResult was observed (or predicted).
      *
      * The pose represents a transform from a target coordinate system (i.e.
-     * the coordinate system of the Trackable) to the base coordinate system as
-     * returned by getCoordinateSystem() (i.e. either camera-space or world-space,
-     * depending on how %Vuforia has been configured).
+     * the coordinate system of the Trackable) to the world coordinate system.
      *
-     * In other words, if this TrackableResult comes from an ObjectTracker, and
+     * In other words, if this TrackableResult comes from an ObjectTracker and
      * you render 3D geometry using
      *
      * - the pose matrix as the geometry's model-view matrix, and
-     * - a projection matrix obtained from a RenderingPrimitives instance using
-     *   the coordinate system returned by getCoordinateSystem(),
+     * - a projection matrix obtained from a RenderingPrimitives instance
      *
      * then
      *
@@ -145,24 +140,7 @@ public:
      */
     virtual const Matrix34F& getPose() const = 0;
 
-    /// Get the base coordinate system for the pose matrix. (DEPRECATED)
-    /**
-     * \returns The base coordinate system for the pose matrix, or
-     * COORDINATE_SYSTEM_UNKNOWN if the Trackable's STATUS is NO_POSE.
-     *
-     * The pose matrix returned by getPose() is defined as a transform from
-     * the Trackable's coordinate system to another ('base') coordinate system.
-     * This function tells you what that 'base' coordinate system is.
-     *
-     * \note When the Trackable's STATUS (as returned by getStatus()) is NO_POSE,
-     * this method will return COORDINATE_SYSTEM_UNKNOWN.
-     * 
-     * \deprecated This method has been deprecated. It will be removed in an
-     * upcoming Vuforia release.
-     */
-    virtual COORDINATE_SYSTEM_TYPE getCoordinateSystem() const = 0;
-
-    virtual ~TrackableResult()  {}
+    virtual ~TrackableResult() {}
 };
 
 } // namespace Vuforia
