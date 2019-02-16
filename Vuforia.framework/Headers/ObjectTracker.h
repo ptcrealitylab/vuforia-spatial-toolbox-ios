@@ -1,5 +1,5 @@
 /*===============================================================================
-Copyright (c) 2015-2018 PTC Inc. All Rights Reserved.
+Copyright (c) 2018 PTC Inc. All Rights Reserved.
 
 Copyright (c) 2014 Qualcomm Connected Experiences, Inc. All Rights Reserved.
 
@@ -18,6 +18,8 @@ countries.
 
 // Include files
 #include <Vuforia/Tracker.h>
+#include <Vuforia/Vuforia.h>
+#include <Vuforia/List.h>
 
 namespace Vuforia
 {
@@ -97,17 +99,27 @@ public:
      */
     virtual bool deactivateDataSet(DataSet* dataset) = 0;
 
-    /// Get a specific active DataSet.
+    /// Get a specific active DataSet. (DEPRECATED)
     /**
      * \param idx The index of the active DataSet to get, in the range
      * 0..getActiveDataSetCount()-1.
      * \returns The active DataSet with the given index, or NULL if the index
      * is out of range.
+     *
+     * \deprecated This API has been deprecated. It will be removed in an
+     * upcoming Vuforia release. Use the getActiveDataSets() API instead.
      */
     virtual DataSet* getActiveDataSet(const int idx) = 0;
 
-    /// Get the number of currently active DataSets.
+    /// Get the number of currently active DataSets. (DEPRECATED)
+    /**
+     * \deprecated This API has been deprecated. It will be removed in an
+     * upcoming Vuforia release. Use the getActiveDataSets() API instead.
+     */
     virtual int getActiveDataSetCount() const = 0;
+
+    /// Provides access to the list of currently active active datasets.
+    virtual List<DataSet> getActiveDataSets() = 0;
 
     /// Get the ImageTargetBuilder for the current scene.
     /**
@@ -116,47 +128,25 @@ public:
      */
     virtual ImageTargetBuilder* getImageTargetBuilder() = 0;
 
+    /// The type of Target finder to return
+    /**
+     * Enum describing the different TargetFinder types that Vuforia can return
+     */
+    enum TargetFinderType
+    {
+        CLOUD_RECO, ///< A TargetFinder to recognize ImageTargets using cloud-based
+                    ///< image recognition.
+        MODEL_RECO, ///< A TargetFinder to recognize ModelTargets using model recognition.
+    };
+    
     /// Get the TargetFinder for the current scene.
     /**
-     * \returns The TargetFinder that should be used if you want to retrieve
-     * targets via cloud-based recognition.
+     * \param type The type of the TargetFinder to be returned.
+     * \returns The requested TargetFinder.
      */
-    virtual TargetFinder* getTargetFinder() = 0;
-
-    /// Set whether the extended tracking environment map persists for a longer time. (DEPRECATED)
-    /**
-     * When using extended tracking (Trackable::startExtendedTracking()),
-     * %Vuforia may build a map of the user's environment in order to implement
-     * and support the extended tracking process.
-     *
-     * This map will only live for a certain amount of time, after which it will
-     * be destroyed. If this method is called with on=true, the map will persist
-     * until you call resetExtendedTracking(), or until the application exits.
-     *
-     * \param on true to hold on to any maps built for extended tracking until a
-     * call to resetExtendedTracking() is made, or false to allow %Vuforia to
-     * manage the extended tracking map's lifetime.
-     * \returns true on success, otherwise false (check application logs for
-     * details).
-     * 
-     * \deprecated This method has been deprecated. It will be removed in an
-     * upcoming %Vuforia release. Use PositionalDeviceTracker if you need extended
-     * tracking functionality.
-     */
-    virtual bool persistExtendedTracking(bool on) = 0;
-
-    /// Reset the extended tracking environment map (DEPRECATED).
-    /**
-     * See persistExtendedTracking() for more information.
-     *
-     * \returns true if the environment map was reset successfully, otherwise
-     * false.
-     *
-     * \deprecated This method has been deprecated. It will be removed in an
-     * upcoming %Vuforia release. Use PositionalDeviceTracker if you need extended
-     * tracking functionality.
-     */
-    virtual bool resetExtendedTracking() = 0;
+    virtual TargetFinder* getTargetFinder(
+        TargetFinderType type = CLOUD_RECO
+    ) = 0;
 
 };
 
