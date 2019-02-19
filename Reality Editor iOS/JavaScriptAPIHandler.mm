@@ -75,8 +75,7 @@
             for (int i = 0; i < visibleMarkers.count; i++) {
                 NSDictionary* thisMarker = visibleMarkers[i];
                 NSString* markerName = thisMarker[@"name"];
-//                NSString* markerMatrix = thisMarker[@"modelViewMatrix"];
-                NSString* markerMatrix = thisMarker[@"modelViewProjectionMatrix"];
+                NSString* markerMatrix = thisMarker[@"modelViewMatrix"];
                 javaScriptObject = [javaScriptObject stringByAppendingString:[NSString stringWithFormat:@"'%@': %@,", markerName, markerMatrix]];
             }
             javaScriptObject = [javaScriptObject substringToIndex:javaScriptObject.length-1]; // remove last comma character before closing the object
