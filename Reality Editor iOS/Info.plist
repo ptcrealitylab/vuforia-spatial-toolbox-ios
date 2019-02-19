@@ -28,6 +28,8 @@
 	<string>This app uses your microphone to control the world around you with your speech.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>This app uses Speech recognition to transform your spoken words into text.</string>
+	<key>UIApplicationExitsOnSuspend</key>
+	<true/>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
