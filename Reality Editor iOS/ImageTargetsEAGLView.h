@@ -56,8 +56,6 @@ countries.
 - (void)configureVideoBackgroundWithViewWidth:(float)viewWidth andHeight:(float)viewHeight;
 - (void) updateRenderingPrimitives;
 
-- (Vuforia::Matrix44F)getModelViewProjectionForImageTrackable:(const Vuforia::TrackableResult*)imageTrackableResult deviceTrackable:(const Vuforia::TrackableResult*)deviceTrackableResult andProjection:(Vuforia::Matrix44F&) projectionMatrix;
-
 - (NSString *)stringFromMatrix44F:(Vuforia::Matrix44F)vuforiaMatrix;
 
 @end

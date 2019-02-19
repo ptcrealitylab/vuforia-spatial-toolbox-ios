@@ -247,13 +247,13 @@
         NSError * error = nil;
         
         Vuforia::setHint(Vuforia::HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 5);
-        Vuforia::setHint(Vuforia::HINT_MAX_SIMULTANEOUS_OBJECT_TARGETS, 2);
+        Vuforia::setHint(Vuforia::HINT_MAX_SIMULTANEOUS_OBJECT_TARGETS, 3);
         
         [self.vapp startAR:Vuforia::CameraDevice::CAMERA_DIRECTION_BACK error:&error];
         
         [self.eaglView updateRenderingPrimitives];
         
-        Vuforia::CameraDevice::getInstance().setFocusMode(Vuforia::CameraDevice::FOCUS_MODE_NORMAL);
+        Vuforia::CameraDevice::getInstance().setFocusMode(Vuforia::CameraDevice::FOCUS_MODE_INFINITY);
         
         if (arDoneCompletionHandler) {
             arDoneCompletionHandler();
@@ -451,20 +451,7 @@
             }
             
             const Vuforia::Trackable & trackable = result->getTrackable();
-            
-//            if (trackable.isOfType(Vuforia::DeviceTrackable::getClassType())) { // TODO: for now, ignore Positional Device Trackers, and send in that information in a different way
-//                NSLog(@"Device Type");
-//
-//                Vuforia::Matrix34F cameraPose = result->getPose();
-//                Vuforia::Matrix44F cameraModelViewMatrix = Vuforia::Tool::convertPose2GLMatrix(result->getPose());
-//
-//                if (cameraMatrixCompletionHandler) {
-//                    cameraMatrixCompletionHandler(@[self.markersFound]);
-//                }
-//
-//                continue;
-//            }
-            
+
             NSString* trackingStatus;
             if (result->getStatus() == Vuforia::TrackableResult::DETECTED) {
                 trackingStatus = @"DETECTED";
@@ -475,7 +462,7 @@
                 continue; // TODO: for now, don't send extended tracking targets to the visibleObjects in javascript
             }
             
-            Vuforia::Matrix44F modelViewMatrix = Vuforia::Tool::convertPose2GLMatrix(result->getPose());
+            Vuforia::Matrix44F modelViewMatrixCorrected = Vuforia::Tool::convertPose2GLMatrix(result->getPose());
             
             // used for debugging
 //            Vuforia::Type trackableType = trackable.getType();
@@ -486,79 +473,17 @@
                 Vuforia::ImageTarget* imageTarget = (Vuforia::ImageTarget *)(&trackable);
                 markerSize = imageTarget->getSize();
             }
-            
-            // TODO: get MVP matrix for this marker
-            
-            Vuforia::Matrix44F mvp = SampleApplicationUtils::Matrix44FIdentity();
-            if (!trackable.isOfType(Vuforia::DeviceTrackable::getClassType())) {
-            /////////////////
-//                float nearPlane = 2;
-//                float farPlane = 2000;
-//                const Vuforia::CameraCalibration& cameraCalibration = Vuforia::CameraDevice::getInstance().getCameraCalibration();
-                Vuforia::Matrix44F projectionMatrix = SampleApplicationUtils::Matrix44FIdentity();
-                
-                // swaps y and z:
-                /*
-                 | 1 0 0 0 |
-                 | 0 0 1 0 |
-                 | 0 1 0 0 |
-                 | 0 0 0 1 |
-                 */
-                
-//                projectionMatrix.data[5] = 0;
-//                projectionMatrix.data[6] = 1;
-//
-//                projectionMatrix.data[9] = 1;
-//                projectionMatrix.data[10] = 0;
-                
-                // swaps x and z:
-                /*
-                 | 0 0 1 0 |
-                 | 0 1 0 0 |
-                 | 1 0 0 0 |
-                 | 0 0 0 1 |
-                 */
-                
-//                projectionMatrix.data[0] = 0;
-//                projectionMatrix.data[2] = 1;
-//
-//                projectionMatrix.data[8] = 1;
-//                projectionMatrix.data[10] = 0;
-                
-                // swaps x and y:
-                /*
-                 | 0 1 0 0 |
-                 | 1 0 0 0 |
-                 | 0 0 1 0 |
-                 | 0 0 0 1 |
-                 */
-                
-//                projectionMatrix.data[0] = 0;
-//                projectionMatrix.data[1] = 1;
-//
-//                projectionMatrix.data[4] = 1;
-//                projectionMatrix.data[5] = 0;
-                
 
-//                Vuforia::Matrix44F projectionMatrix = Vuforia::Tool::getProjectionGL(cameraCalibration, nearPlane, farPlane);
-//                SampleApplicationUtils::rotatePoseMatrix(180, 0, 0, 1, projectionMatrix);
-                mvp = [eaglView getModelViewProjectionForImageTrackable:result deviceTrackable:deviceTrackableResult andProjection:projectionMatrix];
-//                NSLog(@"%@", [self stringFromMatrix44F:mvp]);
-            }
-            /////////////////
-            
             NSDictionary* marker = @{
                                      @"name": [NSString stringWithUTF8String:trackable.getName()],
-                                     @"modelViewMatrix": [self stringFromMatrix44F:modelViewMatrix],
+                                     @"modelViewMatrix": [self stringFromMatrix44F:modelViewMatrixCorrected],
                                      @"projectionMatrix": [self getProjectionMatrixString],
                                      @"poseMatrixData": [self stringFromMatrix34F:result->getPose()],
-                                     @"modelViewProjectionMatrix": [self stringFromMatrix44F:mvp],
                                      @"trackingStatus": trackingStatus,
                                      @"width": [NSNumber numberWithFloat:markerSize.data[0]],
                                      @"height": [NSNumber numberWithFloat:markerSize.data[1]]
                                      };
-            
-            
+
             // DEBUG statements
 //            if (trackable.isOfType(Vuforia::ObjectTarget::getClassType())) {
 //                NSLog(@"Object Type");
@@ -570,77 +495,24 @@
 //                NSLog(@"Object Raw Type");
 //            }
             
-            if (trackable.isOfType(Vuforia::DeviceTrackable::getClassType())) { // TODO: for now, ignore Positional Device Trackers, and send in that information in a different way
+            // send in Positional Device Trackers' information in a different way, via the camera matrix
+            if (trackable.isOfType(Vuforia::DeviceTrackable::getClassType())) {
                 deviceTrackableResult = result;
                 if (cameraMatrixCompletionHandler) {
                     cameraMatrixCompletionHandler(marker);
                 }
                 continue;
             }
-            
-            
-            // Set the device pose matrix to identity
-//            Vuforia::Matrix44F devicePoseMatrix = SampleApplicationUtils::Matrix44FIdentity();
-//            Vuforia::Matrix44F modelMatrix = SampleApplicationUtils::Matrix44FIdentity();
-            
-            // Get the device pose
-//            if (state.getDeviceTrackableResult() != nullptr
-//                && state.getDeviceTrackableResult()->getStatus() != Vuforia::TrackableResult::NO_POSE)
-//            {
-//                Vuforia::Matrix44F modelMatrix = Vuforia::Tool::convertPose2GLMatrix(state->getDeviceTrackableResult()->getPose());
-//                Vuforia::Matrix44F devicePoseMatrix = SampleApplicationUtils::Matrix44FTranspose(SampleApplicationUtils::Matrix44FInverse(modelMatrix));
-//            }
-            
-//            float nearPlane = 2;
-//            float farPlane = 2000;
-//            const Vuforia::CameraCalibration& cameraCalibration = Vuforia::CameraDevice::getInstance().getCameraCalibration();
-//            Vuforia::Matrix44F projec/tionMatrix = Vuforia::Tool::getProjectionGL(cameraCalibration, nearPlane, farPlane);
 
-//            Vuforia::Matrix44F modelViewProjection = [self calculateMVPMatrixFromModel:(float *) View:(float *) andProjection:(float *)]
-            
             [self.markersFound addObject:marker];
             
         }
         
     }
     
-//    if (self.markersFound.count > 0) {
-//        NSLog(@"Markers Found: %@", self.markersFound);
-        
-        if (visibleMarkersCompletionHandler) {
-            visibleMarkersCompletionHandler(self.markersFound);
-        }
-//    }
-}
-
-//[self renderModelWithProjection:&projectionMatrix.data[0] withViewMatrix:&devicePoseMatrix.data[0] withModelMatrix:&modelMatrix.data[0] andTextureIndex:targetIndex];
-//renderModelWithProjection: (float*) projectionMatrix withViewMatrix: (float*) viewMatrix withModelMatrix: (float*) modelMatrix andTextureIndex: (int) textureIndex
-
-- (Vuforia::Matrix44F) calculateMVPMatrixFromModel:(float*)modelMatrix View:(float*)viewMatrix andProjection:(float*)projectionMatrix
-{
-    // OpenGL 2
-    Vuforia::Matrix44F modelViewProjection;
-    
-//    // Apply local transformation to our model
-//    if (offTargetTrackingEnabled)
-//    {
-//        SampleApplicationUtils::translatePoseMatrix(0.0f, kObjectTranslateOffTargetTracking, 0.0f, modelMatrix);
-//        SampleApplicationUtils::rotatePoseMatrix(90, 1, 0, 0, modelMatrix);
-//        SampleApplicationUtils::scalePoseMatrix(kObjectScaleOffTargetTracking, kObjectScaleOffTargetTracking, kObjectScaleOffTargetTracking, modelMatrix);
-//    }
-//    else
-//    {
-//        SampleApplicationUtils::translatePoseMatrix(0.0f, 0.0f, kObjectScaleNormal, modelMatrix);
-//        SampleApplicationUtils::scalePoseMatrix(kObjectScaleNormal, kObjectScaleNormal, kObjectScaleNormal, modelMatrix);
-//    }
-    
-    // Combine device pose (view matrix) with model matrix
-    SampleApplicationUtils::multiplyMatrix(viewMatrix, modelMatrix, modelMatrix);
-    
-    // Do the final combination with the projection matrix
-    SampleApplicationUtils::multiplyMatrix(projectionMatrix, modelMatrix, &modelViewProjection.data[0]);
-    
-    return modelViewProjection;
+    if (visibleMarkersCompletionHandler) {
+        visibleMarkersCompletionHandler(self.markersFound);
+    }
 }
 
 @end
