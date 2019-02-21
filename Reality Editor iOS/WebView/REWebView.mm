@@ -20,6 +20,16 @@
     // automatically make it fullscreen
     CGRect frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
     
+    // initialize the UIWebView instance
+
+//    CGFloat xOffset = 0;
+//#ifdef IS_IOS11orHIGHER
+//    UILayoutGuide* layoutGuide = [[UIApplication sharedApplication] keyWindow].safeAreaLayoutGuide;
+//    xOffset = layoutGuide.layoutFrame.origin.x;
+//#endif
+//
+//    frame = CGRectMake(-1 * xOffset, 0, xOffset + [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+
     // Create the configuration with the user content controller
     WKUserContentController *userContentController = [WKUserContentController new];
     [userContentController addScriptMessageHandler:delegate name:@"realityEditor"];
@@ -77,6 +87,13 @@
         });
         method_setImplementation(method, override);
     }
+}
+
+// override the safe area inserts for iPhoneX fullscreen
+// https://stackoverflow.com/questions/47244002/make-wkwebview-real-fullscreen-on-iphone-x-remove-safe-area-from-wkwebview
+// https://stackoverflow.com/questions/51547468/override-safeareainsets-for-wkwebview-in-objective-c?noredirect=1&lq=1
+- (UIEdgeInsets)safeAreaInsets {
+    return UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 // create a static server with the interface
