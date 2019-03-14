@@ -86,8 +86,36 @@
     
     arDoneCompletionHandler = completionHandler;
     
+    // we use the iOS notification to pause/resume the AR when the application goes (or come back from) background
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(pauseAR)
+     name:UIApplicationWillResignActiveNotification
+     object:nil];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(resumeAR)
+     name:UIApplicationDidBecomeActiveNotification
+     object:nil];
+    
     [self.vapp initAR:Vuforia::GL_20 orientation:[[UIApplication sharedApplication] statusBarOrientation] deviceMode:Vuforia::Device::MODE_AR stereo:false];
     self.didStartAR = true;
+}
+
+- (void) pauseAR {
+    NSError * error = nil;
+    if (![vapp pauseAR:&error]) {
+        NSLog(@"Error pausing AR:%@", [error description]);
+    }
+}
+
+- (void) resumeAR {
+    NSError * error = nil;
+    if(! [vapp resumeAR:&error]) {
+        NSLog(@"Error resuming AR:%@", [error description]);
+    }
+    [eaglView updateRenderingPrimitives];
 }
 
 - (bool)addNewMarker:(NSString *)markerPath
@@ -113,14 +141,14 @@
                 NSLog(@"ERROR: failed to load data set");
                 objectTracker->destroyDataSet(dataSet);
                 dataSet = NULL;
+            } else {
+                objectTracker->activateDataSet(dataSet);
             }
         }
         else {
             NSLog(@"ERROR: failed to create data set");
         }
     }
-    
-    objectTracker->activateDataSet(dataSet);
     
     return dataSet != NULL;
 }

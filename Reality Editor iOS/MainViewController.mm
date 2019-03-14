@@ -38,29 +38,6 @@
     [self.webView loadInterfaceFromLocalServer];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    // listen for when the app is reopened from background to refresh the webView and reset other state
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(onAppReopened)
-                                                 name:UIApplicationDidBecomeActiveNotification
-                                               object:[UIApplication sharedApplication]];
-}
-
-- (void)onAppReopened {
-    // reset web view
-    if (!self.webView.isLoading) {
-        //        double delayInSeconds = 1.0;
-        //        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-        //        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        //            // do something
-        [self.webView reload];
-        //        });
-    }
-    
-    // TODO: reset AR manager, etc...
-}
-
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
