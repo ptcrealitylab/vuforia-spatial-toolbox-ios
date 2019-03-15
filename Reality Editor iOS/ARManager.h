@@ -20,6 +20,7 @@ typedef void (^ MarkerListCompletionHandler)(NSArray *);
     CompletionHandler arDoneCompletionHandler;
     MarkerListCompletionHandler visibleMarkersCompletionHandler;
     MarkerCompletionHandler cameraMatrixCompletionHandler;
+    MarkerCompletionHandler groundPlaneMatrixCompletionHandler;
 }
 
 + (id)sharedManager;
@@ -35,9 +36,11 @@ typedef void (^ MarkerListCompletionHandler)(NSArray *);
 - (NSString *)getProjectionMatrixString;
 - (void)setMatrixCompletionHandler:(MarkerListCompletionHandler)completionHandler;
 - (void)setCameraMatrixCompletionHandler:(MarkerCompletionHandler)completionHandler;
+- (void)setGroundPlaneMatrixCompletionHandler:(MarkerCompletionHandler)completionHandler;
 - (UIImage *)getCameraPixelBuffer;
 - (void)pauseCamera;
 - (void)resumeCamera;
 - (void)focusCamera;
+- (bool)tryPlacingGroundAnchorAtScreenX:(float)normalizedScreenX andScreenY:(float)normalizedScreenY;
 
 @end

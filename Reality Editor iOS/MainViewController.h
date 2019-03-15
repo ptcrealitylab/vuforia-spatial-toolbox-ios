@@ -19,6 +19,7 @@
 
 @property (nonatomic, strong) REWebView* webView;
 @property (nonatomic, strong) JavaScriptAPIHandler* apiHandler;
+@property (nonatomic) BOOL callbacksEnabled;
 
 @end
 
