@@ -10,7 +10,9 @@
 
 @protocol JavaScriptCallbackDelegate
 
+@required
 - (void)callJavaScriptCallback:(NSString *)callback withArguments:(NSArray *)arguments;
+@property (nonatomic) BOOL callbacksEnabled;
 
 @end
 
@@ -27,6 +29,7 @@
 - (void)getProjectionMatrix:(NSString *)callback;
 - (void)getMatrixStream:(NSString *)callback;
 - (void)getCameraMatrixStream:(NSString *)callback;
+- (void)getGroundPlaneMatrixStream:(NSString *)callback;
 - (void)getScreenshot:(NSString *)size callback:(NSString *)callback;
 - (void)setPause;
 - (void)setResume;
@@ -45,6 +48,7 @@
 - (void)remember:(NSString *)dataString;
 - (void)tap;
 - (void)focusCamera;
+- (void)tryPlacingGroundAnchorAtScreenX:(NSString *)normalizedScreenX screenY:(NSString *)normalizedScreenY withCallback:(NSString *)callback;
 
 - (void)loadNewUI:(NSString *)reloadURL;
 - (void)clearCache;

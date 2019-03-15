@@ -79,7 +79,7 @@ enum HINT {
      *  tracking more than two targets, this value should be set to 2.
      *  Default is: 1.
      */
-    HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS = 5,
+    HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS = 0,
 
     /// How many object targets to detect and track at the same time.
     /**
@@ -88,7 +88,7 @@ enum HINT {
      *  tracking more than 1 target, this value should be set to 1.
      *  Default is: 1.
      */
-    HINT_MAX_SIMULTANEOUS_OBJECT_TARGETS = 3,
+    HINT_MAX_SIMULTANEOUS_OBJECT_TARGETS = 1,
 
     /// Force delayed loading for object target DataSet.
     /**
@@ -102,7 +102,7 @@ enum HINT {
      *  To disable delayed loading set the hint value to 0.
      *  Default is: 0.
      */
-    HINT_DELAYED_LOADING_OBJECT_DATASETS = 0,
+    HINT_DELAYED_LOADING_OBJECT_DATASETS = 2,
 
     /// Asynchronously fetch the latest device calibration profile.
     /**

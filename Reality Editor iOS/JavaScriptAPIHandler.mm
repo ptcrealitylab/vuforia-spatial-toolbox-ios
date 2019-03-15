@@ -98,6 +98,17 @@
     }];
 }
 
+- (void)getGroundPlaneMatrixStream:(NSString *)callback
+{
+    __block JavaScriptAPIHandler *blocksafeSelf = self; // https://stackoverflow.com/a/5023583/1190267
+
+    [[ARManager sharedManager] setGroundPlaneMatrixCompletionHandler:^(NSDictionary *groundPlaneMarker) {
+        NSString* groundPlaneMatrix = groundPlaneMarker[@"modelViewMatrix"];
+        [blocksafeSelf->delegate callJavaScriptCallback:callback withArguments:@[groundPlaneMatrix]];
+    }];
+}
+
+// TODO: actually use size when getting screenshot
 - (void)getScreenshot:(NSString *)size callback:(NSString *)callback
 {
     UIImage* cameraImage = [[ARManager sharedManager] getCameraPixelBuffer];
@@ -212,6 +223,15 @@
 - (void)focusCamera
 {
     [[ARManager sharedManager] focusCamera];
+}
+
+- (void)tryPlacingGroundAnchorAtScreenX:(NSString *)normalizedScreenX screenY:(NSString *)normalizedScreenY withCallback:(NSString *)callback
+{
+    float x = [normalizedScreenX floatValue];
+    float y = [normalizedScreenY floatValue];
+    bool didSucceed = [(ARManager *)[ARManager sharedManager] tryPlacingGroundAnchorAtScreenX:x andScreenY:y];
+    NSString* successString = didSucceed ? @"true" : @"false";
+    [delegate callJavaScriptCallback:callback withArguments:@[successString]];
 }
 
 - (void)loadNewUI:(NSString *)reloadURL

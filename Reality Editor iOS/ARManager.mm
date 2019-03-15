@@ -14,10 +14,13 @@
 #import <Vuforia/TrackerManager.h>
 #import <Vuforia/ObjectTracker.h>
 #import <Vuforia/PositionalDeviceTracker.h>
+#import <Vuforia/SmartTerrain.h>
+#import <Vuforia/HitTestResult.h>
 #import <Vuforia/Trackable.h>
 #import <Vuforia/DataSet.h>
 #import <Vuforia/CameraDevice.h>
 #import <Vuforia/Tool.h>
+#import <Vuforia/StateUpdater.h>
 
 #import <Vuforia/ObjectTargetResult.h>
 #import <Vuforia/ImageTargetResult.h>
@@ -30,6 +33,11 @@
 @implementation ARManager {
     bool isCameraPaused;
     const Vuforia::TrackableResult* deviceTrackableResult;
+    const Vuforia::TrackableResult* groundPlaneTrackableResult;
+
+    Vuforia::Anchor* mHitTestAnchor;
+    Vuforia::Matrix44F mReticlePose;
+    const char* HIT_TEST_ANCHOR_NAME;
 }
 
 @synthesize didStartAR;
@@ -50,6 +58,7 @@
 {
     if (self = [super init]) {
         self.markersFound = [NSMutableArray array];
+        HIT_TEST_ANCHOR_NAME = "groundPlaneAnchor";
     }
     return self;
 }
@@ -141,6 +150,7 @@
                 NSLog(@"ERROR: failed to load data set");
                 objectTracker->destroyDataSet(dataSet);
                 dataSet = NULL;
+
             } else {
                 objectTracker->activateDataSet(dataSet);
             }
@@ -212,6 +222,11 @@
     cameraMatrixCompletionHandler = completionHandler;
 }
 
+- (void)setGroundPlaneMatrixCompletionHandler:(MarkerCompletionHandler)completionHandler
+{
+    groundPlaneMatrixCompletionHandler = completionHandler;
+}
+
 - (UIImage *)getCameraPixelBuffer
 {
     return [self screenshotOfView:self.eaglView excludingViews:@[]];
@@ -265,6 +280,124 @@
     Vuforia::CameraDevice::getInstance().setFocusMode(Vuforia::CameraDevice::FOCUS_MODE_TRIGGERAUTO);
 }
 
+- (bool)tryPlacingGroundAnchorAtScreenX:(float)normalizedScreenX andScreenY:(float)normalizedScreenY
+{
+    float hitTestX = normalizedScreenX; //0.5f;
+    float hitTestY = normalizedScreenY; //0.5f;
+
+    // Define a default, assumed device height above the plane where you'd like to place content.
+    // The world coordinate system will be scaled accordingly to meet this device height value
+    // once you create the first successful anchor from a HitTestResult. If your users are adults
+    // to place something on the floor use appx. 1.4m. For a tabletop experience use appx. 0.5m.
+    // In apps targeted for kids reduce the assumptions to ~80% of these values.
+    const float DEFAULT_HEIGHT_ABOVE_GROUND = 1.4f;
+    BOOL shouldCreateAnchor = true;
+
+//    const Vuforia::State state = Vuforia::TrackerManager::getInstance().getStateUpdater().updateState();
+//    Vuforia::StateUpdater &stateUpdater = Vuforia::TrackerManager::getStateUpdater();
+
+    const Vuforia::State state = Vuforia::TrackerManager::getInstance().getStateUpdater().getLatestState();
+
+//    const Vuforia::State state = Vuforia::TrackerManager::getStateUpdater();
+
+    BOOL isAnchorResultAvailable = [self performHitTestWithNormalizedTouchPointX:hitTestX andNormalizedTouchPointY:hitTestY withDeviceHeightInMeters:DEFAULT_HEIGHT_ABOVE_GROUND toCreateAnchor:shouldCreateAnchor andStateToUse:state];
+
+    return isAnchorResultAvailable;
+}
+
+- (BOOL) performHitTestWithNormalizedTouchPointX:(float)normalizedTouchPointX
+                        andNormalizedTouchPointY:(float)normalizedTouchPointY
+                        withDeviceHeightInMeters:(float) deviceHeightInMeters
+                                  toCreateAnchor:(BOOL)createAnchor
+                                   andStateToUse:(const Vuforia::State&) state
+{
+    Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
+    Vuforia::PositionalDeviceTracker* deviceTracker = static_cast<Vuforia::PositionalDeviceTracker*> (trackerManager.getTracker(Vuforia::PositionalDeviceTracker::getClassType()));
+    Vuforia::SmartTerrain* smartTerrain = static_cast<Vuforia::SmartTerrain*>(trackerManager.getTracker(Vuforia::SmartTerrain::getClassType()));
+
+    if (deviceTracker == nullptr || smartTerrain == nullptr)
+    {
+        NSLog(@"Failed to perform hit test, trackers not initialized");
+        return NO;
+    }
+
+    Vuforia::Vec2F hitTestPoint(normalizedTouchPointX, normalizedTouchPointY);
+    Vuforia::SmartTerrain::HITTEST_HINT hitTestHint = Vuforia::SmartTerrain::HITTEST_HINT_NONE; // hit test hint is currently unused
+
+    // A hit test is performed for a given State at normalized screen coordinates.
+    // The deviceHeight is an developer provided assumption as explained on
+    // definition of DEFAULT_HEIGHT_ABOVE_GROUND.
+    const auto& hitTestResults = smartTerrain->hitTest(hitTestPoint, hitTestHint, state, deviceHeightInMeters);
+    if (!hitTestResults.empty())
+    {
+        // Use first HitTestResult
+        const Vuforia::HitTestResult* hitTestResult = hitTestResults.at(0);
+
+        if (createAnchor)
+        {
+//            if(mCurrentMode == SAMPLE_APP_INTERACTIVE_MODE)
+//            {
+                // Destroy previous hit test anchor if needed
+                if (mHitTestAnchor != nullptr)
+                {
+                    NSLog(@"Destroying hit test anchor with name '%s'", HIT_TEST_ANCHOR_NAME);
+                    bool result = deviceTracker->destroyAnchor(mHitTestAnchor);
+                    NSLog(@"%s hit test anchor", (result ? "Successfully destroyed" : "Failed to destroy"));
+                }
+
+                mHitTestAnchor = deviceTracker->createAnchor(HIT_TEST_ANCHOR_NAME, *hitTestResult);
+                if (mHitTestAnchor != nullptr)
+                {
+                    NSLog(@"Successfully created hit test anchor with name '%s'", mHitTestAnchor->getName());
+                }
+                else
+                {
+                    NSLog(@"Failed to create hit test anchor");
+                }
+//            }
+//            else if(mCurrentMode == SAMPLE_APP_FURNITURE_MODE)
+//            {
+//                // Destroy previous hit test anchor if needed
+//                if (mFurnitureAnchor != nullptr)
+//                {
+//                    NSLog(@"Destroying hit test anchor with name '%s'", FURNITURE_ANCHOR_NAME);
+//                    bool result = deviceTracker->destroyAnchor(mFurnitureAnchor);
+//                    NSLog(@"%s hit test anchor", (result ? "Successfully destroyed" : "Failed to destroy"));
+//                }
+//
+//                mFurnitureAnchor = deviceTracker->createAnchor(FURNITURE_ANCHOR_NAME, *hitTestResult);
+//                if (mFurnitureAnchor != nullptr)
+//                {
+//                    NSLog(@"Successfully created hit test anchor with name '%s'", mFurnitureAnchor->getName());
+//
+//                    [mFurniture setTransparency:1.0f];
+//                }
+//                else
+//                {
+//                    NSLog(@"Failed to create hit test anchor");
+//                }
+//
+//                mIsFurnitureBeingDragged = NO;
+//            }
+        }
+
+//        if(mCurrentMode == SAMPLE_APP_FURNITURE_MODE)
+//            mFurnitureTranslationPoseMatrix = Vuforia::Tool::convertPose2GLMatrix(hitTestResult->getPose());
+
+        NSLog(@"Successfully placed anchor on ground plane");
+
+        mReticlePose = Vuforia::Tool::convertPose2GLMatrix(hitTestResult->getPose());
+        return YES;
+    }
+    else
+    {
+        NSLog(@"Hit test returned no results");
+        return NO;
+    }
+}
+
+
+
 #pragma mark - SampleApplicationControl Protocol Implementation
 
 - (void) onInitARDone:(NSError *)initError
@@ -274,14 +407,15 @@
     if (initError == nil) {
         NSError * error = nil;
         
-        Vuforia::setHint(Vuforia::HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 5);
-        Vuforia::setHint(Vuforia::HINT_MAX_SIMULTANEOUS_OBJECT_TARGETS, 3);
-        
+        bool didSimultaneousImagesSucceed = Vuforia::setHint(Vuforia::HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 5);
+        bool didSimultaneousObjectsSucceed = Vuforia::setHint(Vuforia::HINT_MAX_SIMULTANEOUS_OBJECT_TARGETS, 2);
+        NSLog(@"Set simultaneouse image targets to 5 (%d), simultaneous object targets to 2 (%d)", didSimultaneousImagesSucceed, didSimultaneousObjectsSucceed);
+
         [self.vapp startAR:Vuforia::CameraDevice::CAMERA_DIRECTION_BACK error:&error];
         
         [self.eaglView updateRenderingPrimitives];
         
-        Vuforia::CameraDevice::getInstance().setFocusMode(Vuforia::CameraDevice::FOCUS_MODE_INFINITY);
+        Vuforia::CameraDevice::getInstance().setFocusMode(Vuforia::CameraDevice::FOCUS_MODE_NORMAL);
         
         if (arDoneCompletionHandler) {
             arDoneCompletionHandler();
@@ -337,14 +471,20 @@
         NSLog(@"Failed to initialize ObjectTracker.");
         return false;
     }
-    
-    Vuforia::setAllowedFusionProviders(Vuforia::FUSION_PROVIDER_TYPE::FUSION_PROVIDER_ALL);
-    
+
     // Initialize the device tracker
     Vuforia::Tracker* deviceTracker = trackerManager.initTracker(Vuforia::PositionalDeviceTracker::getClassType());
     if (deviceTracker == nullptr)
     {
         NSLog(@"Failed to initialize DeviceTracker.");
+        return false;
+    }
+
+    Vuforia::Tracker* smartTerrain = trackerManager.initTracker(Vuforia::SmartTerrain::getClassType());
+    if (smartTerrain == nullptr)
+    {
+        NSLog(@"Failed to start SmartTerrain.");
+        return false;
     }
     
     NSLog(@"Initialized trackers");
@@ -360,23 +500,42 @@
 
 - (bool) doStartTrackers
 {
+    NSLog(@"doStartTrackers");
+
     Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
     
+    // Start object tracker
     Vuforia::Tracker* objectTracker = trackerManager.getTracker(Vuforia::ObjectTracker::getClassType());
-    if (objectTracker == 0) {
-        NSLog(@"Error starting object tracker");
-        return false;
+    if(objectTracker == nullptr || !objectTracker->start())
+    {
+        NSLog(@"ERROR: Failed to start object tracker");
+        return NO;
     }
-    objectTracker->start();
+    NSLog(@"Successfully started object tracker");
     
+    // Start device tracker
     Vuforia::Tracker* deviceTracker = trackerManager.getTracker(Vuforia::PositionalDeviceTracker::getClassType());
-    if (deviceTracker == 0) {
-        NSLog(@"Error starting device tracker");
-        return false;
+    if (deviceTracker == nullptr || !deviceTracker->start())
+    {
+        NSLog(@"Failed to start DeviceTracker");
+        return NO;
     }
-    deviceTracker->start();
+    NSLog(@"Successfully started DeviceTracker");
     
-    NSLog(@"doStartTrackers");
+    // Start ground plane tracker
+    Vuforia::Tracker* smartTerrain = trackerManager.getTracker(Vuforia::SmartTerrain::getClassType());
+    if (smartTerrain == nullptr || !smartTerrain->start())
+    {
+        NSLog(@"Failed to start SmartTerrain");
+
+        // We stop the device tracker since there was an error starting Smart Terrain one
+//        deviceTracker->stop();
+//        NSLog(@"Stopped DeviceTracker tracker due to failure to start SmartTerrain");
+
+        return NO;
+    }
+    NSLog(@"Successfully started SmartTerrain");
+
     return true;
 }
 
@@ -425,20 +584,8 @@
         }
     }
     
-    // destroy all anchors for the device tracker
-    Vuforia::PositionalDeviceTracker* deviceTracker = static_cast<Vuforia::PositionalDeviceTracker*>(trackerManager.getTracker(Vuforia::PositionalDeviceTracker::getClassType()));
-    if (deviceTracker == 0) {
-        NSLog(@"Error finding object tracker to unload data");
-        return false;
-    }
-    int numPositionAnchors = deviceTracker->getNumAnchors();
-    for (int i = 0; i < numPositionAnchors; i++) {
-        Vuforia::Anchor* thisAnchor = deviceTracker->getAnchor(i);
-        
-        if (!deviceTracker->destroyAnchor(thisAnchor)) {
-            NSLog(@"Failed to destroy anchor");
-        }
-    }
+    // Note: don't need to unload device tracker anchors.
+    // On tracker stop, the anchors will be destroyed.
     
     NSLog(@"doUnloadTrackersData");
     return true;
@@ -465,6 +612,11 @@
 {
     if (!isCameraPaused) { // if frozen, keep sending old markers into javascript app
         
+        // continuously try to find the ground plane until an anchor is successfully placed
+        if (mHitTestAnchor == nullptr) {
+            [self tryPlacingGroundAnchorAtScreenX:0.5 andScreenY:0.5];
+        }
+
         [self.markersFound removeAllObjects];
         
         int numOfTrackables = state->getNumTrackableResults();
@@ -487,7 +639,7 @@
                 trackingStatus = @"TRACKED";
             } else if (result->getStatus() == Vuforia::TrackableResult::EXTENDED_TRACKED) {
                 trackingStatus = @"EXTENDED_TRACKED";
-                continue; // TODO: for now, don't send extended tracking targets to the visibleObjects in javascript
+//                continue; // TODO: for now, don't send extended tracking targets to the visibleObjects in javascript
             }
             
             Vuforia::Matrix44F modelViewMatrixCorrected = Vuforia::Tool::convertPose2GLMatrix(result->getPose());
@@ -523,11 +675,41 @@
 //                NSLog(@"Object Raw Type");
 //            }
             
+//            if(result->isOfType(Vuforia::DeviceTrackableResult::getClassType())) {
+//                devicePoseTemp = result->getPose();
+//                mDevicePoseMatrix = SampleApplicationUtils::Matrix44FTranspose(SampleApplicationUtils::Matrix44FInverse(modelViewMatrix));
+//                mIsDeviceResultAvailable = YES;
+//            } else if(result->isOfType(Vuforia::AnchorResult::getClassType())) {
+//                mIsAnchorResultAvailable = YES;
+//                mAnchorResultsCount ++;
+//
+//                if(!strcmp(result->getTrackable().getName(), HIT_TEST_ANCHOR_NAME))
+//                {
+//                    renderAstronaut = YES;
+//                    mHitTestPoseMatrix = modelViewMatrix;
+//                }
+//
+//                if(!strcmp(result->getTrackable().getName(), MID_AIR_ANCHOR_NAME))
+//                {
+//                    renderDrone = YES;
+//                    mMidAirPoseMatrix = modelViewMatrix;
+//                }
+//            }
+
             // send in Positional Device Trackers' information in a different way, via the camera matrix
             if (trackable.isOfType(Vuforia::DeviceTrackable::getClassType())) {
                 deviceTrackableResult = result;
                 if (cameraMatrixCompletionHandler) {
                     cameraMatrixCompletionHandler(marker);
+                }
+                continue;
+            }
+
+            // send in Ground Plane Anchor information in a different way, via the camera matrix
+            if (trackable.isOfType(Vuforia::Anchor::getClassType())) {
+                groundPlaneTrackableResult = result;
+                if (groundPlaneMatrixCompletionHandler) {
+                    groundPlaneMatrixCompletionHandler(marker);
                 }
                 continue;
             }

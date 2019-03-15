@@ -19,6 +19,7 @@
     // set up web view
     
     self.webView = [[REWebView alloc] initWithDelegate:self];
+    [self.webView addObserver:self forKeyPath:@"loading" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:nil];
     [self.webView loadInterfaceFromLocalServer];
     [self.view addSubview:self.webView];
     
@@ -29,6 +30,21 @@
     // set this main view controller as the container for the AR view
     
     [[ARManager sharedManager] setContainingViewController:self];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"loading"]) {
+        bool oldLoading = [[change objectForKey:NSKeyValueChangeOldKey] boolValue];
+        bool newLoading = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
+
+        // disable callbacks anytime the webview is loading and re-enable whenever it finishes
+        if (newLoading && !oldLoading) {
+            self.callbacksEnabled = false;
+        } else if (!newLoading && oldLoading) {
+            self.callbacksEnabled = true;
+        }
+    }
 }
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
@@ -46,7 +62,7 @@
 #pragma mark - JavaScript API Implementation
 
 - (void)handleCustomRequest:(NSDictionary *)messageBody {
-    NSLog(@"Handle Request: %@", messageBody);
+//    NSLog(@"Handle Request: %@", messageBody);
     
     NSString* functionName = messageBody[@"functionName"]; // required
     NSDictionary* arguments = messageBody[@"arguments"]; // optional
@@ -71,6 +87,9 @@
     } else if ([functionName isEqualToString:@"getCameraMatrixStream"]) {
         [self.apiHandler getCameraMatrixStream:callback];
         
+    } else if ([functionName isEqualToString:@"getGroundPlaneMatrixStream"]) {
+        [self.apiHandler getGroundPlaneMatrixStream:callback];
+
     } else if ([functionName isEqualToString:@"getScreenshot"]) {
         NSString* size = (NSString *)arguments[@"size"];
         [self.apiHandler getScreenshot:size callback:callback];
@@ -132,9 +151,14 @@
     } else if ([functionName isEqualToString:@"tap"]) {
         [self.apiHandler tap];
         
+    } else if ([functionName isEqualToString:@"tryPlacingGroundAnchor"]) {
+        NSString* normalizedScreenX = (NSString *)arguments[@"normalizedScreenX"];
+        NSString* normalizedScreenY = (NSString *)arguments[@"normalizedScreenY"];
+        [self.apiHandler tryPlacingGroundAnchorAtScreenX:normalizedScreenX screenY:normalizedScreenY withCallback:callback];
+
     } else if ([functionName isEqualToString:@"loadNewUI"]) {
         NSString* reloadURL = (NSString *)arguments[@"reloadURL"];
-        //        [self.apiHandler loadNewUI:reloadURL];
+//        [self.apiHandler loadNewUI:reloadURL];
         [self.webView loadInterfaceFromURL:reloadURL];
         
     } else if ([functionName isEqualToString:@"clearCache"]) {
@@ -154,6 +178,8 @@
 
 - (void)callJavaScriptCallback:(NSString *)callback withArguments:(NSArray *)arguments
 {
+//    if (!self.callbacksEnabled) return;
+
     if (callback) {
         if (arguments && arguments.count > 0) {
             for (int i=0; i < arguments.count; i++) {

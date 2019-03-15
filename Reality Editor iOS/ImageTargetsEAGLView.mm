@@ -340,6 +340,4 @@ namespace {
     return [context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
-
-
 @end
