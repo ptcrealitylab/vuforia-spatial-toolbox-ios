@@ -117,6 +117,7 @@ namespace {
     self.cameraMode = Vuforia::CameraDevice::MODE_DEFAULT;
     self.deviceMode = deviceMode;
     self.stereo = stereo;
+    //self.stereo = false;
 
     // Initialising Vuforia is a potentially lengthy operation, so perform it on a
     // background thread
