@@ -391,7 +391,7 @@
     }
     else
     {
-        NSLog(@"Hit test returned no results");
+       // NSLog(@"Hit test returned no results");
         return NO;
     }
 }
@@ -480,12 +480,16 @@
         return false;
     }
 
+
+    // todo is this tracker needed?
+
     Vuforia::Tracker* smartTerrain = trackerManager.initTracker(Vuforia::SmartTerrain::getClassType());
     if (smartTerrain == nullptr)
     {
         NSLog(@"Failed to start SmartTerrain.");
         return false;
     }
+
     
     NSLog(@"Initialized trackers");
     return true;
@@ -623,7 +627,7 @@
         for (int i=0; i<numOfTrackables; i++) {
             
             const Vuforia::TrackableResult* result = state->getTrackableResult(i);
-            
+
             if(result->getStatus() != Vuforia::TrackableResult::DETECTED &&
                result->getStatus() != Vuforia::TrackableResult::TRACKED &&
                result->getStatus() != Vuforia::TrackableResult::EXTENDED_TRACKED) {
@@ -633,17 +637,38 @@
             const Vuforia::Trackable & trackable = result->getTrackable();
 
             NSString* trackingStatus;
+
+            if (result->getStatus() == Vuforia::TrackableResult::EXTENDED_TRACKED) {
+                trackingStatus = @"EXTENDED_TRACKED";
+            } else {
+                trackingStatus = @"TRACKED";
+            };
+
+            /*
             if (result->getStatus() == Vuforia::TrackableResult::DETECTED) {
                 trackingStatus = @"DETECTED";
             } else if (result->getStatus() == Vuforia::TrackableResult::TRACKED) {
                 trackingStatus = @"TRACKED";
             } else if (result->getStatus() == Vuforia::TrackableResult::EXTENDED_TRACKED) {
                 trackingStatus = @"EXTENDED_TRACKED";
-//                continue; // TODO: for now, don't send extended tracking targets to the visibleObjects in javascript
+            } else
+            // removing extended tracking will eliminate the device tracker.
+                // is it possible that these two other cases help with object tracking?
+            if (result->getStatus() == Vuforia::TrackableResult::NO_POSE) {
+                trackingStatus = @"TRACKED";
+            }else if (result->getStatus() == Vuforia::TrackableResult::LIMITED) {
+                trackingStatus = @"TRACKED";
             }
-            
-            Vuforia::Matrix44F modelViewMatrixCorrected = Vuforia::Tool::convertPose2GLMatrix(result->getPose());
-            
+             */
+
+
+
+            Vuforia::Matrix44F modelViewMatrixCorrected = Vuforia::Tool::convert2GLMatrix(result->getPose());
+     //       NSLog(@"%f",modelViewMatrixCorrected.data[12]*1000 );
+           modelViewMatrixCorrected.data[12] *=  1000;
+            modelViewMatrixCorrected.data[13] *=  1000;
+            modelViewMatrixCorrected.data[14] *=  1000;
+
             // used for debugging
 //            Vuforia::Type trackableType = trackable.getType();
 //            NSLog(@"trackable type: %u, status: %@", trackableType.getData(), trackingStatus);
@@ -654,15 +679,19 @@
                 markerSize = imageTarget->getSize();
             }
 
+
             NSDictionary* marker = @{
                                      @"name": [NSString stringWithUTF8String:trackable.getName()],
                                      @"modelViewMatrix": [self stringFromMatrix44F:modelViewMatrixCorrected],
                                      @"projectionMatrix": [self getProjectionMatrixString],
+                    // what is poseMatrixData?
                                      @"poseMatrixData": [self stringFromMatrix34F:result->getPose()],
                                      @"trackingStatus": trackingStatus,
+                    // todo I don't know with width and height actually work with object marker?
                                      @"width": [NSNumber numberWithFloat:markerSize.data[0]],
                                      @"height": [NSNumber numberWithFloat:markerSize.data[1]]
                                      };
+
 
             // DEBUG statements
 //            if (trackable.isOfType(Vuforia::ObjectTarget::getClassType())) {
@@ -714,11 +743,15 @@
                 continue;
             }
 
-            [self.markersFound addObject:marker];
+            if(trackingStatus != @"EXTENDED_TRACKED") {
+                [self.markersFound addObject:marker];
+            }
             
         }
         
     }
+
+
     
     if (visibleMarkersCompletionHandler) {
         visibleMarkersCompletionHandler(self.markersFound);
