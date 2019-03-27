@@ -1,4 +1,3 @@
-
 #public Interface interface
 /bin/data/interfaceData
 /bin/data/editor_private
@@ -11,16 +10,11 @@
 RealityServer/RE-server
 RealityServer/server
 
-
-#documentation
-/bin/data/docs_generated/
-
 #key files
 vuforiaKey.h
 
 # osx directory files
-.DS_Store
-
+.DS_Store/
 
 # Xcode
 #

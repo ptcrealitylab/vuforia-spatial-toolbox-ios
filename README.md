@@ -1,13 +1,21 @@
-# RealityEditor
+## One Reality App Setup Guide
 
-### Installation
+There is now a **one-reality** branch of the iOS project
 
-1. Download the latest openframeworks for iOS from this address:
-http://openframeworks.cc/download/
-2. clone https://github.com/realityeditor/realityeditor-ios.git in to the apps/myApps folder.
-3. clone https://github.com/realityeditor/userinterface.git in to the bin/data folder for the realityeditor-ios app. (the realityeditor .gitignore file will ignore this second repository).
-3. clone https://github.com/realityeditor/ofxQCAR.git, and https://github.com/realityeditor/ofxJSON.git in to the open frameworks addon folder.
-4. MAKE SURE THAT YOU HAVE A VALID VUFORIA KEY (the ofxQCAR examples show some)
+- without openFrameworks
+- with a self-hosted Node.js server
 
 
-You should be able to compile the reality editor from now on.
+
+###How to set up:
+
+0. Make sure you're on the **one-reality** branch of the RE-realityeditor-ios git repository
+
+1. Install cocoapods (like npm but for iOS frameworks) in the terminal using: `sudo gem install cocoapods`
+2. Run `pod install` in the project directory to set up the modules.
+3. Open the RealityServer directory so that you can see the placeholder file _\_replace_with_RE-server_directory\__ and download the **miniServerForIos** branch of the RE-server (https://github.com/PTCInc/RE-server/tree/miniServerForIos) into the folder. The server.js should have the path *RealityServer/RE-server/server.js*
+4. Download the **one-reality** branch of the RE-userinterface (https://github.com/PTCInc/RE-userinterface/tree/one-reality) to the bin/data folder so that the index.html file has the path _bin/data/userinterface/index.html_
+5. Add the private _vuforiaKey.h_ file so that it has the path _Reality Editor iOS/vuforiaKey.h_
+6. Open Reality Editor iOS.**xcworkspace** (not the Reality Editor iOS.**xcodeproj** file). This opens a project with all of the modules included. If everything so far has succeeded, the project structure should look like this, and the project should compile:
+
+![project-structure](README-resources/project-structure.png)
