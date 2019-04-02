@@ -58,8 +58,11 @@
 
 - (void)getProjectionMatrix:(NSString *)callback
 {
-    NSString* projectionMatrixString = [[ARManager sharedManager] getProjectionMatrixString];
-    [delegate callJavaScriptCallback:callback withArguments:@[projectionMatrixString]];
+    __block JavaScriptAPIHandler *blocksafeSelf = self; // https://stackoverflow.com/a/5023583/1190267
+    
+    [[ARManager sharedManager] getProjectionMatrixStringWithCompletionHandler:^(NSString *projectionMatrixString) {
+        [blocksafeSelf->delegate callJavaScriptCallback:callback withArguments:@[projectionMatrixString]];
+    }];
 }
 
 - (void)getMatrixStream:(NSString *)callback
