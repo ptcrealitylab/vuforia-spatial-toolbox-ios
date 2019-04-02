@@ -127,7 +127,7 @@
     [eaglView updateRenderingPrimitives];
 }
 
-- (bool)addNewMarker:(NSString *)markerPath
+- (BOOL)addNewMarker:(NSString *)markerPath
 {
     NSLog(@"loadObjectTrackerDataSet (%@)", markerPath);
 
@@ -165,11 +165,13 @@
 
 - (NSString *)getProjectionMatrixString
 {
-    float nearPlane = 2;
-    float farPlane = 2000;
-    const Vuforia::CameraCalibration& cameraCalibration = Vuforia::CameraDevice::getInstance().getCameraCalibration();
-    Vuforia::Matrix44F projectionMatrix = Vuforia::Tool::getProjectionGL(cameraCalibration, nearPlane, farPlane);
+    Vuforia::Matrix44F projectionMatrix = [self.eaglView getProjectionMatrix];
     return [self stringFromMatrix44F:projectionMatrix];
+}
+
+- (void)getProjectionMatrixStringWithCompletionHandler:(MatrixStringCompletionHandler)completionHandler
+{
+    projectionMatrixCompletionHandler = completionHandler;
 }
 
 - (NSString *)stringFromMatrix34F:(Vuforia::Matrix34F)vuforiaMatrix
@@ -280,7 +282,7 @@
     Vuforia::CameraDevice::getInstance().setFocusMode(Vuforia::CameraDevice::FOCUS_MODE_TRIGGERAUTO);
 }
 
-- (bool)tryPlacingGroundAnchorAtScreenX:(float)normalizedScreenX andScreenY:(float)normalizedScreenY
+- (BOOL)tryPlacingGroundAnchorAtScreenX:(float)normalizedScreenX andScreenY:(float)normalizedScreenY
 {
     float hitTestX = normalizedScreenX; //0.5f;
     float hitTestY = normalizedScreenY; //0.5f;
@@ -291,7 +293,7 @@
     // to place something on the floor use appx. 1.4m. For a tabletop experience use appx. 0.5m.
     // In apps targeted for kids reduce the assumptions to ~80% of these values.
     const float DEFAULT_HEIGHT_ABOVE_GROUND = 1.4f;
-    BOOL shouldCreateAnchor = true;
+    BOOL shouldCreateAnchor = YES;
 
 //    const Vuforia::State state = Vuforia::TrackerManager::getInstance().getStateUpdater().updateState();
 //    Vuforia::StateUpdater &stateUpdater = Vuforia::TrackerManager::getStateUpdater();
@@ -411,7 +413,7 @@
         bool didSimultaneousObjectsSucceed = Vuforia::setHint(Vuforia::HINT_MAX_SIMULTANEOUS_OBJECT_TARGETS, 2);
         NSLog(@"Set simultaneouse image targets to 5 (%d), simultaneous object targets to 2 (%d)", didSimultaneousImagesSucceed, didSimultaneousObjectsSucceed);
 
-        [self.vapp startAR:Vuforia::CameraDevice::CAMERA_DIRECTION_BACK error:&error];
+        [self.vapp startAR:&error];
         
         [self.eaglView updateRenderingPrimitives];
         
@@ -449,27 +451,12 @@
     
     Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
     
-    // To get the best performance for extended tracking in this application
-    // we ensure that the most optimal fusion provider is being used.
-    Vuforia::FUSION_PROVIDER_TYPE provider =  Vuforia::getActiveFusionProvider();
-    
-    // For ImageTargets, the recommended fusion provider mode is
-    // the one recommended by the FUSION_OPTIMIZE_IMAGE_TARGETS_AND_VUMARKS enum
-    if ((provider& ~Vuforia::FUSION_PROVIDER_TYPE::FUSION_OPTIMIZE_IMAGE_TARGETS_AND_VUMARKS) != 0)
-    {
-        if (Vuforia::setAllowedFusionProviders(Vuforia::FUSION_PROVIDER_TYPE::FUSION_OPTIMIZE_IMAGE_TARGETS_AND_VUMARKS) == Vuforia::FUSION_PROVIDER_TYPE::FUSION_PROVIDER_INVALID_OPERATION)
-        {
-            NSLog(@"Failed to select the recommended fusion provider mode (FUSION_OPTIMIZE_IMAGE_TARGETS_AND_VUMARKS).");
-            return false;
-        }
-    }
-    
     // Initialize the object tracker
     Vuforia::Tracker* objectTracker = trackerManager.initTracker(Vuforia::ObjectTracker::getClassType());
     if (objectTracker == nullptr)
     {
         NSLog(@"Failed to initialize ObjectTracker.");
-        return false;
+        return NO;
     }
 
     // Initialize the device tracker
@@ -477,22 +464,19 @@
     if (deviceTracker == nullptr)
     {
         NSLog(@"Failed to initialize DeviceTracker.");
-        return false;
+        return NO;
     }
 
-
     // todo is this tracker needed?
-
     Vuforia::Tracker* smartTerrain = trackerManager.initTracker(Vuforia::SmartTerrain::getClassType());
     if (smartTerrain == nullptr)
     {
         NSLog(@"Failed to start SmartTerrain.");
-        return false;
+        return NO;
     }
-
     
     NSLog(@"Initialized trackers");
-    return true;
+    return YES;
 }
 
 - (bool) doLoadTrackersData // TODO: add via api?
@@ -565,7 +549,7 @@
     return true;
 }
 
-- (bool) doUnloadTrackersData
+- (BOOL) doUnloadTrackersData
 {
     Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
     
@@ -573,11 +557,12 @@
     Vuforia::ObjectTracker* objectTracker = static_cast<Vuforia::ObjectTracker*>(trackerManager.getTracker(Vuforia::ObjectTracker::getClassType()));
     if (objectTracker == 0) {
         NSLog(@"Error finding object tracker to unload data");
-        return false;
+        return NO;
     }
-    int numObjectTargets = objectTracker->getActiveDataSetCount();
+    
+    int numObjectTargets = objectTracker->getActiveDataSets().size();
     for (int i = 0; i < numObjectTargets; i++) {
-        Vuforia::DataSet* thisDataSet = objectTracker->getActiveDataSet(i);
+        Vuforia::DataSet* thisDataSet = objectTracker->getActiveDataSets().at(i);
         
         if (!objectTracker->deactivateDataSet(thisDataSet)) {
             NSLog(@"Failed to deactivate data set");
@@ -592,7 +577,7 @@
     // On tracker stop, the anchors will be destroyed.
     
     NSLog(@"doUnloadTrackersData");
-    return true;
+    return YES;
 }
 
 - (bool) doDeinitTrackers
@@ -607,13 +592,32 @@
 
 - (void) configureVideoBackgroundWithViewWidth:(float)viewWidth andHeight:(float)viewHeight
 {
-    [self.eaglView configureVideoBackgroundWithViewWidth:viewWidth andHeight:viewHeight];
+    [self.eaglView configureVideoBackgroundWithCameraMode:[self.vapp getCameraMode] viewWidth:viewWidth viewHeight:viewHeight];
     NSLog(@"configureVideoBackgroundWithViewWidth:andHeight");
+}
+
+- (void)configureVideoBackgroundWithCameraMode:(Vuforia::CameraDevice::MODE)cameraMode viewWidth:(float)viewWidth andHeight:(float)viewHeight
+{
+    [self.eaglView configureVideoBackgroundWithCameraMode:cameraMode viewWidth:viewWidth viewHeight:viewHeight];
+    NSLog(@"configureVideoBackgroundWithCameraMode:viewWidth:andHeight");
 }
 
 // optional protocol implementation
 - (void) onVuforiaUpdate:(Vuforia::State *)state
 {
+    if (projectionMatrixCompletionHandler) {
+        // try getting the projection matrix this frame...
+        
+        if ([self.eaglView isProjectionMatrixReady]) {
+            Vuforia::Matrix44F projectionMatrix = [self.eaglView getProjectionMatrix];
+            NSString* projectionMatrixString = [self stringFromMatrix44F:projectionMatrix];
+            projectionMatrixCompletionHandler(projectionMatrixString);
+            projectionMatrixCompletionHandler = nil;
+        } else {
+            NSLog(@"projection matrix is not ready at this state");
+        }
+    }
+    
     if (!isCameraPaused) { // if frozen, keep sending old markers into javascript app
         
         // continuously try to find the ground plane until an anchor is successfully placed
@@ -623,10 +627,10 @@
 
         [self.markersFound removeAllObjects];
         
-        int numOfTrackables = state->getNumTrackableResults();
-        for (int i=0; i<numOfTrackables; i++) {
+        int numOfTrackables = state->getTrackableResults().size();;
+        for (int i = 0; i < numOfTrackables; i++) {
             
-            const Vuforia::TrackableResult* result = state->getTrackableResult(i);
+            const Vuforia::TrackableResult* result = state->getTrackableResults().at(i);
 
             if(result->getStatus() != Vuforia::TrackableResult::DETECTED &&
                result->getStatus() != Vuforia::TrackableResult::TRACKED &&
@@ -660,8 +664,6 @@
                 trackingStatus = @"TRACKED";
             }
              */
-
-
 
             Vuforia::Matrix44F modelViewMatrixCorrected = Vuforia::Tool::convert2GLMatrix(result->getPose());
      //       NSLog(@"%f",modelViewMatrixCorrected.data[12]*1000 );
@@ -734,7 +736,7 @@
                 continue;
             }
 
-            // send in Ground Plane Anchor information in a different way, via the camera matrix
+            // send in Ground Plane Anchor information in a different way, via the groundPlane matrix
             if (trackable.isOfType(Vuforia::Anchor::getClassType())) {
                 groundPlaneTrackableResult = result;
                 if (groundPlaneMatrixCompletionHandler) {
@@ -743,15 +745,13 @@
                 continue;
             }
 
-            if(trackingStatus != @"EXTENDED_TRACKED") {
+            if(![trackingStatus isEqualToString:@"EXTENDED_TRACKED"]) {
                 [self.markersFound addObject:marker];
             }
             
         }
         
     }
-
-
     
     if (visibleMarkersCompletionHandler) {
         visibleMarkersCompletionHandler(self.markersFound);
