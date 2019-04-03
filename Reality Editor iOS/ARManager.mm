@@ -167,6 +167,8 @@
 {
     float nearPlane = 2;
     float farPlane = 2000;
+
+
     const Vuforia::CameraCalibration& cameraCalibration = Vuforia::CameraDevice::getInstance().getCameraCalibration();
     Vuforia::Matrix44F projectionMatrix = Vuforia::Tool::getProjectionGL(cameraCalibration, nearPlane, farPlane);
     return [self stringFromMatrix44F:projectionMatrix];
@@ -455,7 +457,7 @@
     
     // For ImageTargets, the recommended fusion provider mode is
     // the one recommended by the FUSION_OPTIMIZE_IMAGE_TARGETS_AND_VUMARKS enum
-    if ((provider& ~Vuforia::FUSION_PROVIDER_TYPE::FUSION_OPTIMIZE_IMAGE_TARGETS_AND_VUMARKS) != 0)
+  /*  if ((provider& ~Vuforia::FUSION_PROVIDER_TYPE::FUSION_OPTIMIZE_IMAGE_TARGETS_AND_VUMARKS) != 0)
     {
         if (Vuforia::setAllowedFusionProviders(Vuforia::FUSION_PROVIDER_TYPE::FUSION_OPTIMIZE_IMAGE_TARGETS_AND_VUMARKS) == Vuforia::FUSION_PROVIDER_TYPE::FUSION_PROVIDER_INVALID_OPERATION)
         {
@@ -463,7 +465,7 @@
             return false;
         }
     }
-    
+    */
     // Initialize the object tracker
     Vuforia::Tracker* objectTracker = trackerManager.initTracker(Vuforia::ObjectTracker::getClassType());
     if (objectTracker == nullptr)
@@ -622,27 +624,32 @@
         }
 
         [self.markersFound removeAllObjects];
-        
-        int numOfTrackables = state->getNumTrackableResults();
-        for (int i=0; i<numOfTrackables; i++) {
-            
-            const Vuforia::TrackableResult* result = state->getTrackableResult(i);
 
-            if(result->getStatus() != Vuforia::TrackableResult::DETECTED &&
+       // int numOfTrackables = state->getNumTrackableResults();
+        for (int i=0; i<state->getTrackableResults().size(); i++) {
+
+
+            
+            const Vuforia::TrackableResult* result = state->getTrackableResults()[i];
+
+           /* if(result->getStatus() != Vuforia::TrackableResult::DETECTED &&
                result->getStatus() != Vuforia::TrackableResult::TRACKED &&
                result->getStatus() != Vuforia::TrackableResult::EXTENDED_TRACKED) {
                 continue;
-            }
+            }*/
             
             const Vuforia::Trackable & trackable = result->getTrackable();
 
             NSString* trackingStatus;
 
-            if (result->getStatus() == Vuforia::TrackableResult::EXTENDED_TRACKED) {
+           if (result->getStatus() == Vuforia::TrackableResult::EXTENDED_TRACKED) {
                 trackingStatus = @"EXTENDED_TRACKED";
             } else {
                 trackingStatus = @"TRACKED";
             };
+
+
+           // NSLog(@"%s",result->getStatusInfo());
 
             /*
             if (result->getStatus() == Vuforia::TrackableResult::DETECTED) {
@@ -655,11 +662,11 @@
             // removing extended tracking will eliminate the device tracker.
                 // is it possible that these two other cases help with object tracking?
             if (result->getStatus() == Vuforia::TrackableResult::NO_POSE) {
-                trackingStatus = @"TRACKED";
+                trackingStatus = @"NO_POSE";
             }else if (result->getStatus() == Vuforia::TrackableResult::LIMITED) {
-                trackingStatus = @"TRACKED";
+                trackingStatus = @"LIMITED";
             }
-             */
+*/
 
 
 
@@ -743,9 +750,19 @@
                 continue;
             }
 
-            if(trackingStatus != @"EXTENDED_TRACKED") {
-                [self.markersFound addObject:marker];
+
+
+       
+            if([marker[@"name"] isEqualToString:@"WorldReferenceXXXXXXXXXXXX"]){
+                     [self.markersFound addObject:marker];
+                
+            } else {
+                  //  if(trackingStatus != @"EXTENDED_TRACKED") {
+                    [self.markersFound addObject:marker];
+                    // }
+                
             }
+       
             
         }
         
