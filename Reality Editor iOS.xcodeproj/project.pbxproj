@@ -423,7 +423,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
 			);
@@ -434,7 +434,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8030A2BADF7A0FC3EBC39D41 /* [CP] Check Pods Manifest.lock */ = {
@@ -624,7 +624,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = W88G8YNU4K;
+				DEVELOPMENT_TEAM = NAKQL4P3R6;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -704,7 +704,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = W88G8YNU4K;
+				DEVELOPMENT_TEAM = NAKQL4P3R6;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				FRAMEWORK_SEARCH_PATHS = (

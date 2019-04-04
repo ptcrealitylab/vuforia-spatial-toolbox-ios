@@ -208,7 +208,7 @@
         float sceneScaleFactor = [self getSceneScaleFactorWithViewId:[self currentView] cameraCalibration:state.getCameraCalibration()];
         SampleApplicationUtils::scalePoseMatrix(sceneScaleFactor, sceneScaleFactor, 1.0f, vbProjectionMatrix.data);
     }
-    
+
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     glDisable(GL_SCISSOR_TEST);
@@ -463,10 +463,14 @@
     Vuforia::VIEW vw = viewList.getView(0);
     self.currentView = vw;
     
+ 
+    
     // Set up the viewport
     Vuforia::Vec4I viewport;
     // We're writing directly to the screen, so the viewport is relative to the screen
     viewport = self.currentRenderingPrimitives->getViewport(vw);
+    
+
     
     Vuforia::Matrix34F projMatrix = self.currentRenderingPrimitives->getProjectionMatrix(vw, cameraCalibration);
     
