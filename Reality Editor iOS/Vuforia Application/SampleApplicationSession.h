@@ -1,6 +1,6 @@
 /*===============================================================================
-Copyright (c) 2016-2018 PTC Inc. All Rights Reserved.
-
+ Copyright (c) 2019 PTC Inc. All Rights Reserved.
+ 
  Copyright (c) 2012-2015 Qualcomm Connected Experiences, Inc. All Rights Reserved.
  
  Vuforia is a trademark of PTC Inc., registered in the United States and other
@@ -40,63 +40,67 @@ Copyright (c) 2016-2018 PTC Inc. All Rights Reserved.
 @required
 // this method is called to notify the application that the initialization (initAR) is complete
 // usually the application then starts the AR through a call to startAR
-- (void) onInitARDone:(NSError *)error;
+- (void)onInitARDone:(NSError *)error;
 
 // the application must initialize its tracker(s)
-- (bool) doInitTrackers;
+- (BOOL)doInitTrackers;
 
 // the application must initialize the data associated to its tracker(s)
-- (bool) doLoadTrackersData;
+- (BOOL)doLoadTrackersData;
 
 // the application must starts its tracker(s)
-- (bool) doStartTrackers;
+- (BOOL)doStartTrackers;
 
 // the application must stop its tracker(s)
-- (bool) doStopTrackers;
+- (BOOL)doStopTrackers;
 
 // the application must unload the data associated its tracker(s)
-- (bool) doUnloadTrackersData;
+- (BOOL)doUnloadTrackersData;
 
 // the application must deinititalize its tracker(s)
-- (bool) doDeinitTrackers;
+- (BOOL)doDeinitTrackers;
 
 // the application msut handle the video background configuration
-- (void)configureVideoBackgroundWithViewWidth:(float)viewWidth andHeight:(float)viewHeight;
+- (void) configureVideoBackgroundWithCameraMode:(Vuforia::CameraDevice::MODE)cameraMode viewWidth:(float)viewWidth andHeight:(float)viewHeight;
 
 @optional
-// optional method to handle the Vuforia callback - can be used to swap dataset for instance
-- (void) onVuforiaUpdate: (Vuforia::State *) state;
+// optional method to handle the Vuforia Engine callback - can be used to swap dataset for instance
+- (void) onVuforiaUpdate:(Vuforia::State *)state;
 
 @end
 
 @interface SampleApplicationSession : NSObject
 
-- (id)initWithDelegate:(id<SampleApplicationControl>) delegate;
+- (id)initWithDelegate:(id<SampleApplicationControl>)delegate;
 
 // initialize the AR library. This is an asynchronous method. When the initialization is complete, the callback method initARDone will be called
-- (void) initAR:(int) VuforiaInitFlags orientation:(UIInterfaceOrientation) ARViewOrientation deviceMode:(Vuforia::Device::MODE)deviceMode stereo:(bool)stereo;
+- (void) initAR:(int)vuforiaInitFlags orientation:(UIInterfaceOrientation)ARViewOrientation deviceMode:(Vuforia::Device::MODE)deviceMode stereo:(bool)stereo;
+- (void) initAR:(int)vuforiaInitFlags orientation:(UIInterfaceOrientation)ARViewOrientation deviceMode:(Vuforia::Device::MODE)deviceMode stereo:(bool)stereo cameraMode:(Vuforia::CameraDevice::MODE)cameraMode;
 
 // start the AR session
-- (bool) startAR:(Vuforia::CameraDevice::CAMERA_DIRECTION) camera error:(NSError **)error;
+- (BOOL)startAR:(NSError **)error;
 
 // pause the AR session
-- (bool) pauseAR:(NSError **)error;
+- (BOOL)pauseAR:(NSError **)error;
 
 // resume the AR session
-- (bool) resumeAR:(NSError **)error;
+- (BOOL)resumeAR:(NSError **)error;
 
 // stop the AR session
-- (bool) stopAR:(NSError **)error;
+- (BOOL)stopAR:(NSError **)error;
 
 // stop the camera.
 // This can be used if you want to switch between the front and the back camera for instance
-- (bool) stopCamera:(NSError **)error;
+- (BOOL)stopCamera:(NSError **)error;
 
 // utility methods
-- (void) changeOrientation:(UIInterfaceOrientation) ARViewOrientation;
+- (BOOL)setFusionProviderType:(Vuforia::FUSION_PROVIDER_TYPE) providerType;
 
-@property (nonatomic, readwrite) BOOL isRetinaDisplay;
+- (void)changeOrientation:(UIInterfaceOrientation) ARViewOrientation;
+
+// Get current camera mode
+- (Vuforia::CameraDevice::MODE) getCameraMode;
+
 @property (nonatomic, readwrite) BOOL cameraIsStarted;
-@property (nonatomic, readwrite) Vuforia::CameraDevice::MODE cameraMode;
 
 @end

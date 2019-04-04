@@ -9,10 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "ImageTargetsEAGLView.h"
 #import "SampleApplicationSession.h"
+#import <Vuforia/CameraDevice.h>
 
 typedef void (^ CompletionHandler)(void);
 typedef void (^ MarkerCompletionHandler)(NSDictionary *);
 typedef void (^ MarkerListCompletionHandler)(NSArray *);
+typedef void (^ MatrixStringCompletionHandler)(NSString *);
 
 @interface ARManager : NSObject <SampleApplicationControl> {
     UIViewController* containingViewController;
@@ -21,6 +23,7 @@ typedef void (^ MarkerListCompletionHandler)(NSArray *);
     MarkerListCompletionHandler visibleMarkersCompletionHandler;
     MarkerCompletionHandler cameraMatrixCompletionHandler;
     MarkerCompletionHandler groundPlaneMatrixCompletionHandler;
+    MatrixStringCompletionHandler projectionMatrixCompletionHandler;
 }
 
 + (id)sharedManager;
@@ -32,8 +35,10 @@ typedef void (^ MarkerListCompletionHandler)(NSArray *);
 
 - (void)setContainingViewController:(UIViewController *)newContainingViewController;
 - (void)startARWithCompletionHandler:(CompletionHandler)completionHandler;
+- (void)configureVideoBackgroundWithViewWidth:(float)viewWidth andHeight:(float)viewHeight;
+- (void)configureVideoBackgroundWithCameraMode:(Vuforia::CameraDevice::MODE)cameraMode viewWidth:(float)viewWidth andHeight:(float)viewHeight;
 - (bool)addNewMarker:(NSString *)markerPath;
-- (NSString *)getProjectionMatrixString;
+- (void)getProjectionMatrixStringWithCompletionHandler:(MatrixStringCompletionHandler)completionHandler;
 - (void)setMatrixCompletionHandler:(MarkerListCompletionHandler)completionHandler;
 - (void)setCameraMatrixCompletionHandler:(MarkerCompletionHandler)completionHandler;
 - (void)setGroundPlaneMatrixCompletionHandler:(MarkerCompletionHandler)completionHandler;

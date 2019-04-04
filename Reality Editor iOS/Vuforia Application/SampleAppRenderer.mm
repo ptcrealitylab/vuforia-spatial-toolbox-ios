@@ -50,6 +50,7 @@
 @property (nonatomic, readwrite) CGFloat farPlane;
 @property (nonatomic, readwrite) Vuforia::VIEW currentView;
 @property (nonatomic, readwrite) BOOL mIsActivityInPortraitMode;
+
 // The current set of rendering primitives
 @property (nonatomic, readwrite) Vuforia::RenderingPrimitives *currentRenderingPrimitives;
 
@@ -120,16 +121,7 @@
     const Vuforia::State state = Vuforia::TrackerManager::getInstance().getStateUpdater().updateState();
     mRenderer.begin(state);
     
-    // We must detect if background reflection is active and adjust the
-    // culling direction.
-    // If the reflection is active, this means the pose matrix has been
-    // reflected as well,
-    // therefore standard counter clockwise face culling will result in
-    // "inside out" models.
-    if(Vuforia::Renderer::getInstance().getVideoBackgroundConfig().mReflection == Vuforia::VIDEO_BACKGROUND_REFLECTION_ON)
-        glFrontFace(GL_CW);  //Front camera
-    else
-        glFrontFace(GL_CCW);   //Back camera
+    glFrontFace(GL_CCW);   //Back camera
     
     if(self.currentRenderingPrimitives == nullptr)
         [self updateRenderingPrimitives];
@@ -280,23 +272,16 @@
     return tan(cameraFovYRads / 2) / tan(virtualFovYRads / 2);
 }
 
-
 - (CGSize)getCurrentARViewBoundsSize
 {
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     CGSize viewSize = screenBounds.size;
     
-    // If this device has a retina display, scale the view bounds
-    // for the AR (OpenGL) view
-    BOOL isRetinaDisplay = [[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && 1.0 < [UIScreen mainScreen].scale;
+    viewSize.width *= [UIScreen mainScreen].nativeScale;
+    viewSize.height *= [UIScreen mainScreen].nativeScale;
     
-    if (YES == isRetinaDisplay) {
-        viewSize.width *= [UIScreen mainScreen].nativeScale;
-        viewSize.height *= [UIScreen mainScreen].nativeScale;
-    }
     return viewSize;
 }
-
 
 - (void)updateOrientation
 {
@@ -311,17 +296,16 @@
     }
 }
 
-
 // Configure Vuforia with the video background size
-- (void)configureVideoBackgroundWithViewWidth:(float)viewWidthConfig andHeight:(float)viewHeightConfig
+- (void) configureVideoBackgroundWithCameraMode:(Vuforia::CameraDevice::MODE)cameraMode viewWidth:(float)viewWidthConfig viewHeight:(float)viewHeightConfig
 {
     float viewWidth = viewWidthConfig;
     float viewHeight = viewHeightConfig;
   
     // Get the default video mode
     Vuforia::CameraDevice& cameraDevice = Vuforia::CameraDevice::getInstance();
-    Vuforia::VideoMode videoMode = cameraDevice.getVideoMode(Vuforia::CameraDevice::MODE_DEFAULT);
-  
+    Vuforia::VideoMode videoMode = cameraDevice.getVideoMode(cameraMode);
+
     // Configure the video background
     Vuforia::VideoBackgroundConfig config;
     config.mPosition.data[0] = 0.0f;
@@ -450,6 +434,53 @@
   
     // Set the config
     Vuforia::Renderer::getInstance().setVideoBackgroundConfig(config);
+}
+
+- (BOOL)isProjectionMatrixReady
+{
+    const Vuforia::State state = Vuforia::TrackerManager::getInstance().getStateUpdater().getLatestState();
+    const Vuforia::CameraCalibration* cameraCalibration = state.getCameraCalibration();
+
+    return (self.currentRenderingPrimitives != nullptr && cameraCalibration != nullptr);
+}
+
+- (Vuforia::Matrix44F)getProjectionMatrix
+{
+    if(self.currentRenderingPrimitives == nullptr) {
+        [self updateRenderingPrimitives];
+    }
+    
+    const Vuforia::State state = Vuforia::TrackerManager::getInstance().getStateUpdater().getLatestState();
+
+    const Vuforia::CameraCalibration* cameraCalibration = state.getCameraCalibration();
+    if (cameraCalibration == nullptr) {
+        NSLog(@"no camera calibration yet");
+    }
+    
+    Vuforia::ViewList& viewList = self.currentRenderingPrimitives->getRenderingViews();
+
+    // for now, just assumes there is one view
+    Vuforia::VIEW vw = viewList.getView(0);
+    self.currentView = vw;
+    
+    // Set up the viewport
+    Vuforia::Vec4I viewport;
+    // We're writing directly to the screen, so the viewport is relative to the screen
+    viewport = self.currentRenderingPrimitives->getViewport(vw);
+    
+    Vuforia::Matrix34F projMatrix = self.currentRenderingPrimitives->getProjectionMatrix(vw, cameraCalibration);
+    
+    Vuforia::Matrix44F rawProjectionMatrixGL = Vuforia::Tool::convertPerspectiveProjection2GLMatrix(projMatrix,
+                                                                                                    self.nearPlane,
+                                                                                                    self.farPlane);
+    
+    // Apply the appropriate eye adjustment to the raw projection matrix, and assign to the global variable
+    Vuforia::Matrix44F eyeAdjustmentGL = Vuforia::Tool::convert2GLMatrix(self.currentRenderingPrimitives->getEyeDisplayAdjustmentMatrix(vw));
+    
+    Vuforia::Matrix44F projectionMatrix;
+    SampleApplicationUtils::multiplyMatrix(&rawProjectionMatrixGL.data[0], &eyeAdjustmentGL.data[0], &projectionMatrix.data[0]);
+    
+    return projectionMatrix;
 }
 
 @end
