@@ -413,11 +413,11 @@
         bool didSimultaneousObjectsSucceed = Vuforia::setHint(Vuforia::HINT_MAX_SIMULTANEOUS_OBJECT_TARGETS, 2);
         NSLog(@"Set simultaneouse image targets to 5 (%d), simultaneous object targets to 2 (%d)", didSimultaneousImagesSucceed, didSimultaneousObjectsSucceed);
 
-        [self.vapp startAR:Vuforia::CameraDevice::CAMERA_DIRECTION_BACK error:&error];
+        [self.vapp startAR:&error];
         
         [self.eaglView updateRenderingPrimitives];
         
-        Vuforia::CameraDevice::getInstance().setFocusMode(Vuforia::CameraDevice::FOCUS_MODE_NORMAL);
+        Vuforia::CameraDevice::getInstance().setFocusMode(Vuforia::CameraDevice::FOCUS_MODE_INFINITY);
         
         if (arDoneCompletionHandler) {
             arDoneCompletionHandler();
@@ -671,6 +671,7 @@
             modelViewMatrixCorrected.data[13] *=  1000;
             modelViewMatrixCorrected.data[14] *=  1000;
 
+
             // used for debugging
 //            Vuforia::Type trackableType = trackable.getType();
 //            NSLog(@"trackable type: %u, status: %@", trackableType.getData(), trackingStatus);
@@ -746,13 +747,12 @@
             }
 
 
-
-
             if([marker[@"name"] isEqualToString:@"WorldReferenceXXXXXXXXXXXX"]){
                      [self.markersFound addObject:marker];
 
             } else {
-                if(![trackingStatus isEqualToString:@"EXTENDED_TRACKED"]) {
+
+               if(![trackingStatus isEqualToString:@"EXTENDED_TRACKED"]) {
                     [self.markersFound addObject:marker];
                 }
 

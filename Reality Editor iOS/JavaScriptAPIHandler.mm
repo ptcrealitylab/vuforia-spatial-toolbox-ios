@@ -13,6 +13,7 @@
 #import "FileManager.h"
 #import "SpeechManager.h"
 #import <AudioToolbox/AudioToolbox.h>
+#import <sys/utsname.h>
 
 @implementation JavaScriptAPIHandler {
 //    NSString* matrixStreamCallback;
@@ -33,8 +34,14 @@
 // response with a callback that indicates the device name
 - (void)getDeviceReady:(NSString *)callback
 {
-    NSString* deviceName = [[UIDevice currentDevice] localizedModel];
-    [delegate callJavaScriptCallback:callback withArguments:@[deviceName]];
+    
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    
+    
+    NSString* deviceName = [NSString stringWithCString:systemInfo.machine
+                                              encoding:NSUTF8StringEncoding];//[[UIDevice currentDevice] localizedModel];
+    [delegate callJavaScriptCallback:callback withArguments:@[[NSString stringWithFormat:@"'%@'", deviceName]]];
 }
 
 // check if vuforia is ready and fires a callback once that's the case

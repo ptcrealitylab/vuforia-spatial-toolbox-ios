@@ -112,8 +112,8 @@ namespace {
     [self initAR:vuforiaInitFlags
      orientation:ARViewOrientation
       deviceMode:deviceMode
-          stereo:stereo
-      cameraMode:Vuforia::CameraDevice::MODE_DEFAULT];
+          stereo:false
+      cameraMode:Vuforia::CameraDevice::MODE_OPTIMIZE_QUALITY];
 }
 
 - (void) initAR:(int)vuforiaInitFlags
@@ -128,7 +128,7 @@ namespace {
     self.ARViewOrientation = ARViewOrientation;
     self.cameraMode = cameraMode;
     self.deviceMode = deviceMode;
-    self.stereo = stereo;
+    self.stereo = false;
     
     // Initialising Vuforia is a potentially lengthy operation, so perform it on a
     // background thread
