@@ -699,7 +699,7 @@ namespace SampleApplicationUtils
         switch (pixelFormat)
         {
             case Vuforia::UNKNOWN_FORMAT:
-            case Vuforia::YUV:
+            case Vuforia::YUYV:
                 return -1;
                 
             case Vuforia::RGB565:

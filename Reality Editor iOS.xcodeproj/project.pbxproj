@@ -25,9 +25,9 @@
 		4304598B20F7CDA800B54215 /* SampleApplicationUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4304597820F7CDA800B54215 /* SampleApplicationUtils.cpp */; };
 		4304598C20F7CDA800B54215 /* SampleAppRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4304597920F7CDA800B54215 /* SampleAppRenderer.mm */; };
 		4304599420F7D01F00B54215 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43D0355720EAC1FE00AA1039 /* WebKit.framework */; };
-		4304599520F7D02900B54215 /* Vuforia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4304595620F7C4A500B54215 /* Vuforia.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		4304599620F7D02900B54215 /* Vuforia.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4304595620F7C4A500B54215 /* Vuforia.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4304599C20F7D0B300B54215 /* ImageTargetsEAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4304599B20F7D0B200B54215 /* ImageTargetsEAGLView.mm */; };
+		436CF08A225285C0002E77C9 /* Vuforia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 436CF088225285B7002E77C9 /* Vuforia.framework */; };
+		436CF08B225285C0002E77C9 /* Vuforia.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 436CF088225285B7002E77C9 /* Vuforia.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		437B8AEC21025108006720F5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 437B8AEB21025108006720F5 /* AudioToolbox.framework */; };
 		4397878320FFB88500B3A9E5 /* JavaScriptAPIHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4397878220FFB88500B3A9E5 /* JavaScriptAPIHandler.mm */; };
 		4397878620FFC18B00B3A9E5 /* ARManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4397878520FFC18B00B3A9E5 /* ARManager.mm */; };
@@ -59,7 +59,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				43ADDCE12214784900E5BB36 /* NodeMobile.framework in Embed Frameworks */,
-				4304599620F7D02900B54215 /* Vuforia.framework in Embed Frameworks */,
+				436CF08B225285C0002E77C9 /* Vuforia.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -67,7 +67,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4304595620F7C4A500B54215 /* Vuforia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Vuforia.framework; sourceTree = "<group>"; };
 		4304595B20F7CDA600B54215 /* Teapot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Teapot.h; sourceTree = "<group>"; };
 		4304595D20F7CDA600B54215 /* Background.fragsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Background.fragsh; sourceTree = "<group>"; };
 		4304595E20F7CDA600B54215 /* Background.vertsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Background.vertsh; sourceTree = "<group>"; };
@@ -96,6 +95,7 @@
 		4304599A20F7D0B200B54215 /* ImageTargetsEAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTargetsEAGLView.h; sourceTree = "<group>"; };
 		4304599B20F7D0B200B54215 /* ImageTargetsEAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageTargetsEAGLView.mm; sourceTree = "<group>"; };
 		4304599D20F7DFDE00B54215 /* vuforiaKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vuforiaKey.h; sourceTree = "<group>"; };
+		436CF088225285B7002E77C9 /* Vuforia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Vuforia.framework; sourceTree = "<group>"; };
 		437B8AEB21025108006720F5 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		4397878120FFB88500B3A9E5 /* JavaScriptAPIHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JavaScriptAPIHandler.h; sourceTree = "<group>"; };
 		4397878220FFB88500B3A9E5 /* JavaScriptAPIHandler.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = JavaScriptAPIHandler.mm; sourceTree = "<group>"; };
@@ -128,7 +128,6 @@
 		43D0355720EAC1FE00AA1039 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		55AC56D1CA09AE8695064552 /* Pods_Reality_Editor_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Reality_Editor_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		62FC7EC5CED3832D3BC793DC /* Pods-Reality Editor iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reality Editor iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS.debug.xcconfig"; sourceTree = "<group>"; };
-		A7034E632218B043006B01A6 /* GCDWebServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GCDWebServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7EE6C752218853B00F60723 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A7F7A922221755D500692858 /* RE-server */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "RE-server"; path = "bin/data/RE-server"; sourceTree = SOURCE_ROOT; };
 		E121292531BDDE6690F2B7D0 /* Pods-Reality Editor iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reality Editor iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -144,7 +143,7 @@
 				437B8AEC21025108006720F5 /* AudioToolbox.framework in Frameworks */,
 				4304599420F7D01F00B54215 /* WebKit.framework in Frameworks */,
 				43ADDCE02214784900E5BB36 /* NodeMobile.framework in Frameworks */,
-				4304599520F7D02900B54215 /* Vuforia.framework in Frameworks */,
+				436CF08A225285C0002E77C9 /* Vuforia.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,11 +290,10 @@
 		43D0355620EAC1FD00AA1039 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A7034E632218B043006B01A6 /* GCDWebServer.framework */,
+				436CF088225285B7002E77C9 /* Vuforia.framework */,
 				43ADDCDE2214784200E5BB36 /* NodeMobile.framework */,
 				43AD9581220E172900E5BB36 /* Speech.framework */,
 				437B8AEB21025108006720F5 /* AudioToolbox.framework */,
-				4304595620F7C4A500B54215 /* Vuforia.framework */,
 				43D0355720EAC1FE00AA1039 /* WebKit.framework */,
 				55AC56D1CA09AE8695064552 /* Pods_Reality_Editor_iOS.framework */,
 			);
@@ -425,7 +423,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
 			);
@@ -436,7 +434,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8030A2BADF7A0FC3EBC39D41 /* [CP] Check Pods Manifest.lock */ = {
@@ -626,7 +624,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = NAKQL4P3R6;
+				DEVELOPMENT_TEAM = W88G8YNU4K;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -706,7 +704,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = NAKQL4P3R6;
+				DEVELOPMENT_TEAM = W88G8YNU4K;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				FRAMEWORK_SEARCH_PATHS = (

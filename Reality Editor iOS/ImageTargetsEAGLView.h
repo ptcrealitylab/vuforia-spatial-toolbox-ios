@@ -13,14 +13,15 @@ countries.
 
 #import "Texture.h"
 #import "SampleApplicationSession.h"
-//#import "SampleApplication3DModel.h"
 #import "SampleGLResourceHandler.h"
 #import "SampleAppRenderer.h"
-#import "Teapot.h"
+
+typedef void (^ MatrixStringCompletionHandler)(NSString *);
 
 // EAGLView is a subclass of UIView and conforms to the informal protocol
 // UIGLViewProtocol
-@interface ImageTargetsEAGLView : UIView <UIGLViewProtocol, SampleGLResourceHandler, SampleAppRendererControl> {
+@interface ImageTargetsEAGLView : UIView <UIGLViewProtocol, SampleGLResourceHandler, SampleAppRendererControl>
+{
 @private
     // OpenGL ES context
     EAGLContext *context;
@@ -30,7 +31,7 @@ countries.
     GLuint defaultFramebuffer;
     GLuint colorRenderbuffer;
     GLuint depthRenderbuffer;
-
+    
     // Shader handles
     GLuint shaderProgramID;
     GLint vertexHandle;
@@ -39,23 +40,21 @@ countries.
     GLint mvpMatrixHandle;
     GLint texSampler2DHandle;
     
-    BOOL offTargetTrackingEnabled;
-//    SampleApplication3DModel * buildingModel;
-    
     SampleAppRenderer * sampleAppRenderer;
 }
 
-@property (nonatomic, weak) SampleApplicationSession * vapp;
+- (id) initWithFrame:(CGRect)frame appSession:(SampleApplicationSession *)app;
 
-- (id)initWithFrame:(CGRect)frame appSession:(SampleApplicationSession *) app;
-
-- (void)finishOpenGLESCommands;
-- (void)freeOpenGLESResources;
+- (void) finishOpenGLESCommands;
+- (void) freeOpenGLESResources;
 
 - (void) setOffTargetTrackingMode:(BOOL) enabled;
-- (void)configureVideoBackgroundWithViewWidth:(float)viewWidth andHeight:(float)viewHeight;
+- (void) configureVideoBackgroundWithCameraMode:(Vuforia::CameraDevice::MODE)cameraMode viewWidth:(float)viewWidth viewHeight:(float)viewHeight;
 - (void) updateRenderingPrimitives;
 
 - (NSString *)stringFromMatrix44F:(Vuforia::Matrix44F)vuforiaMatrix;
+- (Vuforia::Matrix44F)getProjectionMatrix;
+
+- (BOOL)isProjectionMatrixReady;
 
 @end

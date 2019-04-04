@@ -9,6 +9,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <Vuforia/CameraDevice.h>
 #import <Vuforia/Device.h>
 #import <Vuforia/State.h>
 
@@ -39,9 +40,14 @@
 - (void) renderVideoBackgroundWithState:(const Vuforia::State&)state;
 
 //Configure the video backgound size
-- (void) configureVideoBackgroundWithViewWidth:(float)viewWidth andHeight:(float)viewHeight;
+- (void) configureVideoBackgroundWithCameraMode:(Vuforia::CameraDevice::MODE)cameraMode viewWidth:(float)viewWidth viewHeight:(float)viewHeight;
 
 //Updates the rendering primitives to be called when there is a change of screen size or orientation
 - (void) updateRenderingPrimitives;
+
+//Gets the projection matrix
+- (Vuforia::Matrix44F)getProjectionMatrix;
+
+- (BOOL)isProjectionMatrixReady;
 
 @end

@@ -57,7 +57,7 @@ namespace {
 }
 
 
-@interface ImageTargetsEAGLView (PrivateMethods)
+@interface ImageTargetsEAGLView ()
 
 - (void)initShaders;
 - (void)createFramebuffer;
@@ -65,14 +65,15 @@ namespace {
 - (void)setFramebuffer;
 - (BOOL)presentFramebuffer;
 
+@property (nonatomic, weak) SampleApplicationSession * vapp;
+@property (nonatomic, readwrite) BOOL isDeviceTrackerRelocalizing;
+@property (nonatomic, readwrite) BOOL offTargetTrackingEnabled;
+
 @end
 
+@implementation ImageTargetsEAGLView
 
-@implementation ImageTargetsEAGLView {
-    Vuforia::Matrix44F teapotModelViewMatrix;
-}
-
-@synthesize vapp = vapp;
+@synthesize vapp, offTargetTrackingEnabled, isDeviceTrackerRelocalizing;
 
 // You must implement this method, which ensures the view's underlying layer is
 // of type CAEAGLLayer
@@ -85,28 +86,29 @@ namespace {
 //------------------------------------------------------------------------------
 #pragma mark - Lifecycle
 
-- (id)initWithFrame:(CGRect)frame appSession:(SampleApplicationSession *) app
+- (id) initWithFrame:(CGRect)frame appSession:(SampleApplicationSession *)app
 {
     self = [super initWithFrame:frame];
     
-    if (self) {
-        vapp = app;
-        // Enable retina mode if available on this device
-        if (YES == [vapp isRetinaDisplay]) {
-            [self setContentScaleFactor:[UIScreen mainScreen].nativeScale];
-        }
-
+    if (self)
+    {
+        self.vapp = app;
+        
+        [self setContentScaleFactor:[UIScreen mainScreen].nativeScale];
+        
         // Create the OpenGL ES context
         context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
         
         // The EAGLContext must be set for each thread that wishes to use it.
         // Set it the first time this method is called (on the main thread)
-        if (context != [EAGLContext currentContext]) {
+        if (context != [EAGLContext currentContext])
+        {
             [EAGLContext setCurrentContext:context];
         }
-
-        offTargetTrackingEnabled = NO;
-        sampleAppRenderer = [[SampleAppRenderer alloc]initWithSampleAppRendererControl:self nearPlane:0.01 farPlane:5];
+        
+        self.offTargetTrackingEnabled = NO;
+        self.isDeviceTrackerRelocalizing = NO;
+        sampleAppRenderer = [[SampleAppRenderer alloc]initWithSampleAppRendererControl:self nearPlane:2 farPlane:2000];
         
         [self initShaders];
         
@@ -160,15 +162,10 @@ namespace {
     glFinish();
 }
 
-- (void) setOffTargetTrackingMode:(BOOL) enabled {
-    offTargetTrackingEnabled = enabled;
+- (void) setOffTargetTrackingMode:(BOOL)enabled
+{
+    self.offTargetTrackingEnabled = enabled;
 }
-
-//- (void) loadBuildingsModel {
-//    buildingModel = [[SampleApplication3DModel alloc] initWithTxtResourceName:@"buildings"];
-//    [buildingModel read];
-//}
-
 
 - (void) updateRenderingPrimitives
 {
@@ -181,19 +178,21 @@ namespace {
 
 // Draw the current frame using OpenGL
 //
-// This method is called by Vuforia when it wishes to render the current frame to
+// This method is called by Vuforia Engine when it wishes to render the current frame to
 // the screen.
 //
-// *** Vuforia will call this method periodically on a background thread ***
-- (void)renderFrameVuforia
+// *** Vuforia Engine will call this method periodically on a background thread ***
+- (void) renderFrameVuforia
 {
-    if (! vapp.cameraIsStarted) {
+    if (!self.vapp.cameraIsStarted)
+    {
         return;
     }
     
     [sampleAppRenderer renderFrameVuforia];
 }
 
+// TODO: update with to match method from VuforiaSamples 8.1
 - (void) renderFrameWithState:(const Vuforia::State&) state projectMatrix:(Vuforia::Matrix44F&) projectionMatrix {
     [self setFramebuffer];
     
@@ -228,35 +227,49 @@ namespace {
             ];
 }
 
-- (void)configureVideoBackgroundWithViewWidth:(float)viewWidth andHeight:(float)viewHeight
+- (BOOL)isProjectionMatrixReady
 {
-    [sampleAppRenderer configureVideoBackgroundWithViewWidth:viewWidth andHeight:viewHeight];
+    return [sampleAppRenderer isProjectionMatrixReady];
+}
+
+- (Vuforia::Matrix44F)getProjectionMatrix
+{
+    return [sampleAppRenderer getProjectionMatrix];
+}
+
+- (void) configureVideoBackgroundWithCameraMode:(Vuforia::CameraDevice::MODE)cameraMode viewWidth:(float)viewWidth viewHeight:(float)viewHeight
+{
+    [sampleAppRenderer configureVideoBackgroundWithCameraMode:[vapp getCameraMode]
+                                                    viewWidth:viewWidth
+                                                   viewHeight:viewHeight];
 }
 
 //------------------------------------------------------------------------------
 #pragma mark - OpenGL ES management
 
-- (void)initShaders
+- (void) initShaders
 {
     shaderProgramID = [SampleApplicationShaderUtils createProgramWithVertexShaderFileName:@"Simple.vertsh"
-                                                   fragmentShaderFileName:@"Simple.fragsh"];
-
-    if (0 < shaderProgramID) {
+                                                                   fragmentShaderFileName:@"Simple.fragsh"];
+    
+    if (0 < shaderProgramID)
+    {
         vertexHandle = glGetAttribLocation(shaderProgramID, "vertexPosition");
         normalHandle = glGetAttribLocation(shaderProgramID, "vertexNormal");
         textureCoordHandle = glGetAttribLocation(shaderProgramID, "vertexTexCoord");
         mvpMatrixHandle = glGetUniformLocation(shaderProgramID, "modelViewProjectionMatrix");
         texSampler2DHandle  = glGetUniformLocation(shaderProgramID,"texSampler2D");
     }
-    else {
+    else
+    {
         NSLog(@"Could not initialise augmentation shader");
     }
 }
 
-
 - (void)createFramebuffer
 {
-    if (context) {
+    if (context)
+    {
         // Create default framebuffer object
         glGenFramebuffers(1, &defaultFramebuffer);
         glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
@@ -286,39 +299,43 @@ namespace {
     }
 }
 
-
 - (void)deleteFramebuffer
 {
-    if (context) {
+    if (context)
+    {
         [EAGLContext setCurrentContext:context];
         
-        if (defaultFramebuffer) {
+        if (defaultFramebuffer)
+        {
             glDeleteFramebuffers(1, &defaultFramebuffer);
             defaultFramebuffer = 0;
         }
         
-        if (colorRenderbuffer) {
+        if (colorRenderbuffer)
+        {
             glDeleteRenderbuffers(1, &colorRenderbuffer);
             colorRenderbuffer = 0;
         }
         
-        if (depthRenderbuffer) {
+        if (depthRenderbuffer)
+        {
             glDeleteRenderbuffers(1, &depthRenderbuffer);
             depthRenderbuffer = 0;
         }
     }
 }
 
-
 - (void)setFramebuffer
 {
     // The EAGLContext must be set for each thread that wishes to use it.  Set
     // it the first time this method is called (on the render thread)
-    if (context != [EAGLContext currentContext]) {
+    if (context != [EAGLContext currentContext])
+    {
         [EAGLContext setCurrentContext:context];
     }
     
-    if (!defaultFramebuffer) {
+    if (!defaultFramebuffer)
+    {
         // Perform on the main thread to ensure safe memory allocation for the
         // shared buffer.  Block until the operation is complete to prevent
         // simultaneous access to the OpenGL context
@@ -327,7 +344,6 @@ namespace {
     
     glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
 }
-
 
 - (BOOL)presentFramebuffer
 {

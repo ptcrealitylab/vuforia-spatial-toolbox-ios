@@ -11,11 +11,13 @@ Copyright (c) 2015-2018 PTC Inc. All Rights Reserved.
 #import "SampleApplicationUtils.h"
 #import <Vuforia/Vuforia.h>
 #import <Vuforia/Vuforia_iOS.h>
-#import <Vuforia/Tool.h>
-#import <Vuforia/Renderer.h>
 #import <Vuforia/CameraDevice.h>
-#import <Vuforia/VideoBackgroundConfig.h>
+#import <Vuforia/PositionalDeviceTracker.h>
+#import <Vuforia/Renderer.h>
+#import <Vuforia/Tool.h>
+#import <Vuforia/TrackerManager.h>
 #import <Vuforia/UpdateCallback.h>
+#import <Vuforia/VideoBackgroundConfig.h>
 
 #import <UIKit/UIKit.h>
 
@@ -26,17 +28,11 @@ Copyright (c) 2015-2018 PTC Inc. All Rights Reserved.
 namespace {
     // --- Data private to this unit ---
     
-    // instance of the seesion
-    // used to support the Vuforia callback
+    // Instance of the session
+    // used to support the Vuforia Engine callback
     // there should be only one instance of a session
     // at any given point of time
-    SampleApplicationSession* instance = nil;
-    
-    // Vuforia initialisation flags (passed to Vuforia before initialising)
-    int mVuforiaInitFlags;
-    
-    // camera to use for the session
-    Vuforia::CameraDevice::CAMERA_DIRECTION mCamera = Vuforia::CameraDevice::CAMERA_DIRECTION_DEFAULT;
+    SampleApplicationSession* mInstance = nil;
     
     // class used to support the Vuforia callback mechanism
     class VuforiaApplication_UpdateCallback : public Vuforia::UpdateCallback {
@@ -44,19 +40,23 @@ namespace {
     } vuforiaUpdate;
 
     // NSerror domain for errors coming from the Sample application template classes
-    NSString * SAMPLE_APPLICATION_ERROR_DOMAIN = @"vuforia_sample_application";
+    static NSString* const SAMPLE_APPLICATION_ERROR_DOMAIN = @"vuforia_sample_application";
 }
 
 @interface SampleApplicationSession ()
 
-@property (nonatomic, readwrite) UIInterfaceOrientation mARViewOrientation;
+@property (nonatomic, readwrite) UIInterfaceOrientation ARViewOrientation;
 @property (nonatomic, readwrite) BOOL cameraIsActive;
 
 @property (nonatomic, readwrite) Vuforia::Device::MODE deviceMode;
 @property (nonatomic, readwrite) bool stereo;
+@property (nonatomic, readwrite) Vuforia::CameraDevice::MODE cameraMode;
+
+// Vuforia Engine initialization flags (passed to Vuforia Engine before initializing)
+@property (nonatomic, readwrite) int vuforiaInitFlags;
 
 // SampleApplicationControl delegate (receives callbacks in response to particular
-// events, such as completion of Vuforia initialisation)
+// events, such as completion of Vuforia initialization)
 @property (nonatomic, assign) id delegate;
 
 @end
@@ -64,251 +64,260 @@ namespace {
 
 @implementation SampleApplicationSession
 
-- (id)initWithDelegate:(id<SampleApplicationControl>) delegate
+- (id) initWithDelegate:(id<SampleApplicationControl>)delegate
 {
     self = [super init];
-    if (self) {
+    if (self)
+    {
         self.delegate = delegate;
         
         // we keep a reference of the instance in order to implement the Vuforia callback
-        instance = self;
+        mInstance = self;
     }
     return self;
 }
 
 // build a NSError
-- (NSError *) NSErrorWithCode:(int) code {
+- (NSError *) NSErrorWithCode:(int)code
+{
     return [NSError errorWithDomain:SAMPLE_APPLICATION_ERROR_DOMAIN code:code userInfo:nil];
 }
 
-- (NSError *) NSErrorWithCode:(NSString *) description code:(NSInteger)code {
+- (NSError *) NSErrorWithCode:(NSString *) description code:(NSInteger)code
+{
     NSDictionary *userInfo = @{
-                           NSLocalizedDescriptionKey: description
-                           };
+                               NSLocalizedDescriptionKey: description
+                               };
     return [NSError errorWithDomain:SAMPLE_APPLICATION_ERROR_DOMAIN
-                                     code:code
-                                 userInfo:userInfo];
+                               code:code
+                           userInfo:userInfo];
 }
 
-- (NSError *) NSErrorWithCode:(int) code error:(NSError **) error{
-    if (error != NULL) {
+- (NSError *) NSErrorWithCode:(int)code error:(NSError **)error
+{
+    if (error != nil)
+    {
         *error = [self NSErrorWithCode:code];
         return *error;
     }
     return nil;
 }
 
-// Determine whether the device has a retina display
-- (BOOL)isRetinaDisplay
+// Initialize the Vuforia Engine
+- (void) initAR:(int)vuforiaInitFlags
+    orientation:(UIInterfaceOrientation)ARViewOrientation
+     deviceMode:(Vuforia::Device::MODE)deviceMode
+         stereo:(bool)stereo
 {
-    // If UIScreen mainScreen responds to selector
-    // displayLinkWithTarget:selector: and the scale property is larger than 1.0, then this
-    // is a retina display
-    return ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && 1.0 < [UIScreen mainScreen].scale);
+    [self initAR:vuforiaInitFlags
+     orientation:ARViewOrientation
+      deviceMode:deviceMode
+          stereo:stereo
+      cameraMode:Vuforia::CameraDevice::MODE_DEFAULT];
 }
 
-// Initialize the Vuforia SDK
-- (void) initAR:(int) VuforiaInitFlags orientation:(UIInterfaceOrientation) ARViewOrientation deviceMode:(Vuforia::Device::MODE)deviceMode stereo:(bool)stereo {
+- (void) initAR:(int)vuforiaInitFlags
+    orientation:(UIInterfaceOrientation)ARViewOrientation
+     deviceMode:(Vuforia::Device::MODE)deviceMode
+         stereo:(bool)stereo
+     cameraMode:(Vuforia::CameraDevice::MODE)cameraMode
+{
     self.cameraIsActive = NO;
     self.cameraIsStarted = NO;
-    mVuforiaInitFlags = VuforiaInitFlags;
-    self.isRetinaDisplay = [self isRetinaDisplay];
-    self.mARViewOrientation = ARViewOrientation;
-    self.cameraMode = Vuforia::CameraDevice::MODE_DEFAULT;
+    self.vuforiaInitFlags = vuforiaInitFlags;
+    self.ARViewOrientation = ARViewOrientation;
+    self.cameraMode = cameraMode;
     self.deviceMode = deviceMode;
     self.stereo = stereo;
-    //self.stereo = false;
-
+    
     // Initialising Vuforia is a potentially lengthy operation, so perform it on a
     // background thread
     [self performSelectorInBackground:@selector(initVuforiaInBackground) withObject:nil];
 }
 
+- (Vuforia::CameraDevice::MODE) getCameraMode
+{
+    return self.cameraMode;
+}
+
 // Initialise Vuforia
 // (Performed on a background thread)
-- (void)initVuforiaInBackground
+- (void) initVuforiaInBackground
 {
     // Background thread must have its own autorelease pool
     @autoreleasepool {
-        Vuforia::setInitParameters(mVuforiaInitFlags, vuforiaKey);
+        Vuforia::setInitParameters(self.vuforiaInitFlags, vuforiaKey);
         
         // Vuforia::init() will return positive numbers up to 100 as it progresses
         // towards success.  Negative numbers indicate error conditions
         NSInteger initSuccess = 0;
         do {
             initSuccess = Vuforia::init();
-        } while (0 <= initSuccess && 100 > initSuccess);
+        } while (initSuccess >= 0 && initSuccess < 100);
         
-        if (100 == initSuccess) {
-            // We can now continue the initialization of Vuforia
+        if (initSuccess == 100)
+        {
+            // We can now continue the initialization of Vuforia Engine
             // (on the main thread)
             [self performSelectorOnMainThread:@selector(prepareAR) withObject:nil waitUntilDone:NO];
         }
-        else {
-            // Failed to initialise Vuforia:
-            if (Vuforia::INIT_NO_CAMERA_ACCESS == initSuccess) {
-                // On devices running iOS 8+, the user is required to explicitly grant
-                // camera access to an App.
-                // If camera access is denied, Vuforia::init will return
-                // Vuforia::INIT_NO_CAMERA_ACCESS.
-                // This case should be handled gracefully, e.g.
-                // by warning and instructing the user on how
-                // to restore the camera access for this app
-                // via Device Settings > Privacy > Camera
-                [self performSelectorOnMainThread:@selector(showCameraAccessWarning) withObject:nil waitUntilDone:YES];
+        else
+        {
+            NSError * error;
+            NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+            NSString *cameraAccessErrorMessage = [NSString stringWithFormat:NSLocalizedString(@"INIT_CAMERA_ACCESS_DENIED", nil), appName, appName];
+            
+            switch(initSuccess)
+            {
+                case Vuforia::INIT_NO_CAMERA_ACCESS:
+                    // On devices running iOS 8+, the user is required to explicitly grant
+                    // camera access to an App.
+                    // If camera access is denied, Vuforia::init will return
+                    // Vuforia::INIT_NO_CAMERA_ACCESS.
+                    // This case should be handled gracefully, e.g.
+                    // by warning and instructing the user on how
+                    // to restore the camera access for this app
+                    // via Device Settings > Privacy > Camera
+                    error = [self NSErrorWithCode:cameraAccessErrorMessage code:initSuccess];
+                    break;
+                    
+                case Vuforia::INIT_LICENSE_ERROR_NO_NETWORK_TRANSIENT:
+                    error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_NO_NETWORK_TRANSIENT", nil) code:initSuccess];
+                    break;
+                    
+                case Vuforia::INIT_LICENSE_ERROR_NO_NETWORK_PERMANENT:
+                    error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_NO_NETWORK_PERMANENT", nil) code:initSuccess];
+                    break;
+                    
+                case Vuforia::INIT_LICENSE_ERROR_INVALID_KEY:
+                    error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_INVALID_KEY", nil) code:initSuccess];
+                    break;
+                    
+                case Vuforia::INIT_LICENSE_ERROR_CANCELED_KEY:
+                    error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_CANCELED_KEY", nil) code:initSuccess];
+                    break;
+                    
+                case Vuforia::INIT_LICENSE_ERROR_MISSING_KEY:
+                    error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_MISSING_KEY", nil) code:initSuccess];
+                    break;
+                    
+                case Vuforia::INIT_LICENSE_ERROR_PRODUCT_TYPE_MISMATCH:
+                    error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_PRODUCT_TYPE_MISMATCH", nil) code:initSuccess];
+                    break;
+                    
+                default:
+                    error = [self NSErrorWithCode:NSLocalizedString(@"INIT_default", nil) code:initSuccess];
+                    break;
             }
-            else {
-                NSError * error;
-                switch(initSuccess) {
-                    case Vuforia::INIT_LICENSE_ERROR_NO_NETWORK_TRANSIENT:
-                        error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_NO_NETWORK_TRANSIENT", nil) code:initSuccess];
-                        break;
-                        
-                    case Vuforia::INIT_LICENSE_ERROR_NO_NETWORK_PERMANENT:
-                        error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_NO_NETWORK_PERMANENT", nil) code:initSuccess];
-                        break;
-                        
-                    case Vuforia::INIT_LICENSE_ERROR_INVALID_KEY:
-                        error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_INVALID_KEY", nil) code:initSuccess];
-                        break;
-                        
-                    case Vuforia::INIT_LICENSE_ERROR_CANCELED_KEY:
-                        error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_CANCELED_KEY", nil) code:initSuccess];
-                        break;
-                        
-                    case Vuforia::INIT_LICENSE_ERROR_MISSING_KEY:
-                        error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_MISSING_KEY", nil) code:initSuccess];
-                        break;
-                        
-                    case Vuforia::INIT_LICENSE_ERROR_PRODUCT_TYPE_MISMATCH:
-                        error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_PRODUCT_TYPE_MISMATCH", nil) code:initSuccess];
-                        break;
-                        
-                    default:
-                        error = [self NSErrorWithCode:NSLocalizedString(@"INIT_default", nil) code:initSuccess];
-                        break;
-                        
-                }
-                // Vuforia initialization error
-                [self.delegate onInitARDone:error];
-            }
+            
+            // Vuforia Engine initialization error
+            [self.delegate onInitARDone:error];
         }
     }
 }
 
-
-// Prompts a dialog to warn the user that
-// the camera access was not granted to this App and
-// to provide instructions on how to restore it.
--(void) showCameraAccessWarning
+// Resume Vuforia Engine
+- (BOOL) resumeAR:(NSError **)error
 {
-    NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey];
-    NSString *message = [NSString stringWithFormat:@"User denied camera access to this App. To restore camera access, go to: \nSettings > Privacy > Camera > %@ and turn it ON as well as \nSettings > General > Restrictions > Camera and turn it ON.", appName];
-    
-    UIAlertController *uiAlertController =
-    [UIAlertController alertControllerWithTitle:@"Camera Access Warning"
-                                        message:message
-                                 preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *defaultAction =
-    [UIAlertAction actionWithTitle:@"Close"
-                             style:UIAlertActionStyleDefault
-                           handler:^(UIAlertAction *action) {
-                               // Quit the app when the user dismisses the camera access alert dialog
-                               if ([uiAlertController.title isEqualToString:@"Camera Access Warning"])
-                               {
-                                   [[NSNotificationCenter defaultCenter] postNotificationName:@"kDismissAppViewController" object:nil];
-                               }
-                           }];
-    
-    [uiAlertController addAction:defaultAction];
-    [uiAlertController presentViewController:uiAlertController animated:YES completion:nil];
-}
-
-
-// Resume Vuforia
-- (bool) resumeAR:(NSError **)error {
     Vuforia::onResume();
     
     // if the camera was previously started, but not currently active, then
     // we restart it
-    if ((self.cameraIsStarted) && (! self.cameraIsActive)) {
-        
+    if ((self.cameraIsStarted) && (!self.cameraIsActive))
+    {
         // initialize the camera
-        if (! Vuforia::CameraDevice::getInstance().init(mCamera)) {
+        if (!Vuforia::CameraDevice::getInstance().init())
+        {
             [self NSErrorWithCode:E_INITIALIZING_CAMERA error:error];
             return NO;
         }
         
         // select the video mode
-        if(! Vuforia::CameraDevice::getInstance().selectVideoMode(self.cameraMode)) {
+        if(!Vuforia::CameraDevice::getInstance().selectVideoMode(self.cameraMode))
+        {
             [self NSErrorWithCode:-1 error:error];
             return NO;
         }
         
-        // configure Vuforia video background
+        // configure video background
         CGSize ARViewBoundsSize = [self getCurrentARViewBoundsSize];
-        [self.delegate configureVideoBackgroundWithViewWidth:ARViewBoundsSize.width
-                                                   andHeight:ARViewBoundsSize.height];
+        [self.delegate configureVideoBackgroundWithCameraMode:self.cameraMode
+                                                    viewWidth:ARViewBoundsSize.width
+                                                    andHeight:ARViewBoundsSize.height];
         
         // set the FPS to its recommended value
         int recommendedFps = Vuforia::Renderer::getInstance().getRecommendedFps();
         Vuforia::Renderer::getInstance().setTargetFps(recommendedFps);
         
         // start the camera
-        if (!Vuforia::CameraDevice::getInstance().start()) {
+        if (!Vuforia::CameraDevice::getInstance().start())
+        {
             [self NSErrorWithCode:E_STARTING_CAMERA error:error];
             return NO;
         }
         
         self.cameraIsActive = YES;
     }
+    
+    if (self.cameraIsActive)
+    {
+        [self.delegate doStartTrackers];
+    }
+    
     return YES;
 }
 
-
 // Pause Vuforia
-- (bool)pauseAR:(NSError **)error {
-    if (self.cameraIsActive) {
+- (BOOL) pauseAR:(NSError **)error
+{
+    BOOL successfullyPaused = YES;
+    [self.delegate doStopTrackers];
+    
+    if (self.cameraIsActive)
+    {
         // Stop and deinit the camera
-        if(! Vuforia::CameraDevice::getInstance().stop()) {
+        if(! Vuforia::CameraDevice::getInstance().stop())
+        {
             [self NSErrorWithCode:E_STOPPING_CAMERA error:error];
-            return NO;
+            successfullyPaused = NO;
         }
-        if(! Vuforia::CameraDevice::getInstance().deinit()) {
+        
+        if(! Vuforia::CameraDevice::getInstance().deinit())
+        {
             [self NSErrorWithCode:E_DEINIT_CAMERA error:error];
-            return NO;
+            successfullyPaused = NO;
         }
         self.cameraIsActive = NO;
     }
+    
     Vuforia::onPause();
-    return YES;
+    return successfullyPaused;
 }
 
-- (void) Vuforia_onUpdate:(Vuforia::State *) state {
-    if ((self.delegate != nil) && [self.delegate respondsToSelector:@selector(onVuforiaUpdate:)]) {
+- (void) vuforia_onUpdate:(Vuforia::State *)state
+{
+    if ((self.delegate != nil) && [self.delegate respondsToSelector:@selector(onVuforiaUpdate:)])
+    {
         [self.delegate onVuforiaUpdate:state];
     }
 }
 
-- (CGSize)getCurrentARViewBoundsSize
+- (CGSize) getCurrentARViewBoundsSize
 {
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     CGSize viewSize = screenBounds.size;
     
-    // If this device has a retina display, scale the view bounds
-    // for the AR (OpenGL) view
-    if (YES == self.isRetinaDisplay) {
-        viewSize.width *= [UIScreen mainScreen].nativeScale;
-        viewSize.height *= [UIScreen mainScreen].nativeScale;
-    }
+    viewSize.width *= [UIScreen mainScreen].nativeScale;
+    viewSize.height *= [UIScreen mainScreen].nativeScale;
     return viewSize;
 }
 
-- (void) prepareAR  {
-    // we register for the Vuforia callback
+- (void) prepareAR
+{
+    // we register for the Vuforia Engine callback
     Vuforia::registerCallback(&vuforiaUpdate);
     
-    // Tell Vuforia we've created a drawing surface
+    // Tell Vuforia Engine we've created a drawing surface
     Vuforia::onSurfaceCreated();
     
     CGSize viewBoundsSize = [self getCurrentARViewBoundsSize];
@@ -316,25 +325,25 @@ namespace {
     int largerSize = MAX(viewBoundsSize.width, viewBoundsSize.height);
     
     // Frames from the camera are always landscape, no matter what the
-    // orientation of the device.  Tell Vuforia to rotate the video background (and
+    // orientation of the device. Tell Vuforia Engine to rotate the video background (and
     // the projection matrix it provides to us for rendering our augmentation)
     // by the proper angle in order to match the EAGLView orientation
-    if (self.mARViewOrientation == UIInterfaceOrientationPortrait)
+    if (self.ARViewOrientation == UIInterfaceOrientationPortrait)
     {
         Vuforia::onSurfaceChanged(smallerSize, largerSize);
         Vuforia::setRotation(Vuforia::ROTATE_IOS_90);
     }
-    else if (self.mARViewOrientation == UIInterfaceOrientationPortraitUpsideDown)
+    else if (self.ARViewOrientation == UIInterfaceOrientationPortraitUpsideDown)
     {
         Vuforia::onSurfaceChanged(smallerSize, largerSize);
         Vuforia::setRotation(Vuforia::ROTATE_IOS_270);
     }
-    else if (self.mARViewOrientation == UIInterfaceOrientationLandscapeLeft)
+    else if (self.ARViewOrientation == UIInterfaceOrientationLandscapeLeft)
     {
         Vuforia::onSurfaceChanged(largerSize, smallerSize);
         Vuforia::setRotation(Vuforia::ROTATE_IOS_180);
     }
-    else if (self.mARViewOrientation == UIInterfaceOrientationLandscapeRight)
+    else if (self.ARViewOrientation == UIInterfaceOrientationLandscapeRight)
     {
         Vuforia::onSurfaceChanged(largerSize, smallerSize);
         Vuforia::setRotation(Vuforia::ROTATE_IOS_0);
@@ -345,7 +354,8 @@ namespace {
 
 - (void) initTracker {
     // ask the application to initialize its trackers
-    if (! [self.delegate doInitTrackers]) {
+    if (![self.delegate doInitTrackers])
+    {
         [self.delegate onInitARDone:[self NSErrorWithCode:E_INIT_TRACKERS]];
         return;
     }
@@ -353,14 +363,15 @@ namespace {
 }
 
 
-- (void) loadTrackerData {
+- (void) loadTrackerData
+{
     // Loading tracker data is a potentially lengthy operation, so perform it on
     // a background thread
     [self performSelectorInBackground:@selector(loadTrackerDataInBackground) withObject:nil];
 }
 
 // *** Performed on a background thread ***
-- (void)loadTrackerDataInBackground
+- (void) loadTrackerDataInBackground
 {
     // Background thread must have its own autorelease pool
     @autoreleasepool {
@@ -380,41 +391,42 @@ namespace {
     device.setViewerActive(self.stereo);
 }
 
-
 // Start Vuforia camera with the specified view size
-- (bool)startCamera:(Vuforia::CameraDevice::CAMERA_DIRECTION)camera viewWidth:(float)viewWidth andHeight:(float)viewHeight error:(NSError **)error
+- (BOOL) startCameraWithViewWidth:(float)viewWidth andHeight:(float)viewHeight error:(NSError **)error
 {
     // initialize the camera
-    if (! Vuforia::CameraDevice::getInstance().init(camera)) {
+    if (!Vuforia::CameraDevice::getInstance().init())
+    {
         [self NSErrorWithCode:-1 error:error];
         return NO;
     }
     
     // select the default video mode
-    if(! Vuforia::CameraDevice::getInstance().selectVideoMode(Vuforia::CameraDevice::MODE_DEFAULT)) {
+    if(! Vuforia::CameraDevice::getInstance().selectVideoMode(self.cameraMode))
+    {
         [self NSErrorWithCode:-1 error:error];
         return NO;
     }
     
     // configure Vuforia video background
-    [self.delegate configureVideoBackgroundWithViewWidth:viewWidth andHeight:viewHeight];
+    [self.delegate configureVideoBackgroundWithCameraMode:self.cameraMode
+                                                viewWidth:viewWidth
+                                                andHeight:viewHeight];
     
     // set the FPS to its recommended value
     int recommendedFps = Vuforia::Renderer::getInstance().getRecommendedFps();
     Vuforia::Renderer::getInstance().setTargetFps(recommendedFps);
     
     // start the camera
-    if (!Vuforia::CameraDevice::getInstance().start()) {
+    if (!Vuforia::CameraDevice::getInstance().start())
+    {
         [self NSErrorWithCode:-1 error:error];
         return NO;
     }
-    
-    // we keep track of the current camera to restart this
-    // camera when the application comes back to the foreground
-    mCamera = camera;
     
     // ask the application to start the tracker(s)
-    if(! [self.delegate doStartTrackers] ) {
+    if (![self.delegate doStartTrackers])
+    {
         [self NSErrorWithCode:-1 error:error];
         return NO;
     }
@@ -422,84 +434,138 @@ namespace {
     return YES;
 }
 
-
-- (bool) startAR:(Vuforia::CameraDevice::CAMERA_DIRECTION)camera error:(NSError **)error {
+- (BOOL) startAR:(NSError **)error
+{
     CGSize ARViewBoundsSize = [self getCurrentARViewBoundsSize];
     
-    // Start the camera.  This causes Vuforia to locate our EAGLView in the view
+    // Start the camera. This causes Vuforia Engine to locate our EAGLView in the view
     // hierarchy, start a render thread, and then call renderFrameVuforia on the
     // view periodically
-    if (! [self startCamera: camera viewWidth:ARViewBoundsSize.width andHeight:ARViewBoundsSize.height error:error]) {
+    if (![self startCameraWithViewWidth:ARViewBoundsSize.width andHeight:ARViewBoundsSize.height error:error])
+    {
         return NO;
     }
+    
     self.cameraIsActive = YES;
     self.cameraIsStarted = YES;
-
+    
     return YES;
 }
 
-// Stop Vuforia camera
-- (bool)stopAR:(NSError **)error {
+// Stop camera
+- (BOOL) stopAR:(NSError **)error
+{
+    BOOL successfullyStopped = YES;
+    
     // Stop the camera
-    if (self.cameraIsActive) {
+    if (self.cameraIsActive)
+    {
         // Stop and deinit the camera
         Vuforia::CameraDevice::getInstance().stop();
         Vuforia::CameraDevice::getInstance().deinit();
         self.cameraIsActive = NO;
     }
     self.cameraIsStarted = NO;
-
+    
     // ask the application to stop the trackers
-    if(! [self.delegate doStopTrackers]) {
+    if (![self.delegate doStopTrackers])
+    {
         [self NSErrorWithCode:E_STOPPING_TRACKERS error:error];
-        return NO;
+        successfullyStopped = NO;
     }
     
     // ask the application to unload the data associated to the trackers
-    if(! [self.delegate doUnloadTrackersData]) {
+    if (![self.delegate doUnloadTrackersData])
+    {
         [self NSErrorWithCode:E_UNLOADING_TRACKERS_DATA error:error];
-        return NO;
+        successfullyStopped = NO;
     }
     
     // ask the application to deinit the trackers
-    if(! [self.delegate doDeinitTrackers]) {
+    if (![self.delegate doDeinitTrackers])
+    {
         [self NSErrorWithCode:E_DEINIT_TRACKERS error:error];
-        return NO;
+        successfullyStopped = NO;
     }
     
-    // Pause and deinitialise Vuforia
+    // Pause and deinitialize Vuforia Engine
     Vuforia::onPause();
     Vuforia::deinit();
     
-    return YES;
+    return successfullyStopped;
 }
 
 // stop the camera
-- (bool) stopCamera:(NSError **)error {
-    if (self.cameraIsActive) {
+- (BOOL) stopCamera:(NSError **)error
+{
+    if (self.cameraIsActive)
+    {
         // Stop and deinit the camera
         Vuforia::CameraDevice::getInstance().stop();
         Vuforia::CameraDevice::getInstance().deinit();
         self.cameraIsActive = NO;
-    } else {
+    }
+    else
+    {
         [self NSErrorWithCode:E_CAMERA_NOT_STARTED error:error];
         return NO;
     }
+    
     self.cameraIsStarted = NO;
     
     // Stop the trackers
-    if(! [self.delegate doStopTrackers]) {
+    if (![self.delegate doStopTrackers])
+    {
         [self NSErrorWithCode:E_STOPPING_TRACKERS error:error];
         return NO;
     }
+    
+    return YES;
+}
 
+// Sets the fusion provider type for DeviceTracker optimization
+// This setting only affects the Tracker if the DeviceTracker is enabled
+// By default, the provider type is set to FUSION_OPTIMIZE_MODEL_TARGETS_AND_SMART_TERRAIN
+- (BOOL) setFusionProviderType:(Vuforia::FUSION_PROVIDER_TYPE)providerType
+{
+    Vuforia::FUSION_PROVIDER_TYPE provider =  Vuforia::getActiveFusionProvider();
+    
+    if ((provider& ~providerType) != 0)
+    {
+        if (Vuforia::setAllowedFusionProviders(providerType) == Vuforia::FUSION_PROVIDER_TYPE::FUSION_PROVIDER_INVALID_OPERATION)
+        {
+            NSLog(@"Failed to set fusion provider type (%d)", providerType);
+            return NO;
+        }
+    }
+    
+    NSLog(@"Successfully set fusion provider type (%d)", providerType);
     return YES;
 }
 
 
+- (BOOL) resetDeviceTracker:(void (^)(void))completion
+{
+    BOOL wasTrackerReset = NO;
+    Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
+    Vuforia::PositionalDeviceTracker* deviceTracker =
+    static_cast<Vuforia::PositionalDeviceTracker*>(trackerManager.getTracker(Vuforia::PositionalDeviceTracker::getClassType()));
+    
+    if (deviceTracker != nullptr)
+    {
+        wasTrackerReset = deviceTracker->reset();
+        
+        if (completion != nil)
+        {
+            completion();
+        }
+    }
+    return wasTrackerReset;
+}
 
-- (void) changeOrientation:(UIInterfaceOrientation) ARViewOrientation {
-    self.mARViewOrientation = ARViewOrientation;
+- (void) changeOrientation:(UIInterfaceOrientation)ARViewOrientation
+{
+    self.ARViewOrientation = ARViewOrientation;
     
     CGSize arViewBoundsSize = [self getCurrentARViewBoundsSize];
     int smallerSize = MIN(arViewBoundsSize.width, arViewBoundsSize.height);
@@ -509,55 +575,39 @@ namespace {
     // orientation of the device.  Tell Vuforia to rotate the video background (and
     // the projection matrix it provides to us for rendering our augmentation)
     // by the proper angle in order to match the EAGLView orientation
-    if (self.mARViewOrientation == UIInterfaceOrientationPortrait)
+    if (self.ARViewOrientation == UIInterfaceOrientationPortrait)
     {
         Vuforia::onSurfaceChanged(smallerSize, largerSize);
         Vuforia::setRotation(Vuforia::ROTATE_IOS_90);
     }
-    else if (self.mARViewOrientation == UIInterfaceOrientationPortraitUpsideDown)
+    else if (self.ARViewOrientation == UIInterfaceOrientationPortraitUpsideDown)
     {
         Vuforia::onSurfaceChanged(smallerSize, largerSize);
         Vuforia::setRotation(Vuforia::ROTATE_IOS_270);
     }
-    else if (self.mARViewOrientation == UIInterfaceOrientationLandscapeLeft)
+    else if (self.ARViewOrientation == UIInterfaceOrientationLandscapeLeft)
     {
         Vuforia::onSurfaceChanged(largerSize, smallerSize);
         Vuforia::setRotation(Vuforia::ROTATE_IOS_180);
     }
-    else if (self.mARViewOrientation == UIInterfaceOrientationLandscapeRight)
+    else if (self.ARViewOrientation == UIInterfaceOrientationLandscapeRight)
     {
         Vuforia::onSurfaceChanged(largerSize, smallerSize);
         Vuforia::setRotation(Vuforia::ROTATE_IOS_0);
     }
     
-    [self.delegate configureVideoBackgroundWithViewWidth:arViewBoundsSize.width andHeight:arViewBoundsSize.height];
-    
-}
-
-- (void) errorMessage:(NSString *) message
-{
-    
-    UIAlertController *uiAlertController =
-    [UIAlertController alertControllerWithTitle:SAMPLE_APPLICATION_ERROR_DOMAIN
-                                        message:message
-                                 preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *defaultAction =
-    [UIAlertAction actionWithTitle:@"OK"
-                             style:UIAlertActionStyleDefault
-                           handler:^(UIAlertAction *action) {
-
-                           }];
-    
-    [uiAlertController addAction:defaultAction];
-    [uiAlertController presentViewController:uiAlertController animated:YES completion:nil];
+    [self.delegate configureVideoBackgroundWithCameraMode:self.cameraMode
+                                                viewWidth:arViewBoundsSize.width
+                                                andHeight:arViewBoundsSize.height];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Callback function called by the tracker when each tracking cycle has finished
 void VuforiaApplication_UpdateCallback::Vuforia_onUpdate(Vuforia::State& state)
 {
-    if (instance != nil) {
-        [instance Vuforia_onUpdate:&state];
+    if (mInstance != nil)
+    {
+        [mInstance vuforia_onUpdate:&state];
     }
 }
 
