@@ -398,7 +398,12 @@
     }
 }
 
-
+// adds any targets to Vuforia that should always be present, e.g. the World Reference marker
+- (void)addDefaultMarkers
+{
+    NSString* markerPath = [[NSBundle mainBundle] pathForResource:@"liveworx" ofType:@"xml" inDirectory:@"worldReferenceMarker"];
+    [self addNewMarker:markerPath];
+}
 
 #pragma mark - SampleApplicationControl Protocol Implementation
 
@@ -422,6 +427,8 @@
         if (arDoneCompletionHandler) {
             arDoneCompletionHandler();
         }
+        
+        [self addDefaultMarkers];
         
     } else {
         NSLog(@"Error initializing AR:%@", [initError description]);
