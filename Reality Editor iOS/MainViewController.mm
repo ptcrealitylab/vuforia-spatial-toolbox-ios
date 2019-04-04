@@ -9,8 +9,12 @@
 #import "MainViewController.h"
 #import "REWebView.h"
 #import "ARManager.h"
+#import "FileManager.h"
 
 @implementation MainViewController
+{
+    UILabel* loadingLabel;
+}
 
 - (void)viewDidLoad {
     
@@ -20,8 +24,22 @@
     
     self.webView = [[REWebView alloc] initWithDelegate:self];
     [self.webView addObserver:self forKeyPath:@"loading" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:nil];
-    [self.webView loadInterfaceFromLocalServer];
+    
+    // TODO: check if there's an extenal URL saved
+    NSString* savedInterfaceURL = [[FileManager sharedManager] getStorage:@"SETUP:EXTERNAL"];
+    NSLog(@"Saved external state: %@", savedInterfaceURL);
+    if (savedInterfaceURL != NULL) {
+        [self.webView loadInterfaceFromURL:savedInterfaceURL];
+        // TODO: show loading countdown
+    } else {
+        [self.webView loadInterfaceFromLocalServer];
+    }
+    
+    [self performSelector:@selector(checkLoadingForTimeout) withObject:nil afterDelay:10.0f];
+    
     [self.view addSubview:self.webView];
+    
+    [self showLoadingLabel];
     
     // set up javascript API handler
     
@@ -30,6 +48,42 @@
     // set this main view controller as the container for the AR view
     
     [[ARManager sharedManager] setContainingViewController:self];
+}
+
+- (void)showLoadingLabel
+{
+    [[self getLoadingLabel] setHidden:NO];
+    [self.view bringSubviewToFront:[self getLoadingLabel]];
+}
+
+- (void)hideLoadingLabel
+{
+    [[self getLoadingLabel] setHidden:YES];
+}
+
+- (UILabel *)getLoadingLabel
+{
+    if (loadingLabel == nil) {
+        loadingLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 20, 200, 30)];
+        [loadingLabel setText:@"Loading..."];
+        [loadingLabel setTextColor:[UIColor whiteColor]];
+        [self.view addSubview:loadingLabel];
+    }
+    return loadingLabel;
+}
+
+- (void)checkLoadingForTimeout
+{
+    NSLog(@"Check if loading did timeout...");
+    NSLog(@"Is Web View loading? %@", (self.webView.loading ? @"TRUE" : @"FALSE"));
+    NSLog(@"Web View URL: %@", self.webView.URL);
+    
+    if (self.webView.URL == NULL) {
+        
+        // reset the saved state and reload the interface from default server location
+        [[FileManager sharedManager] setStorage:@"SETUP:EXTERNAL" message:NULL];
+        [self.webView loadInterfaceFromLocalServer];
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
@@ -41,8 +95,24 @@
         // disable callbacks anytime the webview is loading and re-enable whenever it finishes
         if (newLoading && !oldLoading) {
             self.callbacksEnabled = false;
+            
+            [self showLoadingLabel];
+            
         } else if (!newLoading && oldLoading) {
             self.callbacksEnabled = true;
+            
+            [self hideLoadingLabel];
+            
+            NSLog(@"done loading... %@", self.webView.URL);
+            if (self.webView.URL) {
+                NSLog(@"Successfully loaded userinterface");
+            } else {
+                NSLog(@"Couldn't load userinterface. Try loading from local server.");
+                
+                // reset the saved state and reload the interface from default server location
+                [[FileManager sharedManager] setStorage:@"SETUP:EXTERNAL" message:NULL];
+                [self.webView loadInterfaceFromLocalServer];
+            }
         }
     }
 }
