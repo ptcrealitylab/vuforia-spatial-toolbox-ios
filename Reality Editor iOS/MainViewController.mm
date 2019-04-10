@@ -78,7 +78,7 @@
     NSLog(@"Is Web View loading? %@", (self.webView.loading ? @"TRUE" : @"FALSE"));
     NSLog(@"Web View URL: %@", self.webView.URL);
     
-    if (self.webView.URL == NULL) {
+    if (self.webView.URL == NULL || self.webView.loading) {
         
         // reset the saved state and reload the interface from default server location
         [[FileManager sharedManager] setStorage:@"SETUP:EXTERNAL" message:NULL];
