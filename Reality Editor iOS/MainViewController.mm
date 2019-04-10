@@ -211,13 +211,6 @@
     } else if ([functionName isEqualToString:@"addSpeechListener"]) {
         [self.apiHandler addSpeechListener:callback];
         
-    } else if ([functionName isEqualToString:@"memorize"]) {
-        [self.apiHandler clearCache];
-        
-    } else if ([functionName isEqualToString:@"remember"]) {
-        NSString* dataString = (NSString *)arguments[@"dataStr"];
-        [self.apiHandler remember:dataString];
-        
     } else if ([functionName isEqualToString:@"tap"]) {
         [self.apiHandler tap];
         

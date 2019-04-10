@@ -242,16 +242,6 @@
     }];
 }
 
-- (void)memorize
-{
-    
-}
-
-- (void)remember:(NSString *)dataString
-{
-    
-}
-
 - (void)tap
 {
     if([[UIDevice currentDevice].model isEqualToString:@"iPhone"]) {
