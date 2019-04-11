@@ -202,8 +202,17 @@
 - (void)getFilesExist:(NSArray *)fileNameArray callback:(NSString *)callback
 {
     bool allExist = [[FileManager sharedManager] getFilesExist:fileNameArray];
-    NSString* successString = allExist ? @"true" : @"false";
-    [delegate callJavaScriptCallback:callback withArguments:@[successString]];
+    
+    NSString* successString = allExist ? @"true" : @"false"; // TODO: create reusable methods to get a javascript-safe version of each argument
+    
+    NSString* fileNameArrayString = @"["; // convert the NSArray into a string containing a JS array
+    for (NSString* fileName in fileNameArray) {
+        fileNameArrayString = [fileNameArrayString stringByAppendingString:[NSString stringWithFormat:@"'%@',", fileName]]; // add each filename in quotes
+    }
+    fileNameArrayString = [fileNameArrayString substringToIndex:[fileNameArrayString length]-1]; // remove last comma
+    fileNameArrayString = [fileNameArrayString stringByAppendingString:@"]"];
+    
+    [delegate callJavaScriptCallback:callback withArguments:@[successString, fileNameArrayString]];
 }
 
 - (void)getChecksum:(NSArray *)fileNameArray callback:(NSString *)callback
