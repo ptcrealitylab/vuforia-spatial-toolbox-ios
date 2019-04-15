@@ -44,8 +44,6 @@
 - (void)startSpeechRecording;
 - (void)stopSpeechRecording;
 - (void)addSpeechListener:(NSString *)callback;
-- (void)memorize;
-- (void)remember:(NSString *)dataString;
 - (void)tap;
 - (void)focusCamera;
 - (void)tryPlacingGroundAnchorAtScreenX:(NSString *)normalizedScreenX screenY:(NSString *)normalizedScreenY withCallback:(NSString *)callback;
