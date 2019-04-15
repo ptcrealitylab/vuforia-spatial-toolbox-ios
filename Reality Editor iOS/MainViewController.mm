@@ -78,7 +78,7 @@
     NSLog(@"Is Web View loading? %@", (self.webView.loading ? @"TRUE" : @"FALSE"));
     NSLog(@"Web View URL: %@", self.webView.URL);
     
-    if (self.webView.URL == NULL) {
+    if (self.webView.URL == NULL || self.webView.loading) {
         
         // reset the saved state and reload the interface from default server location
         [[FileManager sharedManager] setStorage:@"SETUP:EXTERNAL" message:NULL];
@@ -210,13 +210,6 @@
         
     } else if ([functionName isEqualToString:@"addSpeechListener"]) {
         [self.apiHandler addSpeechListener:callback];
-        
-    } else if ([functionName isEqualToString:@"memorize"]) {
-        [self.apiHandler clearCache];
-        
-    } else if ([functionName isEqualToString:@"remember"]) {
-        NSString* dataString = (NSString *)arguments[@"dataStr"];
-        [self.apiHandler remember:dataString];
         
     } else if ([functionName isEqualToString:@"tap"]) {
         [self.apiHandler tap];

@@ -122,9 +122,47 @@
 - (void)getScreenshot:(NSString *)size callback:(NSString *)callback
 {
     UIImage* cameraImage = [[ARManager sharedManager] getCameraPixelBuffer];
+    CGFloat imageWidth = cameraImage.size.width;
+    CGFloat imageHeight = cameraImage.size.height;
+    
+    if ([size isEqualToString:@"S"]) {
+        // rescale small => 1/4 size
+        cameraImage = [self resizeImage:cameraImage newSize:CGSizeMake(imageWidth * 0.25, imageHeight * 0.25)];
+    } else if ([size isEqualToString:@"M"]) {
+        // rescale medium => 1/2 size
+        cameraImage = [self resizeImage:cameraImage newSize:CGSizeMake(imageWidth * 0.50, imageHeight * 0.50)];
+    } else { //if ([size isEqualToString:@"L"]) {
+        // don't rescale
+    }
+    
     NSData *imageData = UIImageJPEGRepresentation(cameraImage, 1.0);
     NSString *encodedString = [NSString stringWithFormat:@"'%@'", [imageData base64EncodedStringWithOptions:NSDataBase64EncodingEndLineWithCarriageReturn]];
     [delegate callJavaScriptCallback:callback withArguments:@[encodedString]];
+}
+
+- (UIImage *)resizeImage:(UIImage*)image newSize:(CGSize)newSize {
+    CGRect newRect = CGRectIntegral(CGRectMake(0, 0, newSize.width, newSize.height));
+    CGImageRef imageRef = image.CGImage;
+    
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    // Set the quality level to use when rescaling
+    CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
+    CGAffineTransform flipVertical = CGAffineTransformMake(1, 0, 0, -1, 0, newSize.height);
+    
+    CGContextConcatCTM(context, flipVertical);
+    // Draw into the context; this scales the image
+    CGContextDrawImage(context, newRect, imageRef);
+    
+    // Get the resized image from the context and a UIImage
+    CGImageRef newImageRef = CGBitmapContextCreateImage(context);
+    UIImage *newImage = [UIImage imageWithCGImage:newImageRef];
+    
+    CGImageRelease(newImageRef);
+    UIGraphicsEndImageContext();
+    
+    return newImage;
 }
 
 - (void)setPause
@@ -171,8 +209,17 @@
 - (void)getFilesExist:(NSArray *)fileNameArray callback:(NSString *)callback
 {
     bool allExist = [[FileManager sharedManager] getFilesExist:fileNameArray];
-    NSString* successString = allExist ? @"true" : @"false";
-    [delegate callJavaScriptCallback:callback withArguments:@[successString]];
+    
+    NSString* successString = allExist ? @"true" : @"false"; // TODO: create reusable methods to get a javascript-safe version of each argument
+    
+    NSString* fileNameArrayString = @"["; // convert the NSArray into a string containing a JS array
+    for (NSString* fileName in fileNameArray) {
+        fileNameArrayString = [fileNameArrayString stringByAppendingString:[NSString stringWithFormat:@"'%@',", fileName]]; // add each filename in quotes
+    }
+    fileNameArrayString = [fileNameArrayString substringToIndex:[fileNameArrayString length]-1]; // remove last comma
+    fileNameArrayString = [fileNameArrayString stringByAppendingString:@"]"];
+    
+    [delegate callJavaScriptCallback:callback withArguments:@[successString, fileNameArrayString]];
 }
 
 - (void)getChecksum:(NSArray *)fileNameArray callback:(NSString *)callback
@@ -209,16 +256,6 @@
     [[SpeechManager sharedManager] addSpeechListener:^(NSString *transcription) {
         [blocksafeSelf->delegate callJavaScriptCallback:callback withArguments:@[[NSString stringWithFormat:@"'%@'", transcription]]];
     }];
-}
-
-- (void)memorize
-{
-    
-}
-
-- (void)remember:(NSString *)dataString
-{
-    
 }
 
 - (void)tap

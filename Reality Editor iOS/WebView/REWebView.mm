@@ -122,6 +122,7 @@
     urlString = [urlString stringByReplacingOccurrencesOfString:@"\"" withString:@""]; // remove any quotes from the string that may have been added during storage encoding
     
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    [self clearCache];
 //    [self loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString]]];
     [self loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0f]];
 }
