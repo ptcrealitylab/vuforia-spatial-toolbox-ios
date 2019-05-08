@@ -26,6 +26,8 @@
 		4304598C20F7CDA800B54215 /* SampleAppRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4304597920F7CDA800B54215 /* SampleAppRenderer.mm */; };
 		4304599420F7D01F00B54215 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43D0355720EAC1FE00AA1039 /* WebKit.framework */; };
 		4304599C20F7D0B300B54215 /* ImageTargetsEAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4304599B20F7D0B200B54215 /* ImageTargetsEAGLView.mm */; };
+		430D4DAB22832F60006E5CBF /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 430D4DAA22832F60006E5CBF /* ReplayKit.framework */; };
+		430D4DAE22832FD3006E5CBF /* VideoRecordingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 430D4DAD22832FD3006E5CBF /* VideoRecordingManager.m */; };
 		436CF08A225285C0002E77C9 /* Vuforia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 436CF088225285B7002E77C9 /* Vuforia.framework */; };
 		436CF08B225285C0002E77C9 /* Vuforia.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 436CF088225285B7002E77C9 /* Vuforia.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		436CF092225693FB002E77C9 /* worldReferenceMarker in Resources */ = {isa = PBXBuildFile; fileRef = 436CF091225693FB002E77C9 /* worldReferenceMarker */; };
@@ -96,6 +98,9 @@
 		4304599A20F7D0B200B54215 /* ImageTargetsEAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTargetsEAGLView.h; sourceTree = "<group>"; };
 		4304599B20F7D0B200B54215 /* ImageTargetsEAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageTargetsEAGLView.mm; sourceTree = "<group>"; };
 		4304599D20F7DFDE00B54215 /* vuforiaKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vuforiaKey.h; sourceTree = "<group>"; };
+		430D4DAA22832F60006E5CBF /* ReplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReplayKit.framework; path = System/Library/Frameworks/ReplayKit.framework; sourceTree = SDKROOT; };
+		430D4DAC22832FD3006E5CBF /* VideoRecordingManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoRecordingManager.h; sourceTree = "<group>"; };
+		430D4DAD22832FD3006E5CBF /* VideoRecordingManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoRecordingManager.m; sourceTree = "<group>"; };
 		436CF088225285B7002E77C9 /* Vuforia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Vuforia.framework; sourceTree = "<group>"; };
 		436CF091225693FB002E77C9 /* worldReferenceMarker */ = {isa = PBXFileReference; lastKnownFileType = folder; path = worldReferenceMarker; sourceTree = "<group>"; };
 		437B8AEB21025108006720F5 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -140,6 +145,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				430D4DAB22832F60006E5CBF /* ReplayKit.framework in Frameworks */,
 				A7034E652218B056006B01A6 /* Pods_Reality_Editor_iOS.framework in Frameworks */,
 				43AD9582220E172900E5BB36 /* Speech.framework in Frameworks */,
 				437B8AEC21025108006720F5 /* AudioToolbox.framework in Frameworks */,
@@ -278,6 +284,8 @@
 				4397878B20FFD73F00B3A9E5 /* FileManager.m */,
 				43AD957E220E15AA00E5BB36 /* SpeechManager.h */,
 				43AD957F220E15AA00E5BB36 /* SpeechManager.m */,
+				430D4DAC22832FD3006E5CBF /* VideoRecordingManager.h */,
+				430D4DAD22832FD3006E5CBF /* VideoRecordingManager.m */,
 				43D0351220EAC02600AA1039 /* Main.storyboard */,
 				43D0351520EAC02600AA1039 /* Assets.xcassets */,
 				43D0351720EAC02600AA1039 /* LaunchScreen.storyboard */,
@@ -301,6 +309,7 @@
 		43D0355620EAC1FD00AA1039 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				430D4DAA22832F60006E5CBF /* ReplayKit.framework */,
 				436CF088225285B7002E77C9 /* Vuforia.framework */,
 				43ADDCDE2214784200E5BB36 /* NodeMobile.framework */,
 				43AD9581220E172900E5BB36 /* Speech.framework */,
@@ -435,18 +444,20 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCDWebServer.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8030A2BADF7A0FC3EBC39D41 /* [CP] Check Pods Manifest.lock */ = {
@@ -475,6 +486,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4304598620F7CDA800B54215 /* Texture.mm in Sources */,
+				430D4DAE22832FD3006E5CBF /* VideoRecordingManager.m in Sources */,
 				43D0351120EAC02600AA1039 /* MainViewController.mm in Sources */,
 				43D0355520EAC1E200AA1039 /* REWebView.mm in Sources */,
 				4304598A20F7CDA800B54215 /* SampleApplicationSession.mm in Sources */,
@@ -636,7 +648,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = NAKQL4P3R6;
+				DEVELOPMENT_TEAM = W88G8YNU4K;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -716,7 +728,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = NAKQL4P3R6;
+				DEVELOPMENT_TEAM = W88G8YNU4K;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				FRAMEWORK_SEARCH_PATHS = (
