@@ -8,5 +8,7 @@ target 'Reality Editor iOS' do
   # Pods for Reality Editor iOS
   pod 'CocoaAsyncSocket'
   pod 'GCDWebServer', '~> 3.0'
+  pod 'AFNetworking', '~> 3.0'
+
 
 end

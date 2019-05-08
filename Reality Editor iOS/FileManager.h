@@ -20,5 +20,6 @@ typedef void (^ CompletionHandlerWithSuccess)(bool);
 - (void)downloadFile:(NSString *)fileName withCompletionHandler:(CompletionHandlerWithSuccess)completionHandler;
 - (long)getChecksum:(NSArray *)fileNameArray;
 - (NSString *)getStorage:(NSString *)storageID;
+- (void)uploadFileFromPath:(NSURL *)localPath toURL:(NSString *)destinationURL;
 
 @end

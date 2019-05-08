@@ -12,6 +12,7 @@
 #import "UDPManager.h"
 #import "FileManager.h"
 #import "SpeechManager.h"
+#import "VideoRecordingManager.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <sys/utsname.h>
 
@@ -256,6 +257,18 @@
     [[SpeechManager sharedManager] addSpeechListener:^(NSString *transcription) {
         [blocksafeSelf->delegate callJavaScriptCallback:callback withArguments:@[[NSString stringWithFormat:@"'%@'", transcription]]];
     }];
+}
+
+// objectKey is the ID of the object. objectIP is the IP of the server hosting this object.
+- (void)startVideoRecording:(NSString *)objectKey ip:(NSString *)objectIP
+{
+    [[VideoRecordingManager sharedManager] startRecording:objectKey ip:objectIP];
+}
+
+// videoID is a unique identifier for this video that will be used as its filename, so that the userinterface can load it from the server when ready.
+- (void)stopVideoRecording:(NSString *)videoId
+{
+    [[VideoRecordingManager sharedManager] stopRecording:videoId];
 }
 
 - (void)tap

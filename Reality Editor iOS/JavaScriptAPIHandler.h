@@ -44,6 +44,8 @@
 - (void)startSpeechRecording;
 - (void)stopSpeechRecording;
 - (void)addSpeechListener:(NSString *)callback;
+- (void)startVideoRecording:(NSString *)objectKey ip:(NSString *)objectIP;
+- (void)stopVideoRecording:(NSString *)videoId;
 - (void)tap;
 - (void)focusCamera;
 - (void)tryPlacingGroundAnchorAtScreenX:(NSString *)normalizedScreenX screenY:(NSString *)normalizedScreenY withCallback:(NSString *)callback;
