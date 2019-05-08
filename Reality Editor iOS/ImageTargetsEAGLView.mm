@@ -108,7 +108,7 @@ namespace {
         
         self.offTargetTrackingEnabled = NO;
         self.isDeviceTrackerRelocalizing = NO;
-        sampleAppRenderer = [[SampleAppRenderer alloc]initWithSampleAppRendererControl:self nearPlane:2 farPlane:2000];
+        sampleAppRenderer = [[SampleAppRenderer alloc]initWithSampleAppRendererControl:self nearPlane:2 farPlane:20000];
         
         [self initShaders];
         
