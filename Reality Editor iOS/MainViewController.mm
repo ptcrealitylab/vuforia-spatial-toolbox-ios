@@ -211,6 +211,15 @@
     } else if ([functionName isEqualToString:@"addSpeechListener"]) {
         [self.apiHandler addSpeechListener:callback];
         
+    } else if ([functionName isEqualToString:@"startVideoRecording"]) {
+        NSString* objectKey = (NSString *)arguments[@"objectKey"];
+        NSString* objectIP = (NSString *)arguments[@"objectIP"];
+        [self.apiHandler startVideoRecording:objectKey ip:objectIP];
+        
+    } else if ([functionName isEqualToString:@"stopVideoRecording"]) {
+        NSString* videoId = (NSString *)arguments[@"videoId"];
+        [self.apiHandler stopVideoRecording:videoId];
+        
     } else if ([functionName isEqualToString:@"tap"]) {
         [self.apiHandler tap];
         

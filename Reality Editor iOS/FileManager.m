@@ -7,6 +7,7 @@
 //
 
 #import "FileManager.h"
+#import "AFNetworking.h"
 
 @implementation FileManager
 
@@ -125,6 +126,28 @@
     NSString* message = [defaults objectForKey:storageID];
     NSLog(@"Loaded %@ from %@", message, storageID);
     return message;
+}
+
+- (void)uploadFileFromPath:(NSURL *)localPath toURL:(NSString *)destinationURL
+{
+    NSDictionary *params = @{};
+    AFHTTPSessionManager* manager = [AFHTTPSessionManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    
+    NSURLSessionTask* task = [manager POST:destinationURL parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        
+        NSString* randomName = [NSString stringWithFormat:@"%u", arc4random() % 1000];
+        [formData appendPartWithFileURL:localPath name:randomName fileName:[randomName stringByAppendingPathExtension:@"mp4"] mimeType:@"video/mp4" error:nil];
+    } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+        NSLog(@"result = %@", result);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"error = %@", error);
+    }];
+    
+    if (!task) {
+        NSLog(@"Creation of task failed.");
+    }
 }
 
 @end
