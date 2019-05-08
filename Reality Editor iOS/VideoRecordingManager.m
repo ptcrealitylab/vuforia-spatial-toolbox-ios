@@ -23,6 +23,7 @@
     return sharedMyManager;
 }
 
+// Source: https://github.com/anthonya1999/ReplayKit-iOS11-Recorder/blob/master/ReplayKit-iOS11-Recorder/ViewController.m
 - (void)startRecording:(NSString *)objectKey ip:(NSString *)objectIP
 {
     NSError *error = nil;
