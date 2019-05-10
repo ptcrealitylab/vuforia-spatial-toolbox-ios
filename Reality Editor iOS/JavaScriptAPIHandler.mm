@@ -87,7 +87,14 @@
                 NSDictionary* thisMarker = visibleMarkers[i];
                 NSString* markerName = thisMarker[@"name"];
                 NSString* markerMatrix = thisMarker[@"modelViewMatrix"];
-                javaScriptObject = [javaScriptObject stringByAppendingString:[NSString stringWithFormat:@"'%@': %@,", markerName, markerMatrix]];
+                NSString* trackingStatus = thisMarker[@"trackingStatus"];
+
+                // old format - userinterface is backwards compatible to work with this or the new format
+//                javaScriptObject = [javaScriptObject stringByAppendingString:[NSString stringWithFormat:@"'%@': %@,", markerName, markerMatrix]];
+                
+                // new format, with trackingStatus
+                javaScriptObject = [javaScriptObject stringByAppendingString:[NSString stringWithFormat:@"'%@': { 'matrix': %@, 'status': '%@'},", markerName, markerMatrix, trackingStatus]];
+                
             }
             javaScriptObject = [javaScriptObject substringToIndex:javaScriptObject.length-1]; // remove last comma character before closing the object
         }
