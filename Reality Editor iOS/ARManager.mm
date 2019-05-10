@@ -693,13 +693,13 @@
             NSDictionary* marker = @{
                                      @"name": [NSString stringWithUTF8String:trackable.getName()],
                                      @"modelViewMatrix": [self stringFromMatrix44F:modelViewMatrixCorrected],
-                                     @"projectionMatrix": [self getProjectionMatrixString],
+//                                     @"projectionMatrix": [self getProjectionMatrixString],
                     // what is poseMatrixData?
-                                     @"poseMatrixData": [self stringFromMatrix34F:result->getPose()],
+//                                     @"poseMatrixData": [self stringFromMatrix34F:result->getPose()],
                                      @"trackingStatus": trackingStatus,
                     // todo I don't know with width and height actually work with object marker?
-                                     @"width": [NSNumber numberWithFloat:markerSize.data[0]],
-                                     @"height": [NSNumber numberWithFloat:markerSize.data[1]]
+//                                     @"width": [NSNumber numberWithFloat:markerSize.data[0]],
+//                                     @"height": [NSNumber numberWithFloat:markerSize.data[1]]
                                      };
 
 
@@ -759,9 +759,9 @@
 
             } else {
 
-               if(![trackingStatus isEqualToString:@"EXTENDED_TRACKED"]) {
+//               if(![trackingStatus isEqualToString:@"EXTENDED_TRACKED"]) {
                     [self.markersFound addObject:marker];
-                }
+//                }
 
             }
             
