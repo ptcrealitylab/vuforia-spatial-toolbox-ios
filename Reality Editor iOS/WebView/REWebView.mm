@@ -116,6 +116,10 @@
 
 - (void)loadInterfaceFromURL:(NSString *)urlString
 {
+    if (urlString.length == 0) {
+        [self loadInterfaceFromLocalServer];
+        return;
+    }
     if (![urlString containsString:@"http://"]) {
         urlString = [NSString stringWithFormat:@"http://%@", urlString];
     }
