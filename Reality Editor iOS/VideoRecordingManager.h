@@ -16,6 +16,7 @@
 @property (strong, nonatomic) RPScreenRecorder *screenRecorder;
 @property (strong, nonatomic) AVAssetWriter *assetWriter;
 @property (strong, nonatomic) AVAssetWriterInput *assetWriterInput;
+//@property (strong, nonatomic) AVAssetWriterInputPixelBufferAdaptor *assetWriterPixelBufferInput;
 
 @property (strong, nonatomic) NSString* objectIP;
 @property (strong, nonatomic) NSString* objectID;
