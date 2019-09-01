@@ -6,7 +6,8 @@
 /bin/data/RE-userinterface
 /bin/data/RE-server
 /bin/data/realityOS
-
+/bin/data/realityOS_iOS
+/bin/data/realityDeviceOS
 #Reality Server
 RealityServer/RE-server
 RealityServer/server
