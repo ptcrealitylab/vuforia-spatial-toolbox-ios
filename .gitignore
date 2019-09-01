@@ -5,6 +5,7 @@
 /bin/data/userinterface
 /bin/data/RE-userinterface
 /bin/data/RE-server
+/bin/data/realityOS
 
 #Reality Server
 RealityServer/RE-server
