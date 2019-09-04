@@ -10,6 +10,7 @@
 #import "REWebView.h"
 #import "ARManager.h"
 #import "FileManager.h"
+#import "VideoRecordingManager.h"
 
 @implementation MainViewController
 {
@@ -48,6 +49,9 @@
     // set this main view controller as the container for the AR view
     
     [[ARManager sharedManager] setContainingViewController:self];
+    
+    // preload the video recording manager and assign it the AR manager as a delegate to get the camera information
+    [[VideoRecordingManager sharedManager] setVideoRecordingDelegate:[ARManager sharedManager]];
 }
 
 - (void)showLoadingLabel

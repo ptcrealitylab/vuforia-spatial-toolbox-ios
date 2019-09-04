@@ -231,7 +231,24 @@
 
 - (UIImage *)getCameraPixelBuffer
 {
+//    [self.eaglView getVideoBackgroundTextureInfo];
+    
     return [self screenshotOfView:self.eaglView excludingViews:@[]];
+}
+
+- (EAGLContext *)getVideoBackgroundContext
+{
+    return [self.eaglView getVideoBackgroundContext];
+}
+
+- (CVPixelBufferRef)getBackgroundPixelBuffer
+{
+    return [self.eaglView getBackgroundPixelBuffer];
+}
+
+- (GLchar *)getVideoBackgroundPixels
+{
+    return [self.eaglView getVideoBackgroundPixels];
 }
 
 // Source: https://gist.github.com/brennanMKE/10010625

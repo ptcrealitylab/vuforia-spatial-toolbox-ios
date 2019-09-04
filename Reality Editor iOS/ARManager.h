@@ -10,13 +10,14 @@
 #import "ImageTargetsEAGLView.h"
 #import "SampleApplicationSession.h"
 #import <Vuforia/CameraDevice.h>
+#import "VideoRecordingDelegate.h"
 
 typedef void (^ CompletionHandler)(void);
 typedef void (^ MarkerCompletionHandler)(NSDictionary *);
 typedef void (^ MarkerListCompletionHandler)(NSArray *);
 typedef void (^ MatrixStringCompletionHandler)(NSString *);
 
-@interface ARManager : NSObject <SampleApplicationControl> {
+@interface ARManager : NSObject <SampleApplicationControl, VideoRecordingDelegate> {
     UIViewController* containingViewController;
 //    SEL startedARSelector;
     CompletionHandler arDoneCompletionHandler;
@@ -43,6 +44,9 @@ typedef void (^ MatrixStringCompletionHandler)(NSString *);
 - (void)setCameraMatrixCompletionHandler:(MarkerCompletionHandler)completionHandler;
 - (void)setGroundPlaneMatrixCompletionHandler:(MarkerCompletionHandler)completionHandler;
 - (UIImage *)getCameraPixelBuffer;
+- (EAGLContext *)getVideoBackgroundContext;
+- (CVPixelBufferRef)getBackgroundPixelBuffer;
+- (GLchar *)getVideoBackgroundPixels;
 - (void)pauseCamera;
 - (void)resumeCamera;
 - (void)focusCamera;

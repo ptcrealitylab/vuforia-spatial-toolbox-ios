@@ -20,6 +20,8 @@ countries.
 #import <Vuforia/DeviceTrackableResult.h>
 #import <Vuforia/ImageTargetResult.h>
 #import <Vuforia/VideoBackgroundConfig.h>
+#import <Vuforia/VideoBackgroundTextureInfo.h>
+#import <Vuforia/CameraDevice.h>
 
 #import "ImageTargetsEAGLView.h"
 #import "Texture.h"
@@ -235,6 +237,43 @@ namespace {
 - (Vuforia::Matrix44F)getProjectionMatrix
 {
     return [sampleAppRenderer getProjectionMatrix];
+}
+
+//- (void)getVideoBackgroundTextureInfo
+//{
+//    Vuforia::VideoBackgroundTextureInfo info;
+//    info = Vuforia::Renderer::getInstance().getVideoBackgroundTextureInfo();
+//
+//    Vuforia::CameraDevice camera = Vuforia::CameraDevice::getInstance()
+//
+////    NSLog(@"video background texture info = %@", info);
+//    NSLog(@"...");
+//}
+
+- (EAGLContext *)getVideoBackgroundContext
+{
+    return context;
+}
+
+- (CVPixelBufferRef)getBackgroundPixelBuffer
+{
+    
+//    [self setFramebuffer];
+//
+//    // Clear colour and depth buffers
+//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//
+//    // Render video background and retrieve tracking state
+//    [sampleAppRenderer renderVideoBackgroundWithState:state];
+//
+//    [self presentFramebuffer];
+    
+    return [sampleAppRenderer getBackgroundPixelBuffer];
+}
+
+- (GLchar *)getVideoBackgroundPixels
+{
+    return [sampleAppRenderer getVideoBackgroundPixels];
 }
 
 - (void) configureVideoBackgroundWithCameraMode:(Vuforia::CameraDevice::MODE)cameraMode viewWidth:(float)viewWidth viewHeight:(float)viewHeight

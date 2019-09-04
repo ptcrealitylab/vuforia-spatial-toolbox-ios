@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <ReplayKit/ReplayKit.h>
+#import "VideoRecordingDelegate.h"
 
 @interface VideoRecordingManager : NSObject
 
@@ -16,11 +17,15 @@
 @property (strong, nonatomic) RPScreenRecorder *screenRecorder;
 @property (strong, nonatomic) AVAssetWriter *assetWriter;
 @property (strong, nonatomic) AVAssetWriterInput *assetWriterInput;
-//@property (strong, nonatomic) AVAssetWriterInputPixelBufferAdaptor *assetWriterPixelBufferInput;
+@property (strong, nonatomic) AVAssetWriterInputPixelBufferAdaptor *assetWriterPixelBufferInput;
 
 @property (strong, nonatomic) NSString* objectIP;
 @property (strong, nonatomic) NSString* objectID;
 
+//@property (strong, nonatomic) id<VideoRecordingDelegate>delegate;
+@property (nonatomic, assign) id<VideoRecordingDelegate> videoRecordingDelegate;
+
+//- (void)initWithARDelegate:(id<VideoRecordingDelegate>)delegate;
 - (void)startRecording:(NSString *)objectKey ip:(NSString *)objectIP;
 - (void)stopRecording:(NSString *)videoId;
 

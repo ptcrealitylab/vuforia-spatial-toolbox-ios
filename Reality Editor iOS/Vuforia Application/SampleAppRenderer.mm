@@ -35,6 +35,9 @@
 
 
 @interface SampleAppRenderer ()
+{
+    GLchar pixels[600 * 400 * 4];
+}
 
 // SampleApplicationControl delegate (receives callbacks in response to particular
 // events, such as completion of Vuforia initialisation)
@@ -170,6 +173,13 @@
         glDisable(GL_SCISSOR_TEST);
         
     }
+    
+//    CVPixelBufferRef pixelBuffer = [self getBackgroundPixelBuffer];
+    
+    // reloads the pixel buffer containing the background every frame... todo: only do this when video recording is started
+    [self getBackgroundPixelBuffer];
+    
+//    NSLog(@"pixelBuffer = %@", pixelBuffer);
     
     mRenderer.end();
     
@@ -485,6 +495,163 @@
     SampleApplicationUtils::multiplyMatrix(&rawProjectionMatrixGL.data[0], &eyeAdjustmentGL.data[0], &projectionMatrix.data[0]);
     
     return projectionMatrix;
+}
+
+- (CVPixelBufferRef)getBackgroundPixelBuffer
+{
+    // Start off-screen rendering by binding all read and write commands to a new frame buffer object
+    unsigned int fbo;
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo); // TODO: maybe change to type GL_DRAW_FRAMEBUFFER so that we still read from the on-screen buffer but we write to the off-screen one?
+    
+    // attach at least one (color, depth, or stencil) buffer to the frame buffer
+    
+    // allocate and attach a render buffer. note that it is write-only, although we can retrieve the frame buffer's contents at the end using glReadPixels
+//    unsigned int rbo;
+//    glGenRenderbuffers(1, &rbo);
+//    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+//
+//    // actually attach the render buffer to the frame buffer
+//    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+//
+//    glBindRenderbuffer(GL_RENDERBUFFER, 0); // once we've allocated enough memory we can unbind the render buffer
+
+    
+    // allocate a texture that we will attach to the frame buffer
+    unsigned int texColorBuffer;
+    glGenTextures(1, &texColorBuffer);
+    glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 600, 400, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL); // TODO: change 600, 400 to screen size
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0); // once we've allocated enough memory we can unbind the texture color buffer
+    
+    // attach the texture to the frame buffer
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
+    
+    // from this point on, the result of all rendering commands will be stored as a texture image
+
+    // TODO: If you want to render your whole screen to a texture of a smaller or larger size you need to call glViewport again (before rendering to your framebuffer) with the new dimensions of your texture, otherwise only a small part of the texture or screen would be drawn onto the texture.
+    
+    
+    // check that the frame buffer is complete, which means it at least has one complete color buffer attachment
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE) {
+        
+        
+        // ---------- vuforia renderVideoBackground code ------------ //
+        
+        //    if (self.currentView == Vuforia::VIEW_POSTPROCESS)
+        //    {
+        //        return 0;
+        //    }
+        
+        // Use texture unit 0 for the video background - this will hold the camera frame and we want to reuse for all views
+        // So need to use a different texture unit for the augmentation
+        int vbVideoTextureUnit = 0;
+        
+        // Bind the video bg texture and get the Texture ID from Vuforia
+        Vuforia::GLTextureUnit tex;
+        tex.mTextureUnit = vbVideoTextureUnit;
+        
+        if (! Vuforia::Renderer::getInstance().updateVideoBackgroundTexture(&tex))
+        {
+            NSLog(@"Unable to bind video background texture!!");
+            return 0;
+        }
+        
+        Vuforia::Matrix44F vbProjectionMatrix = Vuforia::Tool::convert2GLMatrix(
+                                                                                self.currentRenderingPrimitives->getVideoBackgroundProjectionMatrix(self.currentView));
+        
+        //    // Apply the scene scale on video see-through eyewear, to scale the video background and augmentation
+        //    // so that the display lines up with the real world
+        //    // This should not be applied on optical see-through devices, as there is no video background,
+        //    // and the calibration ensures that the augmentation matches the real world
+        //    if (Vuforia::Device::getInstance().isViewerActive())
+        //    {
+        //        float sceneScaleFactor = [self getSceneScaleFactorWithViewId:[self currentView] cameraCalibration:state.getCameraCalibration()];
+        //        SampleApplicationUtils::scalePoseMatrix(sceneScaleFactor, sceneScaleFactor, 1.0f, vbProjectionMatrix.data);
+        //    }
+        
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_CULL_FACE);
+        glDisable(GL_SCISSOR_TEST);
+        
+        const Vuforia::Mesh& vbMesh = self.currentRenderingPrimitives->getVideoBackgroundMesh(self.currentView);
+        // Load the shader and upload the vertex/texcoord/index data
+        glUseProgram(self.vbShaderProgramID);
+        glVertexAttribPointer(self.vbVertexHandle, 3, GL_FLOAT, false, 0, vbMesh.getPositionCoordinates());
+        glVertexAttribPointer(self.vbTexCoordHandle, 2, GL_FLOAT, false, 0, vbMesh.getUVCoordinates());
+        
+        glUniform1i(self.vbTexSampler2DHandle, vbVideoTextureUnit);
+        
+        // Render the video background with the custom shader
+        // First, we enable the vertex arrays
+        glEnableVertexAttribArray(self.vbVertexHandle);
+        glEnableVertexAttribArray(self.vbTexCoordHandle);
+        
+        // Pass the projection matrix to OpenGL
+        glUniformMatrix4fv(self.vbProjectionMatrixHandle, 1, GL_FALSE, vbProjectionMatrix.data);
+        
+        // Then, we issue the render call
+        glDrawElements(GL_TRIANGLES, vbMesh.getNumTriangles() * 3, GL_UNSIGNED_SHORT,
+                       vbMesh.getTriangles());
+        
+        // Finally, we disable the vertex arrays
+        glDisableVertexAttribArray(self.vbVertexHandle);
+        glDisableVertexAttribArray(self.vbTexCoordHandle);
+        
+//        GLchar pixels[600 * 400 * 4];
+        glReadPixels(0, 0, 600, 400, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+        
+//        NSLog(@"pixels: %@", pixels);
+        
+//        NSLog(@"...");
+    
+        
+//        return pixels;
+        
+        
+//        CGSize size = CGSizeMake(600, 400);
+//
+//        NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+//                                 [NSNumber numberWithBool:YES], kCVPixelBufferCGImageCompatibilityKey,
+//                                 [NSNumber numberWithBool:YES], kCVPixelBufferCGBitmapContextCompatibilityKey,
+//                                 nil];
+//        CVPixelBufferRef pxbuffer = NULL;
+//
+//        CVReturn status = CVPixelBufferCreate(kCFAllocatorDefault,
+//                                              size.width,
+//                                              size.height,
+//                                              kCVPixelFormatType_32ARGB,
+//                                              (__bridge CFDictionaryRef) options,
+//                                              &pxbuffer);
+//
+//        if (status != kCVReturnSuccess){
+//            NSLog(@"Failed to create pixel buffer");
+//        }
+        
+        
+        
+        //    SampleApplicationUtils::checkGlError("Rendering of the video background failed");
+
+    } else {
+        NSLog(@"ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+    }
+    
+    // To make sure all rendering operations will have a visual impact on the main window we need to make the default framebuffer active again by binding to 0
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    // When we're done with all framebuffer operations, do not forget to delete the framebuffer object
+    glDeleteFramebuffers(1, &fbo);
+    glDeleteTextures(1, &texColorBuffer); // also delete the texture
+    
+    return 0;
+    
+}
+
+- (GLchar *)getVideoBackgroundPixels
+{
+    // [600 * 400 * 4];
+    return pixels;
 }
 
 @end

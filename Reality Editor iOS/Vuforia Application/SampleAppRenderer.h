@@ -50,4 +50,7 @@
 
 - (BOOL)isProjectionMatrixReady;
 
+- (CVPixelBufferRef)getBackgroundPixelBuffer;
+- (GLchar *)getVideoBackgroundPixels;
+
 @end
