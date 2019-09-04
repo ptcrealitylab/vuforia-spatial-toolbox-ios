@@ -193,24 +193,39 @@
     NSLog(@"Processing video frame (%f)", frameTime);
     
 //    UIImage* cameraBackground = [[ARManager sharedManager] getCameraPixelBuffer];
-    UIImage* cameraBackground = [self.videoRecordingDelegate getCameraPixelBuffer];
+//    UIImage* cameraBackground = [self.videoRecordingDelegate getCameraPixelBuffer];
     
 //    CVPixelBufferRef backgroundPixelBuffer = [self.videoRecordingDelegate getBackgroundPixelBuffer];
 //    NSLog(@"backgroundPixelBuffer: %@", backgroundPixelBuffer);
     
-    GLchar* pixels;
-    pixels = [self.videoRecordingDelegate getVideoBackgroundPixels];
+    GLchar* pixels = [self.videoRecordingDelegate getVideoBackgroundPixels];
     
-    for (int i = 0; i < 10; i++ ) {
-        NSLog(@"background pixels: *(pixels + %d) : %d\n", i, *(pixels + i));
-    }
+//    for (int i = 0; i < 10; i++ ) {
+//        NSLog(@"background pixels: *(pixels + %d) : %d\n", i, *(pixels + i));
+//    }
     
 //    NSLog(@"background pixels: %f", sizeof(pixels));
 
     // Create a dummy pixel buffer to try the encoding
     // on something simple.
-    CVPixelBufferRef pixelBuffer = NULL;
     
+//    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+//                             [NSNumber numberWithBool:YES], kCVPixelBufferCGImageCompatibilityKey,
+//                             [NSNumber numberWithBool:YES], kCVPixelBufferCGBitmapContextCompatibilityKey,
+//                             nil];
+//    CVPixelBufferRef pixelBuffer = NULL;
+//
+//    CGSize size = CGSizeMake(600, 400);
+//
+//    CVReturn status = CVPixelBufferCreate(kCFAllocatorDefault,
+//                                          size.width,
+//                                          size.height,
+//                                          kCVPixelFormatType_32ARGB,
+//                                          (__bridge CFDictionaryRef) options,
+//                                          &pixelBuffer);
+//    if (status != kCVReturnSuccess){
+//        NSLog(@"Failed to create pixel buffer");
+//    }
     
 //    //----------------------------------------------------------
 //    // check if texture cache is enabled,
@@ -222,44 +237,79 @@
 //        CVPixelBufferLockBaseAddress(pixelBuffer, 0);
 //    }
     
-
-    /*
-    if (kCVReturnSuccess == CVPixelBufferLockBaseAddress(pixelBuffer,
-                                                         kCVPixelBufferLock_ReadOnly))
-    {
-        CVPixelBufferPoolRef pixelBufferPool = self.assetWriterPixelBufferInput.pixelBufferPool;
-        if (!pixelBufferPool) {
-            NSLog(@"Pixel buffer asset writer input did not have a pixel buffer pool available; cannot retrieve frame");
-            return;
-        }
-        
-//        CVPixelBufferRef writerPixelBuffer = NULL;
-        GLboolean status = CVPixelBufferPoolCreatePixelBuffer(NULL, self.assetWriterPixelBufferInput.pixelBufferPool, &pixelBuffer);
-        
-        if (status != kCVReturnSuccess) {
-            NSLog(@"Could not get pixel buffer from asset writer input; dropping frame...");
-            return;
-        }
-        
-        uint8_t *pixelBufferBytes = (uint8_t *) CVPixelBufferGetBaseAddress(pixelBuffer);
-        // Use the bytes per row value from the pixel buffer since its stride may be rounded up to be 16-byte aligned
-        uint8_t bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer);
-//        let region = MTLRegionMake2D(0, 0, texture.width, texture.height)
-        
-//        texture.getBytes(pixelBufferBytes, bytesPerRow: bytesPerRow, from: region, mipmapLevel: 0)
-        
-        CMTime presentationTime = CMTimeMakeWithSeconds(frameTime, 240);
-
-        // process pixels how you like!
-        BOOL success = [self.assetWriterPixelBufferInput appendPixelBuffer:pixelBuffer
-                                                      withPresentationTime:presentationTime];
-        NSLog(@"wrote at %@ : %@", CMTimeCopyDescription(NULL, presentationTime), success ? @"YES" : @"NO");
-        
-        CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+    CGSize size = CGSizeMake(600, 400);
+    
+    // get the pixel buffer pool
+    CVPixelBufferPoolRef pixelBufferPool = self.assetWriterPixelBufferInput.pixelBufferPool;
+    if (!pixelBufferPool) {
+        NSLog(@"Pixel buffer asset writer input did not have a pixel buffer pool available; cannot retrieve frame");
+        return;
     }
-     */
     
     
+    // create a pixel buffer from the pool
+    CVPixelBufferRef pixelBuffer = NULL;
+    
+    GLboolean status = CVPixelBufferCreateWithBytes(kCFAllocatorDefault, size.width, size.height, kCVPixelFormatType_32ARGB, (void*)pixels, size.width*4, NULL, 0, NULL, &pixelBuffer);
+
+    
+//    GLboolean status = CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, self.assetWriterPixelBufferInput.pixelBufferPool, &pixelBuffer);
+    if (status != kCVReturnSuccess) {
+        NSLog(@"Could not get pixel buffer from asset writer input; dropping frame...");
+        return;
+    }
+    
+    // add the filled-in pixel buffer to the asset writer at the current timestamp
+    CMTime presentationTime = CMTimeMakeWithSeconds(frameTime, 240);
+    BOOL success = [self.assetWriterPixelBufferInput appendPixelBuffer:pixelBuffer
+                                                  withPresentationTime:presentationTime];
+    NSLog(@"wrote at %@ : %@", CMTimeCopyDescription(NULL, presentationTime), success ? @"YES" : @"NO");
+    
+    /*
+    // lock the base address
+    if (kCVReturnSuccess != CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly)) {
+        NSLog(@"Could not lock pixel buffer base address; dropping frame...");
+        return;
+    }
+    
+    // get a pointer to the pixel buffer that we want to write to
+    uint8_t *pixelBufferBytes = (uint8_t *) CVPixelBufferGetBaseAddress(pixelBuffer);
+    // Use the bytes per row value from the pixel buffer since its stride may be rounded up to be 16-byte aligned
+//        uint8_t bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer);
+//        let region = MTLRegionMake2D(0, 0, texture.width, texture.height)
+    
+//        texture.getBytes(pixelBufferBytes, bytesPerRow: bytesPerRow, from: region, mipmapLevel: 0)
+    
+    // Add data for all the pixels in the image
+    for( int row = 0; row < size.width; ++row )
+    {
+        for( int col = 0; col < size.height ; ++col )
+        {
+            memcpy(&pixelBufferBytes[0], &pixels[3], sizeof(GLchar));       // alpha
+            memcpy(&pixelBufferBytes[1], &pixels[2], sizeof(GLchar));       // red
+            memcpy(&pixelBufferBytes[2], &pixels[1], sizeof(GLchar));       // green
+            memcpy(&pixelBufferBytes[3], &pixels[0], sizeof(GLchar));       // blue
+            // Move the buffer pointer to the next pixel
+            pixelBufferBytes += 4*sizeof(GLchar);
+            pixels += 4*sizeof(GLchar);
+        }
+    }
+    
+    // add the filled-in pixel buffer to the asset writer at the current timestamp
+    CMTime presentationTime = CMTimeMakeWithSeconds(frameTime, 240);
+    BOOL success = [self.assetWriterPixelBufferInput appendPixelBuffer:pixelBuffer
+                                                  withPresentationTime:presentationTime];
+    NSLog(@"wrote at %@ : %@", CMTimeCopyDescription(NULL, presentationTime), success ? @"YES" : @"NO");
+    
+    // unlock the base address so we can continue
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+    */
+    
+    /*
+    
+    CVPixelBufferRef pixelBuffer = NULL;
+    UIImage* cameraBackground = [self.videoRecordingDelegate getCameraPixelBuffer];
+
 //    CVReturn status = CVPixelBufferCreate(kCFAllocatorDefault, width, height,
 //                                          kCVPixelFormatType_32BGRA, NULL, &pixelBuffer);
 //    NSParameterAssert(status == kCVReturnSuccess && pixelBuffer != NULL);
@@ -279,7 +329,7 @@
             NSLog(@"Unresolved error %@,%@.", error, [error userInfo]);
         }
     }
-     
+    */
     
     
 //    [self.assetWriterInput appen]
@@ -387,7 +437,9 @@
     }
     
     CVPixelBufferLockBaseAddress(pxbuffer, 0);
-    void *pxdata = CVPixelBufferGetBaseAddress(pxbuffer);
+//    void *pxdata = CVPixelBufferGetBaseAddress(pxbuffer);
+    uint8_t *pxdata = (uint8_t *) CVPixelBufferGetBaseAddress(pxbuffer);
+
     
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = CGBitmapContextCreate(pxdata, size.width,
