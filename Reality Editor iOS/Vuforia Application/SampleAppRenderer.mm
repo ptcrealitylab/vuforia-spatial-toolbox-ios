@@ -36,7 +36,9 @@
 
 @interface SampleAppRenderer ()
 {
-    GLchar pixels[600 * 400 * 4];
+    BOOL isRecording;
+    GLchar pixels[(1920) * (1080) * 4 + 1]; // the +1 shifts the buffer from RGBA to ARGB. bad side effect is that alpha channel is shifted by 1 pixel, but because the alph channel is uniform it doesn't matter
+    CGSize screenSize;
 }
 
 // SampleApplicationControl delegate (receives callbacks in response to particular
@@ -49,6 +51,13 @@
 @property (nonatomic, readwrite) GLint vbTexCoordHandle;
 @property (nonatomic, readwrite) GLint vbTexSampler2DHandle;
 @property (nonatomic, readwrite) GLint vbProjectionMatrixHandle;
+
+@property (nonatomic, readwrite) GLuint videoRecordingShaderProgramID;
+@property (nonatomic, readwrite) GLint videoRecordingVertexHandle;
+@property (nonatomic, readwrite) GLint videoRecordingTexCoordHandle;
+@property (nonatomic, readwrite) GLint videoRecordingTexSampler2DHandle;
+@property (nonatomic, readwrite) GLint videoRecordingProjectionMatrixHandle;
+
 @property (nonatomic, readwrite) CGFloat nearPlane;
 @property (nonatomic, readwrite) CGFloat farPlane;
 @property (nonatomic, readwrite) Vuforia::VIEW currentView;
@@ -67,6 +76,7 @@
     if (self) {
         self.control = control;
         [self setNearPlane:nearPlane farPlane:farPlane];
+        screenSize = CGSizeMake(1920, 1080);
     }
     return self;
 }
@@ -86,6 +96,18 @@
         NSLog(@"Could not initialise video background shader");
     }
     
+    
+    self.videoRecordingShaderProgramID = [SampleApplicationShaderUtils createProgramWithVertexShaderFileName:@"BackgroundFlipped.vertsh"
+                                                                                      fragmentShaderFileName:@"Background.fragsh"];
+    
+    if (0 < self.videoRecordingShaderProgramID) {
+        self.videoRecordingVertexHandle = glGetAttribLocation(self.videoRecordingShaderProgramID, "vertexPosition");
+        self.videoRecordingTexCoordHandle = glGetAttribLocation(self.videoRecordingShaderProgramID, "vertexTexCoord");
+        self.videoRecordingProjectionMatrixHandle = glGetUniformLocation(self.videoRecordingShaderProgramID, "projectionMatrix");
+        self.videoRecordingTexSampler2DHandle = glGetUniformLocation(self.videoRecordingShaderProgramID, "texSampler2D");
+    } else {
+        NSLog(@"Could not initialize video recording shader");
+    }
 }
 
 
@@ -174,12 +196,10 @@
         
     }
     
-//    CVPixelBufferRef pixelBuffer = [self getBackgroundPixelBuffer];
-    
-    // reloads the pixel buffer containing the background every frame... todo: only do this when video recording is started
-    [self getBackgroundPixelBuffer];
-    
-//    NSLog(@"pixelBuffer = %@", pixelBuffer);
+    // reloads the pixel buffer containing the background every frame while the video is recording
+    if (isRecording) {
+        [self refreshBackgroundPixelBuffer];
+    }
     
     mRenderer.end();
     
@@ -250,8 +270,7 @@
     SampleApplicationUtils::checkGlError("Rendering of the video background failed");
 }
 
-
--(float)getSceneScaleFactorWithViewId:(Vuforia::VIEW)viewId cameraCalibration:(const Vuforia::CameraCalibration*)cameraCalib
+- (float)getSceneScaleFactorWithViewId:(Vuforia::VIEW)viewId cameraCalibration:(const Vuforia::CameraCalibration*)cameraCalib
 {
     if (cameraCalib == nullptr)
     {
@@ -497,7 +516,7 @@
     return projectionMatrix;
 }
 
-- (CVPixelBufferRef)getBackgroundPixelBuffer
+- (CVPixelBufferRef)refreshBackgroundPixelBuffer
 {
     // Start off-screen rendering by binding all read and write commands to a new frame buffer object
     unsigned int fbo;
@@ -521,7 +540,7 @@
     unsigned int texColorBuffer;
     glGenTextures(1, &texColorBuffer);
     glBindTexture(GL_TEXTURE_2D, texColorBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 600, 400, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL); // TODO: change 600, 400 to screen size
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (1920), (1080), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL); // TODO: change 600, 400 to screen size
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0); // once we've allocated enough memory we can unbind the texture color buffer
@@ -559,8 +578,7 @@
             return 0;
         }
         
-        Vuforia::Matrix44F vbProjectionMatrix = Vuforia::Tool::convert2GLMatrix(
-                                                                                self.currentRenderingPrimitives->getVideoBackgroundProjectionMatrix(self.currentView));
+        Vuforia::Matrix44F vbProjectionMatrix = Vuforia::Tool::convert2GLMatrix(self.currentRenderingPrimitives->getVideoBackgroundProjectionMatrix(self.currentView));
         
         //    // Apply the scene scale on video see-through eyewear, to scale the video background and augmentation
         //    // so that the display lines up with the real world
@@ -578,33 +596,34 @@
         
         const Vuforia::Mesh& vbMesh = self.currentRenderingPrimitives->getVideoBackgroundMesh(self.currentView);
         // Load the shader and upload the vertex/texcoord/index data
-        glUseProgram(self.vbShaderProgramID);
-        glVertexAttribPointer(self.vbVertexHandle, 3, GL_FLOAT, false, 0, vbMesh.getPositionCoordinates());
-        glVertexAttribPointer(self.vbTexCoordHandle, 2, GL_FLOAT, false, 0, vbMesh.getUVCoordinates());
+        glUseProgram(self.videoRecordingShaderProgramID);
+        glVertexAttribPointer(self.videoRecordingVertexHandle, 3, GL_FLOAT, false, 0, vbMesh.getPositionCoordinates());
+        glVertexAttribPointer(self.videoRecordingTexCoordHandle, 2, GL_FLOAT, false, 0, vbMesh.getUVCoordinates());
         
         glUniform1i(self.vbTexSampler2DHandle, vbVideoTextureUnit);
         
         // Render the video background with the custom shader
         // First, we enable the vertex arrays
-        glEnableVertexAttribArray(self.vbVertexHandle);
-        glEnableVertexAttribArray(self.vbTexCoordHandle);
+        glEnableVertexAttribArray(self.videoRecordingVertexHandle);
+        glEnableVertexAttribArray(self.videoRecordingTexCoordHandle);
         
         // Pass the projection matrix to OpenGL
-        glUniformMatrix4fv(self.vbProjectionMatrixHandle, 1, GL_FALSE, vbProjectionMatrix.data);
+        glUniformMatrix4fv(self.videoRecordingProjectionMatrixHandle, 1, GL_FALSE, vbProjectionMatrix.data);
         
         // Then, we issue the render call
         glDrawElements(GL_TRIANGLES, vbMesh.getNumTriangles() * 3, GL_UNSIGNED_SHORT,
                        vbMesh.getTriangles());
         
         // Finally, we disable the vertex arrays
-        glDisableVertexAttribArray(self.vbVertexHandle);
-        glDisableVertexAttribArray(self.vbTexCoordHandle);
+        glDisableVertexAttribArray(self.videoRecordingVertexHandle);
+        glDisableVertexAttribArray(self.videoRecordingTexCoordHandle);
         
 //        GLchar pixels[600 * 400 * 4];
-        glReadPixels(0, 0, 600, 400, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+        glReadPixels(0, 0, (1920), (1080), GL_RGBA, GL_UNSIGNED_BYTE, pixels+1);
+        
+        
         
 //        NSLog(@"pixels: %@", pixels);
-        
 //        NSLog(@"...");
     
         
@@ -650,8 +669,29 @@
 
 - (GLchar *)getVideoBackgroundPixels
 {
-    // [600 * 400 * 4];
     return pixels;
+//    // TODO: return pixels with rows flipped vertically
+//    GLchar flippedPixels[(1920) * (1080) * 4 + 1];
+//    // Add data for all the pixels in the image
+//    for( int row = 0; row < 1080; ++row )
+//    {
+//        for( int col = 0; col < 1920 ; ++col )
+//        {
+//            flippedPixels[row * 1920 + col] = pixels[(1079-row) * 1920 + col];
+//        }
+//    }
+//
+//    return flippedPixels; // is of length [600 * 400 * 4]; // TODO: resize for full screen size?
+}
+
+- (void)recordingStarted
+{
+    isRecording = true;
+}
+
+- (void)recordingStopped
+{
+    isRecording = false;
 }
 
 @end

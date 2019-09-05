@@ -43,10 +43,13 @@ typedef void (^ MatrixStringCompletionHandler)(NSString *);
 - (void)setMatrixCompletionHandler:(MarkerListCompletionHandler)completionHandler;
 - (void)setCameraMatrixCompletionHandler:(MarkerCompletionHandler)completionHandler;
 - (void)setGroundPlaneMatrixCompletionHandler:(MarkerCompletionHandler)completionHandler;
-- (UIImage *)getCameraPixelBuffer;
-- (EAGLContext *)getVideoBackgroundContext;
-- (CVPixelBufferRef)getBackgroundPixelBuffer;
+
+- (UIImage *)getCameraScreenshot; // for old screenshot method (todo: replace with new method of glReadPixels)
+
 - (GLchar *)getVideoBackgroundPixels;
+- (void)recordingStarted;
+- (void)recordingStopped;
+
 - (void)pauseCamera;
 - (void)resumeCamera;
 - (void)focusCamera;

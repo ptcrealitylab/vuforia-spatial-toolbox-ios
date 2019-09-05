@@ -229,26 +229,23 @@
     groundPlaneMatrixCompletionHandler = completionHandler;
 }
 
-- (UIImage *)getCameraPixelBuffer
+- (UIImage *)getCameraScreenshot
 {
-//    [self.eaglView getVideoBackgroundTextureInfo];
-    
     return [self screenshotOfView:self.eaglView excludingViews:@[]];
-}
-
-- (EAGLContext *)getVideoBackgroundContext
-{
-    return [self.eaglView getVideoBackgroundContext];
-}
-
-- (CVPixelBufferRef)getBackgroundPixelBuffer
-{
-    return [self.eaglView getBackgroundPixelBuffer];
 }
 
 - (GLchar *)getVideoBackgroundPixels
 {
     return [self.eaglView getVideoBackgroundPixels];
+}
+
+- (void)recordingStarted
+{
+    [self.eaglView recordingStarted];
+}
+- (void)recordingStopped
+{
+    [self.eaglView recordingStopped];
 }
 
 // Source: https://gist.github.com/brennanMKE/10010625
