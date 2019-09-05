@@ -129,7 +129,7 @@
 // TODO: actually use size when getting screenshot
 - (void)getScreenshot:(NSString *)size callback:(NSString *)callback
 {
-    UIImage* cameraImage = [[ARManager sharedManager] getCameraPixelBuffer];
+    UIImage* cameraImage = [[ARManager sharedManager] getCameraScreenshot];
     CGFloat imageWidth = cameraImage.size.width;
     CGFloat imageHeight = cameraImage.size.height;
     

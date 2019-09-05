@@ -11,10 +11,9 @@
 
 // The Video Recording Delegate needs to return an image of the camera feed at this point in time, to be written to the video file.
 @protocol VideoRecordingDelegate
-- (UIImage *)getCameraPixelBuffer;
-- (EAGLContext *)getVideoBackgroundContext;
-- (CVPixelBufferRef)getBackgroundPixelBuffer;
 - (GLchar *)getVideoBackgroundPixels;
+- (void)recordingStarted;
+- (void)recordingStopped;
 @end
 
 #endif /* VideoRecordingDelegate_h */

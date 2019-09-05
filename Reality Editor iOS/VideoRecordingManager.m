@@ -159,7 +159,10 @@
     [self.assetWriter startSessionAtSourceTime:kCMTimeZero]; //presentationTime]; //CMSampleBufferGetPresentationTimeStamp(sampleBuffer)];
     
     isRecording = true;
-    updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.0833 // 12 fps
+    [self.videoRecordingDelegate recordingStarted];
+    
+    float frameRate = 30;
+    updateTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0/frameRate)
                                      target:self
                                    selector:@selector(writeFrame)
                                    userInfo:nil
@@ -169,11 +172,6 @@
     // save the object ID and IP so we can upload to correct server when it finishes
     self.objectID = objectKey;
     self.objectIP = objectIP;
-    
-    EAGLContext* writerContext = [self.videoRecordingDelegate getVideoBackgroundContext];
-    [EAGLContext setCurrentContext:writerContext]; // not sure if I have to do this
-//    [self createDataFBOUsingGPUImagesMethod];
-
 }
 
 - (void)writeFrame
@@ -237,7 +235,7 @@
 //        CVPixelBufferLockBaseAddress(pixelBuffer, 0);
 //    }
     
-    CGSize size = CGSizeMake(600, 400);
+    CGSize size = CGSizeMake(1920, 1080);
     
     // get the pixel buffer pool
     CVPixelBufferPoolRef pixelBufferPool = self.assetWriterPixelBufferInput.pixelBufferPool;
@@ -252,6 +250,7 @@
     
     GLboolean status = CVPixelBufferCreateWithBytes(kCFAllocatorDefault, size.width, size.height, kCVPixelFormatType_32ARGB, (void*)pixels, size.width*4, NULL, 0, NULL, &pixelBuffer);
 
+//    glReadPixels uses GL_RGBA
     
 //    GLboolean status = CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, self.assetWriterPixelBufferInput.pixelBufferPool, &pixelBuffer);
     if (status != kCVReturnSuccess) {
@@ -418,7 +417,7 @@
 ////////////////////////
 - (CVPixelBufferRef) pixelBufferFromCGImage: (CGImageRef) image {
     
-    CGSize size = CGSizeMake(1536, 828);
+    CGSize size = CGSizeMake(1920, 1080);
     
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
                              [NSNumber numberWithBool:YES], kCVPixelBufferCGImageCompatibilityKey,
@@ -461,6 +460,7 @@
 - (void)stopRecording:(NSString *)videoId
 {
     isRecording = false;
+    [self.videoRecordingDelegate recordingStopped];
     [updateTimer invalidate];
     
     [self.assetWriterInput markAsFinished];

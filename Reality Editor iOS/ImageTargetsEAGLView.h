@@ -57,8 +57,8 @@ typedef void (^ MatrixStringCompletionHandler)(NSString *);
 
 - (BOOL)isProjectionMatrixReady;
 
-- (EAGLContext *)getVideoBackgroundContext;
-- (CVPixelBufferRef)getBackgroundPixelBuffer;
 - (GLchar *)getVideoBackgroundPixels;
+- (void)recordingStarted;
+- (void)recordingStopped;
 
 @end
