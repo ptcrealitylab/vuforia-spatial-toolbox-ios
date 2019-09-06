@@ -37,7 +37,8 @@
 @interface SampleAppRenderer ()
 {
     BOOL isRecording;
-    GLchar pixels[(1920) * (1080) * 4 + 1]; // sized to fit the 1080p video. the +1 shifts the buffer from RGBA to ARGB. bad side effect is that alpha channel is shifted by 1 pixel, but because the alph channel is uniform it doesn't matter
+    CGSize maxScreenSize; // if the screen is bigger than this, we clip it when writing to video
+    GLchar pixels[(1920) * (1080) * 4 + 1]; // allocates at least enough memory for the video, since we don't know the exact screen resolution until runtime. sized to fit the 1080p video. ensure maxScreenSize is set to the same dimensions. the +1 shifts the buffer from RGBA to ARGB. bad side effect is that alpha channel is shifted by 1 pixel, but because the alph channel is uniform it doesn't matter
 }
 
 // SampleApplicationControl delegate (receives callbacks in response to particular
@@ -74,6 +75,7 @@
     self = [super init];
     if (self) {
         self.control = control;
+        maxScreenSize = CGSizeMake(1920, 1080); // this is set based on the size of the pixel buffer allocated so we don't overflow
         [self setNearPlane:nearPlane farPlane:farPlane];
     }
     return self;
@@ -307,6 +309,13 @@
     viewSize.width *= [UIScreen mainScreen].nativeScale;
     viewSize.height *= [UIScreen mainScreen].nativeScale;
     
+    if (viewSize.width > maxScreenSize.width) {
+        viewSize.width = maxScreenSize.width;
+    }
+    if (viewSize.height > maxScreenSize.height) {
+        viewSize.height = maxScreenSize.height;
+    }
+    
     return viewSize;
 }
 
@@ -533,12 +542,13 @@
 //
 //    glBindRenderbuffer(GL_RENDERBUFFER, 0); // once we've allocated enough memory we can unbind the render buffer
 
+    CGSize screenSize = [self getCurrentARViewBoundsSize];
     
     // allocate a texture that we will attach to the frame buffer
     unsigned int texColorBuffer;
     glGenTextures(1, &texColorBuffer);
     glBindTexture(GL_TEXTURE_2D, texColorBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (1920), (1080), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL); // TODO: change 600, 400 to screen size
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenSize.width, screenSize.height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0); // once we've allocated enough memory we can unbind the texture color buffer
@@ -556,11 +566,6 @@
         
         
         // ---------- vuforia renderVideoBackground code ------------ //
-        
-        //    if (self.currentView == Vuforia::VIEW_POSTPROCESS)
-        //    {
-        //        return 0;
-        //    }
         
         // Use texture unit 0 for the video background - this will hold the camera frame and we want to reuse for all views
         // So need to use a different texture unit for the augmentation
@@ -616,40 +621,10 @@
         glDisableVertexAttribArray(self.videoRecordingVertexHandle);
         glDisableVertexAttribArray(self.videoRecordingTexCoordHandle);
         
-//        GLchar pixels[600 * 400 * 4];
-        glReadPixels(0, 0, (1920), (1080), GL_RGBA, GL_UNSIGNED_BYTE, pixels+1);
+        // ---------- final step, different from renderVideoBackground ------------ //
         
-        
-        
-//        NSLog(@"pixels: %@", pixels);
-//        NSLog(@"...");
-    
-        
-//        return pixels;
-        
-        
-//        CGSize size = CGSizeMake(600, 400);
-//
-//        NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
-//                                 [NSNumber numberWithBool:YES], kCVPixelBufferCGImageCompatibilityKey,
-//                                 [NSNumber numberWithBool:YES], kCVPixelBufferCGBitmapContextCompatibilityKey,
-//                                 nil];
-//        CVPixelBufferRef pxbuffer = NULL;
-//
-//        CVReturn status = CVPixelBufferCreate(kCFAllocatorDefault,
-//                                              size.width,
-//                                              size.height,
-//                                              kCVPixelFormatType_32ARGB,
-//                                              (__bridge CFDictionaryRef) options,
-//                                              &pxbuffer);
-//
-//        if (status != kCVReturnSuccess){
-//            NSLog(@"Failed to create pixel buffer");
-//        }
-        
-        
-        
-        //    SampleApplicationUtils::checkGlError("Rendering of the video background failed");
+        // read the resulting image into the pixels byte array, for future reference
+        glReadPixels(0, 0, screenSize.width, screenSize.height, GL_RGBA, GL_UNSIGNED_BYTE, pixels+1);
 
     } else {
         NSLog(@"ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
@@ -668,18 +643,6 @@
 - (GLchar *)getVideoBackgroundPixels
 {
     return pixels;
-//    // TODO: return pixels with rows flipped vertically
-//    GLchar flippedPixels[(1920) * (1080) * 4 + 1];
-//    // Add data for all the pixels in the image
-//    for( int row = 0; row < 1080; ++row )
-//    {
-//        for( int col = 0; col < 1920 ; ++col )
-//        {
-//            flippedPixels[row * 1920 + col] = pixels[(1079-row) * 1920 + col];
-//        }
-//    }
-//
-//    return flippedPixels; // is of length [600 * 400 * 4]; // TODO: resize for full screen size?
 }
 
 - (void)recordingStarted

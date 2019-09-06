@@ -128,7 +128,7 @@
     GLchar* pixels = [self.videoRecordingDelegate getVideoBackgroundPixels];
     
     // this is the size of the raw video feed. this will be compressed to the size specified in AVAssetWriter's outputSettings
-    CGSize size = CGSizeMake(1920, 1080);
+    CGSize size = [self.videoRecordingDelegate getCurrentARViewBoundsSize];
     
     // get the pixel buffer pool // TODO: I'm not sure if this is necessary anymore because I changed how I'm writing to the asset writer
     CVPixelBufferPoolRef pixelBufferPool = self.assetWriterPixelBufferInput.pixelBufferPool;

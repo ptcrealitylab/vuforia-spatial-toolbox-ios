@@ -17,7 +17,22 @@
     UILabel* loadingLabel;
 }
 
+- (AVCaptureDevice *)cameraWithPosition:(AVCaptureDevicePosition) position
+{
+    NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+    for (AVCaptureDevice *device in devices) {
+        if ([device position] == position) {
+            return device;
+        }
+    }
+    return nil;
+}
+
 - (void)viewDidLoad {
+    
+    AVCaptureDevice *captureDevice = [self cameraWithPosition:AVCaptureDevicePositionBack];
+    NSArray* availFormat=captureDevice.formats;
+    NSLog(@"%@",availFormat);
     
     [super viewDidLoad];
     

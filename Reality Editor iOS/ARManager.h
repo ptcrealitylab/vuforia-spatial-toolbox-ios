@@ -47,6 +47,7 @@ typedef void (^ MatrixStringCompletionHandler)(NSString *);
 - (UIImage *)getCameraScreenshot; // for old screenshot method (todo: replace with new method of glReadPixels)
 
 - (GLchar *)getVideoBackgroundPixels;
+- (CGSize)getCurrentARViewBoundsSize;
 - (void)recordingStarted;
 - (void)recordingStopped;
 

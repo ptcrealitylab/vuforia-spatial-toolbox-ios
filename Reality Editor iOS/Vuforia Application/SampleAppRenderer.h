@@ -51,6 +51,7 @@
 - (BOOL)isProjectionMatrixReady;
 
 - (GLchar *)getVideoBackgroundPixels;
+- (CGSize)getCurrentARViewBoundsSize;
 - (void)recordingStarted;
 - (void)recordingStopped;
 

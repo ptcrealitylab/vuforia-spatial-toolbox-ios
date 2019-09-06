@@ -438,6 +438,8 @@ namespace {
 {
     CGSize ARViewBoundsSize = [self getCurrentARViewBoundsSize];
     
+    NSLog(@"ARViewBoundsSize: %f x %f", ARViewBoundsSize.width, ARViewBoundsSize.height);
+    
     // Start the camera. This causes Vuforia Engine to locate our EAGLView in the view
     // hierarchy, start a render thread, and then call renderFrameVuforia on the
     // view periodically
