@@ -37,8 +37,7 @@
 @interface SampleAppRenderer ()
 {
     BOOL isRecording;
-    GLchar pixels[(1920) * (1080) * 4 + 1]; // the +1 shifts the buffer from RGBA to ARGB. bad side effect is that alpha channel is shifted by 1 pixel, but because the alph channel is uniform it doesn't matter
-    CGSize screenSize;
+    GLchar pixels[(1920) * (1080) * 4 + 1]; // sized to fit the 1080p video. the +1 shifts the buffer from RGBA to ARGB. bad side effect is that alpha channel is shifted by 1 pixel, but because the alph channel is uniform it doesn't matter
 }
 
 // SampleApplicationControl delegate (receives callbacks in response to particular
@@ -76,7 +75,6 @@
     if (self) {
         self.control = control;
         [self setNearPlane:nearPlane farPlane:farPlane];
-        screenSize = CGSizeMake(1920, 1080);
     }
     return self;
 }
