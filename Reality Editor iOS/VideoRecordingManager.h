@@ -22,7 +22,6 @@
 @property (strong, nonatomic) NSString* objectIP;
 @property (strong, nonatomic) NSString* objectID;
 
-//@property (strong, nonatomic) id<VideoRecordingDelegate>delegate;
 @property (nonatomic, assign) id<VideoRecordingDelegate> videoRecordingDelegate;
 
 //- (void)initWithARDelegate:(id<VideoRecordingDelegate>)delegate;
