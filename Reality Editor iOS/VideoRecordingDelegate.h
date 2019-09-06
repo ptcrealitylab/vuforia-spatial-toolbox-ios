@@ -12,6 +12,7 @@
 // The Video Recording Delegate needs to return an image of the camera feed at this point in time, to be written to the video file.
 @protocol VideoRecordingDelegate
 - (GLchar *)getVideoBackgroundPixels;
+- (CGSize)getCurrentARViewBoundsSize;
 - (void)recordingStarted;
 - (void)recordingStopped;
 @end

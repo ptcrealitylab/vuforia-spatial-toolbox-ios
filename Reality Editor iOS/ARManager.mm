@@ -239,6 +239,11 @@
     return [self.eaglView getVideoBackgroundPixels];
 }
 
+- (CGSize)getCurrentARViewBoundsSize
+{
+    return [self.eaglView getCurrentARViewBoundsSize];
+}
+
 - (void)recordingStarted
 {
     [self.eaglView recordingStarted];
