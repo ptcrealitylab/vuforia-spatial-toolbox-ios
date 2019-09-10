@@ -21,7 +21,7 @@ Vuforia.framework/
 Vuforia.framework/Vuforia
 
 # osx directory files
-.DS_Store/
+.DS_Store
 
 # Xcode
 #
