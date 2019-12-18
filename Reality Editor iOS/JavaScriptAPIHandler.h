@@ -26,6 +26,7 @@
 - (void)getDeviceReady:(NSString *)callback;
 - (void)getVuforiaReady:(NSString *)callback;
 - (void)addNewMarker:(NSString *)markerName callback:(NSString *)callback;
+- (void)addNewMarkerJPG:(NSString *)markerName forObject:objectID targetWidthMeters:(float)targetWidthMeters callback:(NSString *)callback;
 - (void)getProjectionMatrix:(NSString *)callback;
 - (void)getMatrixStream:(NSString *)callback;
 - (void)getCameraMatrixStream:(NSString *)callback;

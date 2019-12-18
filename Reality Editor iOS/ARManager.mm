@@ -27,6 +27,7 @@
 #import <Vuforia/DeviceTrackable.h>
 #import <Vuforia/Anchor.h>
 #import <Vuforia/ObjectTargetRaw.h>
+#import <Vuforia/RuntimeImageSource.h>
 
 #import "SampleApplicationUtils.h"
 
@@ -127,6 +128,53 @@
         NSLog(@"Error resuming AR:%@", [error description]);
     }
     [eaglView updateRenderingPrimitives];
+}
+
+- (BOOL)addNewMarkerFromImage:(NSString *)imagePath forObject:(NSString *)objectID targetWidthMeters:(float)targetWidthMeters;
+{
+    NSLog(@"addNewMarkerFromImage (%@)", imagePath);
+
+    Vuforia::DataSet * dataSet = NULL;
+
+    // Create a new empty data set.
+
+    // Get the Vuforia tracker manager image tracker
+    Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
+    Vuforia::ObjectTracker* objectTracker = static_cast<Vuforia::ObjectTracker*>(trackerManager.getTracker(Vuforia::ObjectTracker::getClassType()));
+
+    if (NULL == objectTracker) {
+       NSLog(@"ERROR: failed to get the ObjectTracker from the tracker manager");
+    } else {
+       dataSet = objectTracker->createDataSet();
+       
+       if (NULL != dataSet) {
+           NSLog(@"INFO: successfully created empty data set");
+           
+           // Get the runtime image source
+           Vuforia::RuntimeImageSource* runtimeImageSource = objectTracker->getRuntimeImageSource();
+           
+           float targetWidthMeters = 1.0;
+
+           // Load the data set from the given path.
+           if (!runtimeImageSource->setFile([imagePath UTF8String], Vuforia::STORAGE_ABSOLUTE, targetWidthMeters, [objectID UTF8String]))
+           {
+               NSLog(@"ERROR: failed to load image file: %@", imagePath);
+               return false;
+           }
+           
+           if (!dataSet->createTrackable(runtimeImageSource)) {
+               NSLog(@"ERROR: failed to create trackable for file: %@", imagePath);
+               return false;
+           }
+           
+           objectTracker->activateDataSet(dataSet);
+       }
+       else {
+           NSLog(@"ERROR: failed to create data set");
+       }
+    }
+
+    return dataSet != NULL;
 }
 
 - (BOOL)addNewMarker:(NSString *)markerPath

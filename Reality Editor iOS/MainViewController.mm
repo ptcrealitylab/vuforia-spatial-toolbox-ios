@@ -167,6 +167,12 @@
         NSString* markerName = (NSString *)arguments[@"markerName"];
         [self.apiHandler addNewMarker:markerName callback:callback];
         
+    } else if ([functionName isEqualToString:@"addNewMarkerJPG"]) {
+        NSString* markerName = (NSString *)arguments[@"markerName"];
+        NSString* objectID = (NSString *)arguments[@"objectID"];
+        float targetWidthMeters = [(NSNumber *)arguments[@"targetWidthMeters"] floatValue];
+        [self.apiHandler addNewMarkerJPG:markerName forObject:objectID targetWidthMeters:targetWidthMeters callback:callback];
+        
     } else if ([functionName isEqualToString:@"getProjectionMatrix"]) {
         [self.apiHandler getProjectionMatrix:callback];
         
