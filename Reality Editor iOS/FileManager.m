@@ -91,7 +91,7 @@
                 NSError* err;
                 [urlData writeToFile:filePath options:NSDataWritingAtomic error:&err];
                 
-                if (err != nil) {
+                if (err == nil) {
                     NSLog(@"File Saved to path: %@", filePath);
                 } else {
                     NSLog(@"File write error: %@", err);

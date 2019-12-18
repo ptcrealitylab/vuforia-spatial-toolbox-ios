@@ -39,6 +39,7 @@ typedef void (^ MatrixStringCompletionHandler)(NSString *);
 - (void)configureVideoBackgroundWithViewWidth:(float)viewWidth andHeight:(float)viewHeight;
 - (void)configureVideoBackgroundWithCameraMode:(Vuforia::CameraDevice::MODE)cameraMode viewWidth:(float)viewWidth andHeight:(float)viewHeight;
 - (bool)addNewMarker:(NSString *)markerPath;
+- (bool)addNewMarkerFromImage:(NSString *)imagePath forObject:(NSString *)objectID targetWidthMeters:(float)targetWidthMeters;
 - (void)getProjectionMatrixStringWithCompletionHandler:(MatrixStringCompletionHandler)completionHandler;
 - (void)setMatrixCompletionHandler:(MarkerListCompletionHandler)completionHandler;
 - (void)setCameraMatrixCompletionHandler:(MarkerCompletionHandler)completionHandler;

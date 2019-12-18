@@ -64,6 +64,15 @@
     [delegate callJavaScriptCallback:callback withArguments:@[successString, [NSString stringWithFormat:@"'%@'", markerName]]];
 }
 
+// adds a new marker and fires a callback with error or success
+- (void)addNewMarkerJPG:(NSString *)markerName forObject:objectID targetWidthMeters:(float)targetWidthMeters callback:(NSString *)callback
+{
+    NSString* markerPath = [[FileManager sharedManager] getTempFilePath:markerName];
+    bool success = [[ARManager sharedManager] addNewMarkerFromImage:markerPath forObject:objectID targetWidthMeters:targetWidthMeters];
+    NSString* successString = success ? @"true" : @"false";
+    [delegate callJavaScriptCallback:callback withArguments:@[successString, [NSString stringWithFormat:@"'%@'", markerName]]];
+}
+
 - (void)getProjectionMatrix:(NSString *)callback
 {
     __block JavaScriptAPIHandler *blocksafeSelf = self; // https://stackoverflow.com/a/5023583/1190267
