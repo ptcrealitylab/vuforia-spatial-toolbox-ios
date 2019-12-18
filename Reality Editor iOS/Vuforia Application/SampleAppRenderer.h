@@ -54,5 +54,6 @@
 - (CGSize)getCurrentARViewBoundsSize;
 - (void)recordingStarted;
 - (void)recordingStopped;
+#pragma mark -
 
 @end
