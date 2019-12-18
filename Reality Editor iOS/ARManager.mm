@@ -108,7 +108,9 @@
      name:UIApplicationDidBecomeActiveNotification
      object:nil];
     
-    [self.vapp initAR:Vuforia::GL_20 orientation:[[UIApplication sharedApplication] statusBarOrientation] deviceMode:Vuforia::Device::MODE_AR stereo:false];
+//    [self.vapp initAR:Vuforia::GL_20 orientation:[[UIApplication sharedApplication] statusBarOrientation] deviceMode:Vuforia::Device::MODE_AR stereo:false];
+    
+    [self.vapp initAR:Vuforia::GL_20 orientation:[[UIApplication sharedApplication] statusBarOrientation] cameraMode:Vuforia::CameraDevice::MODE_DEFAULT];
     self.didStartAR = true;
 }
 

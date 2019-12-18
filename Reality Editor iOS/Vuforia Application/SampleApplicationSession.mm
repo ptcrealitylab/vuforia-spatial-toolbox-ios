@@ -1,5 +1,5 @@
 /*===============================================================================
-Copyright (c) 2015-2018 PTC Inc. All Rights Reserved.
+Copyright (c) 2019 PTC Inc. All Rights Reserved.
 
  Copyright (c) 2012-2015 Qualcomm Connected Experiences, Inc. All Rights Reserved.
  
@@ -18,10 +18,9 @@ Copyright (c) 2015-2018 PTC Inc. All Rights Reserved.
 #import <Vuforia/TrackerManager.h>
 #import <Vuforia/UpdateCallback.h>
 #import <Vuforia/VideoBackgroundConfig.h>
+#import "vuforiaKey.h"
 
 #import <UIKit/UIKit.h>
-
-#import "vuforiaKey.h"
 
 #define DEBUG_SAMPLE_APP 1
 
@@ -48,8 +47,6 @@ namespace {
 @property (nonatomic, readwrite) UIInterfaceOrientation ARViewOrientation;
 @property (nonatomic, readwrite) BOOL cameraIsActive;
 
-@property (nonatomic, readwrite) Vuforia::Device::MODE deviceMode;
-@property (nonatomic, readwrite) bool stereo;
 @property (nonatomic, readwrite) Vuforia::CameraDevice::MODE cameraMode;
 
 // Vuforia Engine initialization flags (passed to Vuforia Engine before initializing)
@@ -78,7 +75,7 @@ namespace {
 }
 
 // build a NSError
-- (NSError *) NSErrorWithCode:(int)code
+- (NSError *)NSErrorWithCode:(int)code
 {
     return [NSError errorWithDomain:SAMPLE_APPLICATION_ERROR_DOMAIN code:code userInfo:nil];
 }
@@ -86,14 +83,14 @@ namespace {
 - (NSError *) NSErrorWithCode:(NSString *) description code:(NSInteger)code
 {
     NSDictionary *userInfo = @{
-                               NSLocalizedDescriptionKey: description
-                               };
+                           NSLocalizedDescriptionKey: description
+                           };
     return [NSError errorWithDomain:SAMPLE_APPLICATION_ERROR_DOMAIN
                                code:code
                            userInfo:userInfo];
 }
 
-- (NSError *) NSErrorWithCode:(int)code error:(NSError **)error
+- (NSError *)NSErrorWithCode:(int)code error:(NSError **)error
 {
     if (error != nil)
     {
@@ -106,20 +103,14 @@ namespace {
 // Initialize the Vuforia Engine
 - (void) initAR:(int)vuforiaInitFlags
     orientation:(UIInterfaceOrientation)ARViewOrientation
-     deviceMode:(Vuforia::Device::MODE)deviceMode
-         stereo:(bool)stereo
 {
     [self initAR:vuforiaInitFlags
      orientation:ARViewOrientation
-      deviceMode:deviceMode
-          stereo:false
-      cameraMode:Vuforia::CameraDevice::MODE_OPTIMIZE_QUALITY];
+      cameraMode:Vuforia::CameraDevice::MODE_DEFAULT];
 }
 
 - (void) initAR:(int)vuforiaInitFlags
     orientation:(UIInterfaceOrientation)ARViewOrientation
-     deviceMode:(Vuforia::Device::MODE)deviceMode
-         stereo:(bool)stereo
      cameraMode:(Vuforia::CameraDevice::MODE)cameraMode
 {
     self.cameraIsActive = NO;
@@ -127,8 +118,6 @@ namespace {
     self.vuforiaInitFlags = vuforiaInitFlags;
     self.ARViewOrientation = ARViewOrientation;
     self.cameraMode = cameraMode;
-    self.deviceMode = deviceMode;
-    self.stereo = false;
     
     // Initialising Vuforia is a potentially lengthy operation, so perform it on a
     // background thread
@@ -146,7 +135,9 @@ namespace {
 {
     // Background thread must have its own autorelease pool
     @autoreleasepool {
-        Vuforia::setInitParameters(self.vuforiaInitFlags, vuforiaKey);
+#pragma mark - Add Vuforia License Key Here
+        Vuforia::setInitParameters(self.vuforiaInitFlags,vuforiaKey);
+#pragma mark -
         
         // Vuforia::init() will return positive numbers up to 100 as it progresses
         // towards success.  Negative numbers indicate error conditions
@@ -166,7 +157,7 @@ namespace {
             NSError * error;
             NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
             NSString *cameraAccessErrorMessage = [NSString stringWithFormat:NSLocalizedString(@"INIT_CAMERA_ACCESS_DENIED", nil), appName, appName];
-            
+
             switch(initSuccess)
             {
                 case Vuforia::INIT_NO_CAMERA_ACCESS:
@@ -180,41 +171,42 @@ namespace {
                     // via Device Settings > Privacy > Camera
                     error = [self NSErrorWithCode:cameraAccessErrorMessage code:initSuccess];
                     break;
-                    
+
                 case Vuforia::INIT_LICENSE_ERROR_NO_NETWORK_TRANSIENT:
                     error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_NO_NETWORK_TRANSIENT", nil) code:initSuccess];
                     break;
-                    
+                        
                 case Vuforia::INIT_LICENSE_ERROR_NO_NETWORK_PERMANENT:
                     error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_NO_NETWORK_PERMANENT", nil) code:initSuccess];
                     break;
-                    
+                        
                 case Vuforia::INIT_LICENSE_ERROR_INVALID_KEY:
                     error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_INVALID_KEY", nil) code:initSuccess];
                     break;
-                    
+                        
                 case Vuforia::INIT_LICENSE_ERROR_CANCELED_KEY:
                     error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_CANCELED_KEY", nil) code:initSuccess];
                     break;
-                    
+                        
                 case Vuforia::INIT_LICENSE_ERROR_MISSING_KEY:
                     error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_MISSING_KEY", nil) code:initSuccess];
                     break;
-                    
+                        
                 case Vuforia::INIT_LICENSE_ERROR_PRODUCT_TYPE_MISMATCH:
                     error = [self NSErrorWithCode:NSLocalizedString(@"INIT_LICENSE_ERROR_PRODUCT_TYPE_MISMATCH", nil) code:initSuccess];
                     break;
-                    
+                        
                 default:
                     error = [self NSErrorWithCode:NSLocalizedString(@"INIT_default", nil) code:initSuccess];
                     break;
             }
-            
+                    
             // Vuforia Engine initialization error
             [self.delegate onInitARDone:error];
         }
     }
 }
+
 
 // Resume Vuforia Engine
 - (BOOL) resumeAR:(NSError **)error
@@ -267,6 +259,7 @@ namespace {
     return YES;
 }
 
+
 // Pause Vuforia
 - (BOOL) pauseAR:(NSError **)error
 {
@@ -294,7 +287,7 @@ namespace {
     return successfullyPaused;
 }
 
-- (void) vuforia_onUpdate:(Vuforia::State *)state
+- (void)vuforia_onUpdate:(Vuforia::State *)state
 {
     if ((self.delegate != nil) && [self.delegate respondsToSelector:@selector(onVuforiaUpdate:)])
     {
@@ -352,7 +345,8 @@ namespace {
     [self initTracker];
 }
 
-- (void) initTracker {
+- (void) initTracker
+{
     // ask the application to initialize its trackers
     if (![self.delegate doInitTrackers])
     {
@@ -383,13 +377,8 @@ namespace {
     }
     
     [self.delegate onInitARDone:nil];
-    
-    Vuforia::Device& device = Vuforia::Device::getInstance();
-    if (!device.setMode(self.deviceMode)) {
-        NSLog(@"ERROR: failed to set the device mode");
-    };
-    device.setViewerActive(self.stereo);
 }
+
 
 // Start Vuforia camera with the specified view size
 - (BOOL) startCameraWithViewWidth:(float)viewWidth andHeight:(float)viewHeight error:(NSError **)error
@@ -423,7 +412,7 @@ namespace {
         [self NSErrorWithCode:-1 error:error];
         return NO;
     }
-    
+
     // ask the application to start the tracker(s)
     if (![self.delegate doStartTrackers])
     {
@@ -434,11 +423,10 @@ namespace {
     return YES;
 }
 
+
 - (BOOL) startAR:(NSError **)error
 {
     CGSize ARViewBoundsSize = [self getCurrentARViewBoundsSize];
-    
-    NSLog(@"ARViewBoundsSize: %f x %f", ARViewBoundsSize.width, ARViewBoundsSize.height);
     
     // Start the camera. This causes Vuforia Engine to locate our EAGLView in the view
     // hierarchy, start a render thread, and then call renderFrameVuforia on the
@@ -450,7 +438,7 @@ namespace {
     
     self.cameraIsActive = YES;
     self.cameraIsStarted = YES;
-    
+
     return YES;
 }
 
@@ -468,7 +456,7 @@ namespace {
         self.cameraIsActive = NO;
     }
     self.cameraIsStarted = NO;
-    
+
     // ask the application to stop the trackers
     if (![self.delegate doStopTrackers])
     {
@@ -521,9 +509,10 @@ namespace {
         [self NSErrorWithCode:E_STOPPING_TRACKERS error:error];
         return NO;
     }
-    
+
     return YES;
 }
+
 
 // Sets the fusion provider type for DeviceTracker optimization
 // This setting only affects the Tracker if the DeviceTracker is enabled
@@ -564,6 +553,7 @@ namespace {
     }
     return wasTrackerReset;
 }
+
 
 - (void) changeOrientation:(UIInterfaceOrientation)ARViewOrientation
 {
