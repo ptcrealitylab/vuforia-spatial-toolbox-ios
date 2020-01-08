@@ -86,6 +86,8 @@
 {
     __block JavaScriptAPIHandler *blocksafeSelf = self; // https://stackoverflow.com/a/5023583/1190267
     
+    BOOL _extendedTrackingEnabled = ((ARManager *)[ARManager sharedManager]).extendedTrackingEnabled;
+    
     [[ARManager sharedManager] setMatrixCompletionHandler:^(NSArray *visibleMarkers) {
         
         NSString* javaScriptObject = @"{";
@@ -98,11 +100,14 @@
                 NSString* markerMatrix = thisMarker[@"modelViewMatrix"];
                 NSString* trackingStatus = thisMarker[@"trackingStatus"];
 
-                // old format - userinterface is backwards compatible to work with this or the new format
-//                javaScriptObject = [javaScriptObject stringByAppendingString:[NSString stringWithFormat:@"'%@': %@,", markerName, markerMatrix]];
-                
-                // new format, with trackingStatus
-                javaScriptObject = [javaScriptObject stringByAppendingString:[NSString stringWithFormat:@"'%@': { 'matrix': %@, 'status': '%@'},", markerName, markerMatrix, trackingStatus]];
+                if (_extendedTrackingEnabled) {
+                    // new format, with trackingStatus
+                    javaScriptObject = [javaScriptObject stringByAppendingString:[NSString stringWithFormat:@"'%@': { 'matrix': %@, 'status': '%@'},", markerName, markerMatrix, trackingStatus]];
+                } else {
+                    // old format - userinterface is backwards compatible to work with this or the new format
+                    javaScriptObject = [javaScriptObject stringByAppendingString:[NSString stringWithFormat:@"'%@': %@,", markerName, markerMatrix]];
+                }
+            
                 
             }
             javaScriptObject = [javaScriptObject substringToIndex:javaScriptObject.length-1]; // remove last comma character before closing the object
@@ -190,6 +195,11 @@
 - (void)setResume
 {
     [[ARManager sharedManager] resumeCamera];
+}
+
+- (void)enableExtendedTracking
+{
+    [[ARManager sharedManager] enableExtendedTracking];
 }
 
 - (void)getUDPMessages:(NSString *)callback

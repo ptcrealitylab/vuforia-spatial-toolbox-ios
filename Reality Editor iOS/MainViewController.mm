@@ -195,6 +195,9 @@
     } else if ([functionName isEqualToString:@"setResume"]) {
         [self.apiHandler setResume];
         
+    } else if ([functionName isEqualToString:@"enableExtendedTracking"]) {
+        [self.apiHandler enableExtendedTracking];
+        
     } else if ([functionName isEqualToString:@"getUDPMessages"]) {
         [self.apiHandler getUDPMessages:callback];
         
