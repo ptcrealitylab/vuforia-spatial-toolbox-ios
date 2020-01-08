@@ -34,6 +34,7 @@
 - (void)getScreenshot:(NSString *)size callback:(NSString *)callback;
 - (void)setPause;
 - (void)setResume;
+- (void)enableExtendedTracking;
 - (void)getUDPMessages:(NSString *)callback;
 - (void)sendUDPMessage:(NSString *)message;
 - (void)getFileExists:(NSString *)fileName callback:(NSString *)callback;

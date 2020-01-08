@@ -119,7 +119,7 @@
 		43AD9586221473AA00E5BB36 /* NodeRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeRunner.h; sourceTree = "<group>"; };
 		43AD9587221473AA00E5BB36 /* NodeRunner.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeRunner.mm; sourceTree = "<group>"; };
 		43ADDCDE2214784200E5BB36 /* NodeMobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NodeMobile.framework; sourceTree = "<group>"; };
-		43D0350920EAC02600AA1039 /* RealityOE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealityOE.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		43D0350920EAC02600AA1039 /* RE-worlds.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RE-worlds.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		43D0350C20EAC02600AA1039 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		43D0350D20EAC02600AA1039 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		43D0350F20EAC02600AA1039 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
@@ -263,7 +263,7 @@
 		43D0350A20EAC02600AA1039 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				43D0350920EAC02600AA1039 /* RealityOE.app */,
+				43D0350920EAC02600AA1039 /* RE-worlds.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -347,7 +347,7 @@
 			);
 			name = "Reality Editor iOS";
 			productName = "Reality Editor iOS";
-			productReference = 43D0350920EAC02600AA1039 /* RealityOE.app */;
+			productReference = 43D0350920EAC02600AA1039 /* RE-worlds.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -716,8 +716,8 @@
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ptc.onereality-oe";
-				PRODUCT_NAME = RealityOE;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ptc.onereality-oe-worlds";
+				PRODUCT_NAME = "RE-worlds";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 arm64e";
@@ -798,8 +798,8 @@
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ptc.onereality-oe";
-				PRODUCT_NAME = RealityOE;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ptc.onereality-oe-worlds";
+				PRODUCT_NAME = "RE-worlds";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 arm64e";

@@ -39,11 +39,15 @@
     Vuforia::Anchor* mHitTestAnchor;
     Vuforia::Matrix44F mReticlePose;
     const char* HIT_TEST_ANCHOR_NAME;
+    
+    BOOL disableGroundPlaneTracker;
+    BOOL disablePositionalDeviceTracker;
 }
 
 @synthesize didStartAR;
 @synthesize eaglView;
 @synthesize vapp;
+@synthesize extendedTrackingEnabled;
 
 + (id)sharedManager
 {
@@ -60,6 +64,10 @@
     if (self = [super init]) {
         self.markersFound = [NSMutableArray array];
         HIT_TEST_ANCHOR_NAME = "groundPlaneAnchor";
+        self.extendedTrackingEnabled = false;
+        
+        disablePositionalDeviceTracker = false;
+        disableGroundPlaneTracker = true;
     }
     return self;
 }
@@ -382,6 +390,11 @@
                                   toCreateAnchor:(BOOL)createAnchor
                                    andStateToUse:(const Vuforia::State&) state
 {
+    if (disableGroundPlaneTracker || disablePositionalDeviceTracker) {
+        NSLog(@"GROUND PLANE DISABLED");
+        return false;
+    }
+    
     Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
     Vuforia::PositionalDeviceTracker* deviceTracker = static_cast<Vuforia::PositionalDeviceTracker*> (trackerManager.getTracker(Vuforia::PositionalDeviceTracker::getClassType()));
     Vuforia::SmartTerrain* smartTerrain = static_cast<Vuforia::SmartTerrain*>(trackerManager.getTracker(Vuforia::SmartTerrain::getClassType()));
@@ -468,11 +481,11 @@
 }
 
 // adds any targets to Vuforia that should always be present, e.g. the World Reference marker
-- (void)addDefaultMarkers
-{
-    NSString* markerPath = [[NSBundle mainBundle] pathForResource:@"liveworx" ofType:@"xml" inDirectory:@"worldReferenceMarker"];
-    [self addNewMarker:markerPath];
-}
+//- (void)addDefaultMarkers
+//{
+//    NSString* markerPath = [[NSBundle mainBundle] pathForResource:@"liveworx" ofType:@"xml" inDirectory:@"worldReferenceMarker"];
+//    [self addNewMarker:markerPath];
+//}
 
 #pragma mark - SampleApplicationControl Protocol Implementation
 
@@ -497,7 +510,7 @@
             arDoneCompletionHandler();
         }
         
-        [self addDefaultMarkers];
+//        [self addDefaultMarkers];
         
     } else {
         NSLog(@"Error initializing AR:%@", [initError description]);
@@ -535,20 +548,25 @@
         return NO;
     }
 
-    // Initialize the device tracker
-    Vuforia::Tracker* deviceTracker = trackerManager.initTracker(Vuforia::PositionalDeviceTracker::getClassType());
-    if (deviceTracker == nullptr)
-    {
-        NSLog(@"Failed to initialize DeviceTracker.");
-        return NO;
+    
+    if (!disablePositionalDeviceTracker) {
+        // Initialize the device tracker
+        Vuforia::Tracker* deviceTracker = trackerManager.initTracker(Vuforia::PositionalDeviceTracker::getClassType());
+        if (deviceTracker == nullptr)
+        {
+            NSLog(@"Failed to initialize DeviceTracker.");
+            return NO;
+        }
     }
 
     // todo is this tracker needed?
-    Vuforia::Tracker* smartTerrain = trackerManager.initTracker(Vuforia::SmartTerrain::getClassType());
-    if (smartTerrain == nullptr)
-    {
-        NSLog(@"Failed to start SmartTerrain.");
-        return NO;
+    if (!disableGroundPlaneTracker) {
+        Vuforia::Tracker* smartTerrain = trackerManager.initTracker(Vuforia::SmartTerrain::getClassType());
+        if (smartTerrain == nullptr)
+        {
+            NSLog(@"Failed to start SmartTerrain.");
+            return NO;
+        }
     }
     
     NSLog(@"Initialized trackers");
@@ -578,27 +596,31 @@
     NSLog(@"Successfully started object tracker");
     
     // Start device tracker
-    Vuforia::Tracker* deviceTracker = trackerManager.getTracker(Vuforia::PositionalDeviceTracker::getClassType());
-    if (deviceTracker == nullptr || !deviceTracker->start())
-    {
-        NSLog(@"Failed to start DeviceTracker");
-        return NO;
+    if (!disablePositionalDeviceTracker) {
+        Vuforia::Tracker* deviceTracker = trackerManager.getTracker(Vuforia::PositionalDeviceTracker::getClassType());
+        if (deviceTracker == nullptr || !deviceTracker->start())
+        {
+            NSLog(@"Failed to start DeviceTracker");
+            return NO;
+        }
+        NSLog(@"Successfully started DeviceTracker");
     }
-    NSLog(@"Successfully started DeviceTracker");
     
     // Start ground plane tracker
-    Vuforia::Tracker* smartTerrain = trackerManager.getTracker(Vuforia::SmartTerrain::getClassType());
-    if (smartTerrain == nullptr || !smartTerrain->start())
-    {
-        NSLog(@"Failed to start SmartTerrain");
+    if (!disableGroundPlaneTracker) {
+            Vuforia::Tracker* smartTerrain = trackerManager.getTracker(Vuforia::SmartTerrain::getClassType());
+            if (smartTerrain == nullptr || !smartTerrain->start())
+            {
+                NSLog(@"Failed to start SmartTerrain");
 
-        // We stop the device tracker since there was an error starting Smart Terrain one
-//        deviceTracker->stop();
-//        NSLog(@"Stopped DeviceTracker tracker due to failure to start SmartTerrain");
+                // We stop the device tracker since there was an error starting Smart Terrain one
+        //        deviceTracker->stop();
+        //        NSLog(@"Stopped DeviceTracker tracker due to failure to start SmartTerrain");
 
-        return NO;
+                return NO;
+            }
+            NSLog(@"Successfully started SmartTerrain");
     }
-    NSLog(@"Successfully started SmartTerrain");
 
     return true;
 }
@@ -614,12 +636,14 @@
     }
     objectTracker->stop();
     
-    Vuforia::Tracker* deviceTracker = trackerManager.getTracker(Vuforia::PositionalDeviceTracker::getClassType());
-    if (deviceTracker == 0) {
-        NSLog(@"Error stopping device tracker");
-        return false;
+    if (!disablePositionalDeviceTracker) {
+        Vuforia::Tracker* deviceTracker = trackerManager.getTracker(Vuforia::PositionalDeviceTracker::getClassType());
+        if (deviceTracker == 0) {
+            NSLog(@"Error stopping device tracker");
+            return false;
+        }
+        deviceTracker->stop();
     }
-    deviceTracker->stop();
     
     NSLog(@"doStopTrackers");
     return true;
@@ -660,7 +684,9 @@
 {
     Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
     trackerManager.deinitTracker(Vuforia::ObjectTracker::getClassType());
-    trackerManager.deinitTracker(Vuforia::PositionalDeviceTracker::getClassType());
+    if (!disablePositionalDeviceTracker) {
+        trackerManager.deinitTracker(Vuforia::PositionalDeviceTracker::getClassType());
+    }
     
     NSLog(@"doDeinitTrackers");
     return true;
@@ -805,6 +831,7 @@
 //            }
 
             // send in Positional Device Trackers' information in a different way, via the camera matrix
+        if (!disablePositionalDeviceTracker) {
             if (trackable.isOfType(Vuforia::DeviceTrackable::getClassType())) {
                 deviceTrackableResult = result;
                 if (cameraMatrixCompletionHandler) {
@@ -812,7 +839,9 @@
                 }
                 continue;
             }
-
+        }
+        
+        if (!disableGroundPlaneTracker) {
             // send in Ground Plane Anchor information in a different way, via the groundPlane matrix
             if (trackable.isOfType(Vuforia::Anchor::getClassType())) {
                 groundPlaneTrackableResult = result;
@@ -821,6 +850,10 @@
                 }
                 continue;
             }
+        }
+
+
+
 
 
             if([marker[@"name"] isEqualToString:@"WorldReferenceXXXXXXXXXXXX"]){
@@ -828,9 +861,13 @@
 
             } else {
 
-//               if(![trackingStatus isEqualToString:@"EXTENDED_TRACKED"]) {
-                    [self.markersFound addObject:marker];
-//                }
+                if (self.extendedTrackingEnabled) {
+                     [self.markersFound addObject:marker];
+                } else {
+                    if(![trackingStatus isEqualToString:@"EXTENDED_TRACKED"]) {
+                         [self.markersFound addObject:marker];
+                     }
+                }
 
             }
             
@@ -843,6 +880,11 @@
     if (visibleMarkersCompletionHandler) {
         visibleMarkersCompletionHandler(self.markersFound);
     }
+}
+
+- (void)enableExtendedTracking:(BOOL)newState
+{
+    self.extendedTrackingEnabled = newState;
 }
 
 @end

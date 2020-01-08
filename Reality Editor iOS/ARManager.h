@@ -33,6 +33,7 @@ typedef void (^ MatrixStringCompletionHandler)(NSString *);
 @property (nonatomic, strong) ImageTargetsEAGLView* eaglView;
 @property (nonatomic, strong) SampleApplicationSession * vapp;
 @property (nonatomic, strong) NSMutableArray* markersFound;
+@property (nonatomic) BOOL extendedTrackingEnabled;
 
 - (void)setContainingViewController:(UIViewController *)newContainingViewController;
 - (void)startARWithCompletionHandler:(CompletionHandler)completionHandler;
@@ -44,6 +45,7 @@ typedef void (^ MatrixStringCompletionHandler)(NSString *);
 - (void)setMatrixCompletionHandler:(MarkerListCompletionHandler)completionHandler;
 - (void)setCameraMatrixCompletionHandler:(MarkerCompletionHandler)completionHandler;
 - (void)setGroundPlaneMatrixCompletionHandler:(MarkerCompletionHandler)completionHandler;
+- (void)enableExtendedTracking:(BOOL)newState;
 
 - (UIImage *)getCameraScreenshot; // for old screenshot method (todo: replace with new method of glReadPixels)
 
