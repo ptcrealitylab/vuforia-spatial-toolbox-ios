@@ -67,7 +67,7 @@
         self.extendedTrackingEnabled = false;
         
         disablePositionalDeviceTracker = false;
-        disableGroundPlaneTracker = true;
+        disableGroundPlaneTracker = false;
     }
     return self;
 }
