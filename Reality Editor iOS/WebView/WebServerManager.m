@@ -30,18 +30,6 @@
     if (self = [super init]) {
         
         // Create server
-        webServer = [[GCDWebServer alloc] init];
-        [GCDWebServer setLogLevel:1]; // don't print DEBUG statements of network activity
-        
-        NSString *userinterfacePath = [[NSBundle mainBundle] pathForResource:@"userinterface" ofType:nil];
-        [webServer addGETHandlerForBasePath:@"/" directoryPath:userinterfacePath indexFilename:@"index.html" cacheAge:0 allowRangeRequests:YES];
-        [webServer startWithPort:8888 bonjourName:nil];
-        
-        if (webServer.serverURL == nil) {
-            NSLog(@"Could not spin up local web server. Check to make sure you are connected to wifi.");
-        } else {
-            NSLog(@"Visit %@ in your web browser", webServer.serverURL);
-        }
         
         NSThread* nodejsThread = nil;
         nodejsThread = [[NSThread alloc]
