@@ -37,8 +37,8 @@
                         selector:@selector(startNode)
                         object:nil
                         ];
-        // Set 2MB of stack space for the Node.js thread.
-        [nodejsThread setStackSize:2*1024*1024];
+        // Set stack space for the Node.js thread, measured in bytes
+        [nodejsThread setStackSize:8*1024*1024];
         [nodejsThread start];
         
     }
