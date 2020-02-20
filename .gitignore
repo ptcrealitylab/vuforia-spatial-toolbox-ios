@@ -4,6 +4,9 @@
 /bin/data/editor
 /bin/data/userinterface
 /bin/data/RE-userinterface
+/bin/data/vuforia-spatial-toolbox-userinterface
+/bin/data/vuforia-toolbox-userinterface
+/bin/data/vuforia-spatial-edge-server
 /bin/data/RE-server
 /bin/data/realityOS
 /bin/data/realityOS_iOS
