@@ -55,5 +55,6 @@
 - (void)loadNewUI:(NSString *)reloadURL;
 - (void)clearCache;
 // TODO: add authenticateTouch(?)
+- (void)enableOrientationChanges:(NSString *)callback;
 
 @end

@@ -11,6 +11,7 @@
 #import "ARManager.h"
 #import "FileManager.h"
 #import "VideoRecordingManager.h"
+#import "DeviceStateManager.h"
 
 @implementation MainViewController
 {
@@ -67,6 +68,8 @@
     
     // preload the video recording manager and assign it the AR manager as a delegate to get the camera information
     [[VideoRecordingManager sharedManager] setVideoRecordingDelegate:[ARManager sharedManager]];
+
+    [[DeviceStateManager sharedManager] setViewToRotate:self.webView];
 }
 
 - (void)showLoadingLabel
@@ -264,6 +267,9 @@
     } else if ([functionName isEqualToString:@"clearCache"]) {
         //        [self.apiHandler clearCache];
         [self.webView clearCache]; // currently apiHandler doesnt have a reference to webView
+
+    } else if ([functionName isEqualToString:@"enableOrientationChanges"]) {
+        [self.apiHandler enableOrientationChanges:callback]; // the callback triggers whenever device orientation changes
     }
 }
 
