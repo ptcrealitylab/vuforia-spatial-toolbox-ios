@@ -15,6 +15,7 @@
 #import "VideoRecordingManager.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <sys/utsname.h>
+#import "DeviceStateManager.h"
 
 @implementation JavaScriptAPIHandler {
 //    NSString* matrixStreamCallback;
@@ -322,7 +323,7 @@
 
 - (void)loadNewUI:(NSString *)reloadURL
 {
-    
+    // TODO: remove?
 }
 
 - (void)clearCache
@@ -331,5 +332,15 @@
 }
 
 // TODO: add authenticateTouch(?)
+
+// enables functionality so that the webView flips upside-down when the device is rotated, and triggers callbacks to notify the UI
+- (void)enableOrientationChanges:(NSString *)callback
+{
+    __block JavaScriptAPIHandler *blocksafeSelf = self; // https://stackoverflow.com/a/5023583/1190267
+
+    [[DeviceStateManager sharedManager] enableOrientationChanges:^(NSString *orientation) {
+        [blocksafeSelf->delegate callJavaScriptCallback:callback withArguments:@[[NSString stringWithFormat:@"'%@'", orientation]]];
+    }];
+}
 
 @end
