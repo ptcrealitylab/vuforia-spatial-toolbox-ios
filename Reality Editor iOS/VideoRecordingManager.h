@@ -24,7 +24,6 @@
 
 @property (nonatomic, assign) id<VideoRecordingDelegate> videoRecordingDelegate;
 
-//- (void)initWithARDelegate:(id<VideoRecordingDelegate>)delegate;
 - (void)startRecording:(NSString *)objectKey ip:(NSString *)objectIP;
 - (void)stopRecording:(NSString *)videoId;
 

@@ -34,6 +34,7 @@
 
 // This is a javascriptAPI-triggered function that starts recording the video feed from the camera background
 // The objectKey and IP are used to save the resulting video file at a certain location on a Reality Server
+// TODO: some optimization of startRecording and writeFrame should remove the slight lag while recording
 - (void)startRecording:(NSString *)objectKey ip:(NSString *)objectIP
 {
     CGSize videoOutputSize = CGSizeMake(640, 360); // change this to compress the video to a smaller size. can go up to 1080p.
@@ -179,7 +180,9 @@
 
 #pragma mark - Screen recording using ReplayKit
 // This set of start/stop recording is currently NOT used, and there is no way to trigger it from the javascriptAPI right now
-// It uses Apple's ReplayKit to record the full screen, including AR elements and other UI, instead of just the camera feed
+// It uses Apple's ReplayKit to record the full screen, *including AR elements and other UI*, instead of just the camera feed
+// It works correctly, but interferes with trying to use the device's native screen recording feature at the same time.
+// Use startRecording and stopRecording instead, which only record the camera background, not the AR elements.
 
 // Source: https://github.com/anthonya1999/ReplayKit-iOS11-Recorder/blob/master/ReplayKit-iOS11-Recorder/ViewController.m
 - (void)startRecordingWithAR:(NSString *)objectKey ip:(NSString *)objectIP
@@ -243,6 +246,7 @@
     }];
 }
 
+// Stops the recording started with startRecordingWithAR, and uploads the result to the server specified when startRecordingWithAR was called.
 - (void)stopRecordingWithAR:(NSString *)videoId
 {
     [self.screenRecorder stopCaptureWithHandler:^(NSError * _Nullable error) {

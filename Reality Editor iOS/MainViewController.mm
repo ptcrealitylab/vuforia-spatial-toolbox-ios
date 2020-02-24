@@ -33,7 +33,7 @@
     
     AVCaptureDevice *captureDevice = [self cameraWithPosition:AVCaptureDevicePositionBack];
     NSArray* availFormat=captureDevice.formats;
-    NSLog(@"%@",availFormat);
+    NSLog(@"captureDevice formats: %@", availFormat);
     
     [super viewDidLoad];
     

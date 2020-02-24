@@ -45,7 +45,7 @@
 //Updates the rendering primitives to be called when there is a change of screen size or orientation
 - (void) updateRenderingPrimitives;
 
-#pragma mark - Extensions to Vuforia Sample Application
+#pragma mark - Spatial Toolbox Extensions to Vuforia Sample Application
 //Gets the projection matrix
 - (Vuforia::Matrix44F)getProjectionMatrix;
 - (BOOL)isProjectionMatrixReady;
