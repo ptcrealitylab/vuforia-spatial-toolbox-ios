@@ -87,7 +87,7 @@
 {
     __block JavaScriptAPIHandler *blocksafeSelf = self; // https://stackoverflow.com/a/5023583/1190267
     
-    BOOL isExtendedTrackingEnabled = ((ARManager *)[ARManager sharedManager]).extendedTrackingEnabled;
+    BOOL isExtendedTrackingEnabled = [[ARManager sharedManager] extendedTrackingEnabled];
     
     [[ARManager sharedManager] setMatrixCompletionHandler:^(NSArray *visibleMarkers) {
         
