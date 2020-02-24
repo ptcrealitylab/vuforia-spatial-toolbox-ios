@@ -12,8 +12,10 @@
 #import "UDPManager.h"
 #import "FileManager.h"
 #import "SpeechManager.h"
+#import "VideoRecordingManager.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <sys/utsname.h>
+#import "DeviceStateManager.h"
 
 @implementation JavaScriptAPIHandler {
 //    NSString* matrixStreamCallback;
@@ -63,6 +65,15 @@
     [delegate callJavaScriptCallback:callback withArguments:@[successString, [NSString stringWithFormat:@"'%@'", markerName]]];
 }
 
+// adds a new marker and fires a callback with error or success
+- (void)addNewMarkerJPG:(NSString *)markerName forObject:objectID targetWidthMeters:(float)targetWidthMeters callback:(NSString *)callback
+{
+    NSString* markerPath = [[FileManager sharedManager] getTempFilePath:markerName];
+    bool success = [[ARManager sharedManager] addNewMarkerFromImage:markerPath forObject:objectID targetWidthMeters:targetWidthMeters];
+    NSString* successString = success ? @"true" : @"false";
+    [delegate callJavaScriptCallback:callback withArguments:@[successString, [NSString stringWithFormat:@"'%@'", markerName]]];
+}
+
 - (void)getProjectionMatrix:(NSString *)callback
 {
     __block JavaScriptAPIHandler *blocksafeSelf = self; // https://stackoverflow.com/a/5023583/1190267
@@ -76,6 +87,8 @@
 {
     __block JavaScriptAPIHandler *blocksafeSelf = self; // https://stackoverflow.com/a/5023583/1190267
     
+    BOOL isExtendedTrackingEnabled = [[ARManager sharedManager] extendedTrackingEnabled];
+    
     [[ARManager sharedManager] setMatrixCompletionHandler:^(NSArray *visibleMarkers) {
         
         NSString* javaScriptObject = @"{";
@@ -86,7 +99,17 @@
                 NSDictionary* thisMarker = visibleMarkers[i];
                 NSString* markerName = thisMarker[@"name"];
                 NSString* markerMatrix = thisMarker[@"modelViewMatrix"];
-                javaScriptObject = [javaScriptObject stringByAppendingString:[NSString stringWithFormat:@"'%@': %@,", markerName, markerMatrix]];
+                NSString* trackingStatus = thisMarker[@"trackingStatus"];
+
+                if (isExtendedTrackingEnabled) {
+                    // new format, with trackingStatus
+                    javaScriptObject = [javaScriptObject stringByAppendingString:[NSString stringWithFormat:@"'%@': { 'matrix': %@, 'status': '%@'},", markerName, markerMatrix, trackingStatus]];
+                } else {
+                    // old format - userinterface is backwards compatible to work with this or the new format
+                    javaScriptObject = [javaScriptObject stringByAppendingString:[NSString stringWithFormat:@"'%@': %@,", markerName, markerMatrix]];
+                }
+            
+                
             }
             javaScriptObject = [javaScriptObject substringToIndex:javaScriptObject.length-1]; // remove last comma character before closing the object
         }
@@ -121,7 +144,7 @@
 // TODO: actually use size when getting screenshot
 - (void)getScreenshot:(NSString *)size callback:(NSString *)callback
 {
-    UIImage* cameraImage = [[ARManager sharedManager] getCameraPixelBuffer];
+    UIImage* cameraImage = [[ARManager sharedManager] getCameraScreenshot];
     CGFloat imageWidth = cameraImage.size.width;
     CGFloat imageHeight = cameraImage.size.height;
     
@@ -173,6 +196,11 @@
 - (void)setResume
 {
     [[ARManager sharedManager] resumeCamera];
+}
+
+- (void)enableExtendedTracking
+{
+    [[ARManager sharedManager] enableExtendedTracking];
 }
 
 - (void)getUDPMessages:(NSString *)callback
@@ -258,6 +286,18 @@
     }];
 }
 
+// objectKey is the ID of the object. objectIP is the IP of the server hosting this object.
+- (void)startVideoRecording:(NSString *)objectKey ip:(NSString *)objectIP
+{
+    [[VideoRecordingManager sharedManager] startRecording:objectKey ip:objectIP];
+}
+
+// videoID is a unique identifier for this video that will be used as its filename, so that the userinterface can load it from the server when ready.
+- (void)stopVideoRecording:(NSString *)videoId
+{
+    [[VideoRecordingManager sharedManager] stopRecording:videoId];
+}
+
 - (void)tap
 {
     if([[UIDevice currentDevice].model isEqualToString:@"iPhone"]) {
@@ -283,7 +323,7 @@
 
 - (void)loadNewUI:(NSString *)reloadURL
 {
-    
+    // TODO: safely remove this
 }
 
 - (void)clearCache
@@ -292,5 +332,15 @@
 }
 
 // TODO: add authenticateTouch(?)
+
+// enables functionality so that the webView flips upside-down when the device is rotated, and triggers callbacks to notify the UI
+- (void)enableOrientationChanges:(NSString *)callback
+{
+    __block JavaScriptAPIHandler *blocksafeSelf = self; // https://stackoverflow.com/a/5023583/1190267
+
+    [[DeviceStateManager sharedManager] enableOrientationChanges:^(NSString *orientation) {
+        [blocksafeSelf->delegate callJavaScriptCallback:callback withArguments:@[[NSString stringWithFormat:@"'%@'", orientation]]];
+    }];
+}
 
 @end

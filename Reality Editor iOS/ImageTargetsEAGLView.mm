@@ -20,6 +20,8 @@ countries.
 #import <Vuforia/DeviceTrackableResult.h>
 #import <Vuforia/ImageTargetResult.h>
 #import <Vuforia/VideoBackgroundConfig.h>
+#import <Vuforia/VideoBackgroundTextureInfo.h>
+#import <Vuforia/CameraDevice.h>
 
 #import "ImageTargetsEAGLView.h"
 #import "Texture.h"
@@ -118,18 +120,6 @@ namespace {
     
     return self;
 }
-
-
-- (CGSize)getCurrentARViewBoundsSize
-{
-    CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    CGSize viewSize = screenBounds.size;
-    
-    viewSize.width *= [UIScreen mainScreen].nativeScale;
-    viewSize.height *= [UIScreen mainScreen].nativeScale;
-    return viewSize;
-}
-
 
 - (void)dealloc
 {
@@ -235,6 +225,26 @@ namespace {
 - (Vuforia::Matrix44F)getProjectionMatrix
 {
     return [sampleAppRenderer getProjectionMatrix];
+}
+
+- (GLchar *)getVideoBackgroundPixels
+{
+    return [sampleAppRenderer getVideoBackgroundPixels];
+}
+
+- (CGSize)getCurrentARViewBoundsSize
+{
+    return [sampleAppRenderer getCurrentARViewBoundsSize];
+}
+
+- (void)recordingStarted
+{
+    [sampleAppRenderer recordingStarted];
+}
+
+- (void)recordingStopped
+{
+    [sampleAppRenderer recordingStopped];
 }
 
 - (void) configureVideoBackgroundWithCameraMode:(Vuforia::CameraDevice::MODE)cameraMode viewWidth:(float)viewWidth viewHeight:(float)viewHeight

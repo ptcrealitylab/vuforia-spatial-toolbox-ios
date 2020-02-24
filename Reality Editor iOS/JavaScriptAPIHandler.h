@@ -26,6 +26,7 @@
 - (void)getDeviceReady:(NSString *)callback;
 - (void)getVuforiaReady:(NSString *)callback;
 - (void)addNewMarker:(NSString *)markerName callback:(NSString *)callback;
+- (void)addNewMarkerJPG:(NSString *)markerName forObject:objectID targetWidthMeters:(float)targetWidthMeters callback:(NSString *)callback;
 - (void)getProjectionMatrix:(NSString *)callback;
 - (void)getMatrixStream:(NSString *)callback;
 - (void)getCameraMatrixStream:(NSString *)callback;
@@ -33,6 +34,7 @@
 - (void)getScreenshot:(NSString *)size callback:(NSString *)callback;
 - (void)setPause;
 - (void)setResume;
+- (void)enableExtendedTracking;
 - (void)getUDPMessages:(NSString *)callback;
 - (void)sendUDPMessage:(NSString *)message;
 - (void)getFileExists:(NSString *)fileName callback:(NSString *)callback;
@@ -44,6 +46,8 @@
 - (void)startSpeechRecording;
 - (void)stopSpeechRecording;
 - (void)addSpeechListener:(NSString *)callback;
+- (void)startVideoRecording:(NSString *)objectKey ip:(NSString *)objectIP;
+- (void)stopVideoRecording:(NSString *)videoId;
 - (void)tap;
 - (void)focusCamera;
 - (void)tryPlacingGroundAnchorAtScreenX:(NSString *)normalizedScreenX screenY:(NSString *)normalizedScreenY withCallback:(NSString *)callback;
@@ -51,5 +55,6 @@
 - (void)loadNewUI:(NSString *)reloadURL;
 - (void)clearCache;
 // TODO: add authenticateTouch(?)
+- (void)enableOrientationChanges:(NSString *)callback;
 
 @end

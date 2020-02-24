@@ -10,13 +10,30 @@
 #import "REWebView.h"
 #import "ARManager.h"
 #import "FileManager.h"
+#import "VideoRecordingManager.h"
+#import "DeviceStateManager.h"
 
 @implementation MainViewController
 {
     UILabel* loadingLabel;
 }
 
+- (AVCaptureDevice *)cameraWithPosition:(AVCaptureDevicePosition) position
+{
+    NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+    for (AVCaptureDevice *device in devices) {
+        if ([device position] == position) {
+            return device;
+        }
+    }
+    return nil;
+}
+
 - (void)viewDidLoad {
+    
+    AVCaptureDevice *captureDevice = [self cameraWithPosition:AVCaptureDevicePositionBack];
+    NSArray* availFormat=captureDevice.formats;
+    NSLog(@"captureDevice formats: %@", availFormat);
     
     [super viewDidLoad];
     
@@ -48,6 +65,11 @@
     // set this main view controller as the container for the AR view
     
     [[ARManager sharedManager] setContainingViewController:self];
+    
+    // preload the video recording manager and assign it the AR manager as a delegate to get the camera information
+    [[VideoRecordingManager sharedManager] setVideoRecordingDelegate:[ARManager sharedManager]];
+
+    [[DeviceStateManager sharedManager] setViewToRotate:self.webView];
 }
 
 - (void)showLoadingLabel
@@ -148,6 +170,12 @@
         NSString* markerName = (NSString *)arguments[@"markerName"];
         [self.apiHandler addNewMarker:markerName callback:callback];
         
+    } else if ([functionName isEqualToString:@"addNewMarkerJPG"]) {
+        NSString* markerName = (NSString *)arguments[@"markerName"];
+        NSString* objectID = (NSString *)arguments[@"objectID"];
+        float targetWidthMeters = [(NSNumber *)arguments[@"targetWidthMeters"] floatValue];
+        [self.apiHandler addNewMarkerJPG:markerName forObject:objectID targetWidthMeters:targetWidthMeters callback:callback];
+        
     } else if ([functionName isEqualToString:@"getProjectionMatrix"]) {
         [self.apiHandler getProjectionMatrix:callback];
         
@@ -169,6 +197,9 @@
         
     } else if ([functionName isEqualToString:@"setResume"]) {
         [self.apiHandler setResume];
+        
+    } else if ([functionName isEqualToString:@"enableExtendedTracking"]) {
+        [self.apiHandler enableExtendedTracking];
         
     } else if ([functionName isEqualToString:@"getUDPMessages"]) {
         [self.apiHandler getUDPMessages:callback];
@@ -211,6 +242,15 @@
     } else if ([functionName isEqualToString:@"addSpeechListener"]) {
         [self.apiHandler addSpeechListener:callback];
         
+    } else if ([functionName isEqualToString:@"startVideoRecording"]) {
+        NSString* objectKey = (NSString *)arguments[@"objectKey"];
+        NSString* objectIP = (NSString *)arguments[@"objectIP"];
+        [self.apiHandler startVideoRecording:objectKey ip:objectIP];
+        
+    } else if ([functionName isEqualToString:@"stopVideoRecording"]) {
+        NSString* videoId = (NSString *)arguments[@"videoId"];
+        [self.apiHandler stopVideoRecording:videoId];
+        
     } else if ([functionName isEqualToString:@"tap"]) {
         [self.apiHandler tap];
         
@@ -227,6 +267,9 @@
     } else if ([functionName isEqualToString:@"clearCache"]) {
         //        [self.apiHandler clearCache];
         [self.webView clearCache]; // currently apiHandler doesnt have a reference to webView
+
+    } else if ([functionName isEqualToString:@"enableOrientationChanges"]) {
+        [self.apiHandler enableOrientationChanges:callback]; // the callback triggers whenever device orientation changes
     }
 }
 

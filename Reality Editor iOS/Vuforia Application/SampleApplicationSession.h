@@ -1,6 +1,6 @@
 /*===============================================================================
- Copyright (c) 2019 PTC Inc. All Rights Reserved.
- 
+Copyright (c) 2019 PTC Inc. All Rights Reserved.
+
  Copyright (c) 2012-2015 Qualcomm Connected Experiences, Inc. All Rights Reserved.
  
  Vuforia is a trademark of PTC Inc., registered in the United States and other
@@ -74,8 +74,8 @@
 - (id)initWithDelegate:(id<SampleApplicationControl>)delegate;
 
 // initialize the AR library. This is an asynchronous method. When the initialization is complete, the callback method initARDone will be called
-- (void) initAR:(int)vuforiaInitFlags orientation:(UIInterfaceOrientation)ARViewOrientation deviceMode:(Vuforia::Device::MODE)deviceMode stereo:(bool)stereo;
-- (void) initAR:(int)vuforiaInitFlags orientation:(UIInterfaceOrientation)ARViewOrientation deviceMode:(Vuforia::Device::MODE)deviceMode stereo:(bool)stereo cameraMode:(Vuforia::CameraDevice::MODE)cameraMode;
+- (void) initAR:(int)vuforiaInitFlags orientation:(UIInterfaceOrientation)ARViewOrientation;
+- (void) initAR:(int)vuforiaInitFlags orientation:(UIInterfaceOrientation)ARViewOrientation cameraMode:(Vuforia::CameraDevice::MODE)cameraMode;
 
 // start the AR session
 - (BOOL)startAR:(NSError **)error;

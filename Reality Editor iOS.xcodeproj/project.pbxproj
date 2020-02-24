@@ -26,8 +26,9 @@
 		4304598C20F7CDA800B54215 /* SampleAppRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4304597920F7CDA800B54215 /* SampleAppRenderer.mm */; };
 		4304599420F7D01F00B54215 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43D0355720EAC1FE00AA1039 /* WebKit.framework */; };
 		4304599C20F7D0B300B54215 /* ImageTargetsEAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4304599B20F7D0B200B54215 /* ImageTargetsEAGLView.mm */; };
-		436CF08A225285C0002E77C9 /* Vuforia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 436CF088225285B7002E77C9 /* Vuforia.framework */; };
-		436CF08B225285C0002E77C9 /* Vuforia.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 436CF088225285B7002E77C9 /* Vuforia.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		430D4DAB22832F60006E5CBF /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 430D4DAA22832F60006E5CBF /* ReplayKit.framework */; };
+		430D4DAE22832FD3006E5CBF /* VideoRecordingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 430D4DAD22832FD3006E5CBF /* VideoRecordingManager.m */; };
+		43277B13232165FF000162C1 /* BackgroundFlipped.vertsh in Resources */ = {isa = PBXBuildFile; fileRef = 43277B12232165FF000162C1 /* BackgroundFlipped.vertsh */; };
 		436CF092225693FB002E77C9 /* worldReferenceMarker in Resources */ = {isa = PBXBuildFile; fileRef = 436CF091225693FB002E77C9 /* worldReferenceMarker */; };
 		437B8AEC21025108006720F5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 437B8AEB21025108006720F5 /* AudioToolbox.framework */; };
 		4397878320FFB88500B3A9E5 /* JavaScriptAPIHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4397878220FFB88500B3A9E5 /* JavaScriptAPIHandler.mm */; };
@@ -47,6 +48,9 @@
 		43D0351C20EAC02600AA1039 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 43D0351B20EAC02600AA1039 /* main.m */; };
 		43D0352520EAC16B00AA1039 /* WebServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 43D0352420EAC16B00AA1039 /* WebServerManager.m */; };
 		43D0355520EAC1E200AA1039 /* REWebView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43D0355420EAC1E200AA1039 /* REWebView.mm */; };
+		43F4A497240425D700564391 /* DeviceStateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 43F4A495240425D700564391 /* DeviceStateManager.m */; };
+		43FC68EB22A5AA4B00F6D6DD /* Vuforia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43FC68EA22A5AA4B00F6D6DD /* Vuforia.framework */; };
+		43FC68EC22A5AA4B00F6D6DD /* Vuforia.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43FC68EA22A5AA4B00F6D6DD /* Vuforia.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A7034E652218B056006B01A6 /* Pods_Reality_Editor_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55AC56D1CA09AE8695064552 /* Pods_Reality_Editor_iOS.framework */; };
 		A7EE6C762218853B00F60723 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7EE6C752218853B00F60723 /* Images.xcassets */; };
 		A7F7A923221755D500692858 /* RE-server in Resources */ = {isa = PBXBuildFile; fileRef = A7F7A922221755D500692858 /* RE-server */; };
@@ -60,7 +64,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				43ADDCE12214784900E5BB36 /* NodeMobile.framework in Embed Frameworks */,
-				436CF08B225285C0002E77C9 /* Vuforia.framework in Embed Frameworks */,
+				43FC68EC22A5AA4B00F6D6DD /* Vuforia.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -96,7 +100,10 @@
 		4304599A20F7D0B200B54215 /* ImageTargetsEAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTargetsEAGLView.h; sourceTree = "<group>"; };
 		4304599B20F7D0B200B54215 /* ImageTargetsEAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageTargetsEAGLView.mm; sourceTree = "<group>"; };
 		4304599D20F7DFDE00B54215 /* vuforiaKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vuforiaKey.h; sourceTree = "<group>"; };
-		436CF088225285B7002E77C9 /* Vuforia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Vuforia.framework; sourceTree = "<group>"; };
+		430D4DAA22832F60006E5CBF /* ReplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReplayKit.framework; path = System/Library/Frameworks/ReplayKit.framework; sourceTree = SDKROOT; };
+		430D4DAC22832FD3006E5CBF /* VideoRecordingManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoRecordingManager.h; sourceTree = "<group>"; };
+		430D4DAD22832FD3006E5CBF /* VideoRecordingManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoRecordingManager.m; sourceTree = "<group>"; };
+		43277B12232165FF000162C1 /* BackgroundFlipped.vertsh */ = {isa = PBXFileReference; lastKnownFileType = text; path = BackgroundFlipped.vertsh; sourceTree = "<group>"; };
 		436CF091225693FB002E77C9 /* worldReferenceMarker */ = {isa = PBXFileReference; lastKnownFileType = folder; path = worldReferenceMarker; sourceTree = "<group>"; };
 		437B8AEB21025108006720F5 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		4397878120FFB88500B3A9E5 /* JavaScriptAPIHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JavaScriptAPIHandler.h; sourceTree = "<group>"; };
@@ -113,7 +120,7 @@
 		43AD9586221473AA00E5BB36 /* NodeRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeRunner.h; sourceTree = "<group>"; };
 		43AD9587221473AA00E5BB36 /* NodeRunner.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeRunner.mm; sourceTree = "<group>"; };
 		43ADDCDE2214784200E5BB36 /* NodeMobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NodeMobile.framework; sourceTree = "<group>"; };
-		43D0350920EAC02600AA1039 /* Reality Editor iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Reality Editor iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		43D0350920EAC02600AA1039 /* Vuforia Spatial Toolbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Vuforia Spatial Toolbox.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		43D0350C20EAC02600AA1039 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		43D0350D20EAC02600AA1039 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		43D0350F20EAC02600AA1039 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
@@ -128,6 +135,10 @@
 		43D0355320EAC1E200AA1039 /* REWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = REWebView.h; sourceTree = "<group>"; };
 		43D0355420EAC1E200AA1039 /* REWebView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = REWebView.mm; sourceTree = "<group>"; };
 		43D0355720EAC1FE00AA1039 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		43D32AA3231F0B11003B7889 /* VideoRecordingDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoRecordingDelegate.h; sourceTree = "<group>"; };
+		43F4A495240425D700564391 /* DeviceStateManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceStateManager.m; sourceTree = "<group>"; };
+		43F4A496240425D700564391 /* DeviceStateManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceStateManager.h; sourceTree = "<group>"; };
+		43FC68EA22A5AA4B00F6D6DD /* Vuforia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Vuforia.framework; sourceTree = "<group>"; };
 		55AC56D1CA09AE8695064552 /* Pods_Reality_Editor_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Reality_Editor_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		62FC7EC5CED3832D3BC793DC /* Pods-Reality Editor iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reality Editor iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		A7EE6C752218853B00F60723 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -140,12 +151,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				430D4DAB22832F60006E5CBF /* ReplayKit.framework in Frameworks */,
 				A7034E652218B056006B01A6 /* Pods_Reality_Editor_iOS.framework in Frameworks */,
 				43AD9582220E172900E5BB36 /* Speech.framework in Frameworks */,
 				437B8AEC21025108006720F5 /* AudioToolbox.framework in Frameworks */,
 				4304599420F7D01F00B54215 /* WebKit.framework in Frameworks */,
 				43ADDCE02214784900E5BB36 /* NodeMobile.framework in Frameworks */,
-				436CF08A225285C0002E77C9 /* Vuforia.framework in Frameworks */,
+				43FC68EB22A5AA4B00F6D6DD /* Vuforia.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,6 +199,7 @@
 			children = (
 				4304595D20F7CDA600B54215 /* Background.fragsh */,
 				4304595E20F7CDA600B54215 /* Background.vertsh */,
+				43277B12232165FF000162C1 /* BackgroundFlipped.vertsh */,
 				4304595F20F7CDA600B54215 /* DiffuseLight.fragsh */,
 				4304596020F7CDA600B54215 /* DiffuseLight.vertsh */,
 				4304596120F7CDA600B54215 /* DiffuseLightMaterials.fragsh */,
@@ -253,7 +266,7 @@
 		43D0350A20EAC02600AA1039 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				43D0350920EAC02600AA1039 /* Reality Editor iOS.app */,
+				43D0350920EAC02600AA1039 /* Vuforia Spatial Toolbox.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -276,8 +289,13 @@
 				4397878820FFD03800B3A9E5 /* UDPManager.mm */,
 				4397878A20FFD73F00B3A9E5 /* FileManager.h */,
 				4397878B20FFD73F00B3A9E5 /* FileManager.m */,
+				43F4A496240425D700564391 /* DeviceStateManager.h */,
+				43F4A495240425D700564391 /* DeviceStateManager.m */,
 				43AD957E220E15AA00E5BB36 /* SpeechManager.h */,
 				43AD957F220E15AA00E5BB36 /* SpeechManager.m */,
+				430D4DAC22832FD3006E5CBF /* VideoRecordingManager.h */,
+				43D32AA3231F0B11003B7889 /* VideoRecordingDelegate.h */,
+				430D4DAD22832FD3006E5CBF /* VideoRecordingManager.m */,
 				43D0351220EAC02600AA1039 /* Main.storyboard */,
 				43D0351520EAC02600AA1039 /* Assets.xcassets */,
 				43D0351720EAC02600AA1039 /* LaunchScreen.storyboard */,
@@ -301,7 +319,8 @@
 		43D0355620EAC1FD00AA1039 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				436CF088225285B7002E77C9 /* Vuforia.framework */,
+				43FC68EA22A5AA4B00F6D6DD /* Vuforia.framework */,
+				430D4DAA22832F60006E5CBF /* ReplayKit.framework */,
 				43ADDCDE2214784200E5BB36 /* NodeMobile.framework */,
 				43AD9581220E172900E5BB36 /* Speech.framework */,
 				437B8AEB21025108006720F5 /* AudioToolbox.framework */,
@@ -333,7 +352,7 @@
 			);
 			name = "Reality Editor iOS";
 			productName = "Reality Editor iOS";
-			productReference = 43D0350920EAC02600AA1039 /* Reality Editor iOS.app */;
+			productReference = 43D0350920EAC02600AA1039 /* Vuforia Spatial Toolbox.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -390,6 +409,7 @@
 				4304597E20F7CDA800B54215 /* DiffuseLightMaterials.fragsh in Resources */,
 				A7EE6C762218853B00F60723 /* Images.xcassets in Resources */,
 				4304598220F7CDA800B54215 /* Simple.fragsh in Resources */,
+				43277B13232165FF000162C1 /* BackgroundFlipped.vertsh in Resources */,
 				4304598420F7CDA800B54215 /* SimpleTexturedColor.fragsh in Resources */,
 				4304598320F7CDA800B54215 /* Simple.vertsh in Resources */,
 				4304597B20F7CDA800B54215 /* Background.vertsh in Resources */,
@@ -435,18 +455,20 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCDWebServer.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8030A2BADF7A0FC3EBC39D41 /* [CP] Check Pods Manifest.lock */ = {
@@ -475,8 +497,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				4304598620F7CDA800B54215 /* Texture.mm in Sources */,
+				430D4DAE22832FD3006E5CBF /* VideoRecordingManager.m in Sources */,
 				43D0351120EAC02600AA1039 /* MainViewController.mm in Sources */,
 				43D0355520EAC1E200AA1039 /* REWebView.mm in Sources */,
+				43F4A497240425D700564391 /* DeviceStateManager.m in Sources */,
 				4304598A20F7CDA800B54215 /* SampleApplicationSession.mm in Sources */,
 				43D0352520EAC16B00AA1039 /* WebServerManager.m in Sources */,
 				4397878320FFB88500B3A9E5 /* JavaScriptAPIHandler.mm in Sources */,
@@ -636,7 +660,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = NAKQL4P3R6;
+				DEVELOPMENT_TEAM = W88G8YNU4K;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -698,8 +722,8 @@
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ptc.onereality;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ptc.vuforia-spatial-toolbox";
+				PRODUCT_NAME = "Vuforia Spatial Toolbox";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 arm64e";
@@ -716,7 +740,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = NAKQL4P3R6;
+				DEVELOPMENT_TEAM = W88G8YNU4K;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -780,8 +804,8 @@
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ptc.onereality;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ptc.vuforia-spatial-toolbox";
+				PRODUCT_NAME = "Vuforia Spatial Toolbox";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 arm64e";
