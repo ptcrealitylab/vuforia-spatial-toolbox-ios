@@ -135,7 +135,7 @@ namespace {
 {
     // Background thread must have its own autorelease pool
     @autoreleasepool {
-#pragma mark - Extensions to Vuforia Sample Application (Add Vuforia License Key Here)
+#pragma mark - Spatial Toolbox Extensions to Vuforia Sample Application (Add Vuforia License Key Here)
         Vuforia::setInitParameters(self.vuforiaInitFlags,vuforiaKey);
 #pragma mark -
         

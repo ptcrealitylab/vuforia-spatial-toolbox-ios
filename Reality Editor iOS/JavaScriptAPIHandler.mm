@@ -87,7 +87,7 @@
 {
     __block JavaScriptAPIHandler *blocksafeSelf = self; // https://stackoverflow.com/a/5023583/1190267
     
-    BOOL _extendedTrackingEnabled = ((ARManager *)[ARManager sharedManager]).extendedTrackingEnabled;
+    BOOL isExtendedTrackingEnabled = ((ARManager *)[ARManager sharedManager]).extendedTrackingEnabled;
     
     [[ARManager sharedManager] setMatrixCompletionHandler:^(NSArray *visibleMarkers) {
         
@@ -101,7 +101,7 @@
                 NSString* markerMatrix = thisMarker[@"modelViewMatrix"];
                 NSString* trackingStatus = thisMarker[@"trackingStatus"];
 
-                if (_extendedTrackingEnabled) {
+                if (isExtendedTrackingEnabled) {
                     // new format, with trackingStatus
                     javaScriptObject = [javaScriptObject stringByAppendingString:[NSString stringWithFormat:@"'%@': { 'matrix': %@, 'status': '%@'},", markerName, markerMatrix, trackingStatus]];
                 } else {
@@ -323,7 +323,7 @@
 
 - (void)loadNewUI:(NSString *)reloadURL
 {
-    // TODO: remove?
+    // TODO: safely remove this
 }
 
 - (void)clearCache

@@ -117,8 +117,6 @@
      name:UIApplicationDidBecomeActiveNotification
      object:nil];
     
-//    [self.vapp initAR:Vuforia::GL_20 orientation:[[UIApplication sharedApplication] statusBarOrientation] deviceMode:Vuforia::Device::MODE_AR stereo:false];
-    
     [self.vapp initAR:Vuforia::GL_20 orientation:[[UIApplication sharedApplication] statusBarOrientation] cameraMode:Vuforia::CameraDevice::MODE_DEFAULT];
     self.didStartAR = true;
 }
@@ -138,6 +136,7 @@
     [eaglView updateRenderingPrimitives];
 }
 
+// Uses the new Vuforia 8.6.7 API to generate an image target using only a JPG image and XML metadata
 - (BOOL)addNewMarkerFromImage:(NSString *)imagePath forObject:(NSString *)objectID targetWidthMeters:(float)targetWidthMeters;
 {
     NSLog(@"addNewMarkerFromImage (%@)", imagePath);
@@ -391,7 +390,6 @@
                                    andStateToUse:(const Vuforia::State&) state
 {
     if (disableGroundPlaneTracker || disablePositionalDeviceTracker) {
-        NSLog(@"GROUND PLANE DISABLED");
         return false;
     }
     
@@ -480,13 +478,6 @@
     }
 }
 
-// adds any targets to Vuforia that should always be present, e.g. the World Reference marker
-//- (void)addDefaultMarkers
-//{
-//    NSString* markerPath = [[NSBundle mainBundle] pathForResource:@"liveworx" ofType:@"xml" inDirectory:@"worldReferenceMarker"];
-//    [self addNewMarker:markerPath];
-//}
-
 #pragma mark - SampleApplicationControl Protocol Implementation
 
 - (void) onInitARDone:(NSError *)initError
@@ -509,9 +500,7 @@
         if (arDoneCompletionHandler) {
             arDoneCompletionHandler();
         }
-        
-//        [self addDefaultMarkers];
-        
+                
     } else {
         NSLog(@"Error initializing AR:%@", [initError description]);
         dispatch_async( dispatch_get_main_queue(), ^{
@@ -548,9 +537,9 @@
         return NO;
     }
 
+    // initialize additional enabled trackers
     
     if (!disablePositionalDeviceTracker) {
-        // Initialize the device tracker
         Vuforia::Tracker* deviceTracker = trackerManager.initTracker(Vuforia::PositionalDeviceTracker::getClassType());
         if (deviceTracker == nullptr)
         {
@@ -559,7 +548,6 @@
         }
     }
 
-    // todo is this tracker needed?
     if (!disableGroundPlaneTracker) {
         Vuforia::Tracker* smartTerrain = trackerManager.initTracker(Vuforia::SmartTerrain::getClassType());
         if (smartTerrain == nullptr)
@@ -611,15 +599,10 @@
             Vuforia::Tracker* smartTerrain = trackerManager.getTracker(Vuforia::SmartTerrain::getClassType());
             if (smartTerrain == nullptr || !smartTerrain->start())
             {
-                NSLog(@"Failed to start SmartTerrain");
-
-                // We stop the device tracker since there was an error starting Smart Terrain one
-        //        deviceTracker->stop();
-        //        NSLog(@"Stopped DeviceTracker tracker due to failure to start SmartTerrain");
-
+                NSLog(@"Failed to start SmartTerrain (ground plane)");
                 return NO;
             }
-            NSLog(@"Successfully started SmartTerrain");
+            NSLog(@"Successfully started SmartTerrain (ground plane)");
     }
 
     return true;
@@ -727,11 +710,10 @@
             [self tryPlacingGroundAnchorAtScreenX:0.5 andScreenY:0.5];
         }
 
-        [self.markersFound removeAllObjects];
+        [self.markersFound removeAllObjects]; // only reset detected markers if unfrozen
         
         int numOfTrackables = state->getTrackableResults().size();;
         for (int i = 0; i < numOfTrackables; i++) {
-            
             const Vuforia::TrackableResult* result = state->getTrackableResults().at(i);
 
             if(result->getStatus() != Vuforia::TrackableResult::DETECTED &&
@@ -746,37 +728,15 @@
 
             if (result->getStatus() == Vuforia::TrackableResult::EXTENDED_TRACKED) {
                 trackingStatus = @"EXTENDED_TRACKED";
-            } else {
+            } else { // TODO: check if we need to handle (status == TrackableResult::DETECTED or LIMITED or NO_POSE)
                 trackingStatus = @"TRACKED";
             };
 
-            /*
-            if (result->getStatus() == Vuforia::TrackableResult::DETECTED) {
-                trackingStatus = @"DETECTED";
-            } else if (result->getStatus() == Vuforia::TrackableResult::TRACKED) {
-                trackingStatus = @"TRACKED";
-            } else if (result->getStatus() == Vuforia::TrackableResult::EXTENDED_TRACKED) {
-                trackingStatus = @"EXTENDED_TRACKED";
-            } else
-            // removing extended tracking will eliminate the device tracker.
-                // is it possible that these two other cases help with object tracking?
-            if (result->getStatus() == Vuforia::TrackableResult::NO_POSE) {
-                trackingStatus = @"TRACKED";
-            }else if (result->getStatus() == Vuforia::TrackableResult::LIMITED) {
-                trackingStatus = @"TRACKED";
-            }
-             */
-
             Vuforia::Matrix44F modelViewMatrixCorrected = Vuforia::Tool::convert2GLMatrix(result->getPose());
-     //       NSLog(@"%f",modelViewMatrixCorrected.data[12]*1000 );
-           modelViewMatrixCorrected.data[12] *=  1000;
-            modelViewMatrixCorrected.data[13] *=  1000;
-            modelViewMatrixCorrected.data[14] *=  1000;
-
-
-            // used for debugging
-//            Vuforia::Type trackableType = trackable.getType();
-//            NSLog(@"trackable type: %u, status: %@", trackableType.getData(), trackingStatus);
+            // scale from meter to mm scale, so the UI can be backwards compatible with older Vuforia versions that used mm
+            modelViewMatrixCorrected.data[12] *= 1000;
+            modelViewMatrixCorrected.data[13] *= 1000;
+            modelViewMatrixCorrected.data[14] *= 1000;
             
             Vuforia::Vec3F markerSize;
             if(trackable.isOfType(Vuforia::ImageTarget::getClassType())){
@@ -784,99 +744,45 @@
                 markerSize = imageTarget->getSize();
             }
 
-
-            NSDictionary* marker = @{
-                                     @"name": [NSString stringWithUTF8String:trackable.getName()],
+            NSDictionary* marker = @{@"name": [NSString stringWithUTF8String:trackable.getName()],
                                      @"modelViewMatrix": [self stringFromMatrix44F:modelViewMatrixCorrected],
-//                                     @"projectionMatrix": [self getProjectionMatrixString],
-                    // what is poseMatrixData?
-//                                     @"poseMatrixData": [self stringFromMatrix34F:result->getPose()],
-                                     @"trackingStatus": trackingStatus,
-                    // todo I don't know with width and height actually work with object marker?
-//                                     @"width": [NSNumber numberWithFloat:markerSize.data[0]],
-//                                     @"height": [NSNumber numberWithFloat:markerSize.data[1]]
-                                     };
-
-
-            // DEBUG statements
-//            if (trackable.isOfType(Vuforia::ObjectTarget::getClassType())) {
-//                NSLog(@"Object Type");
-//            }
-//            if (trackable.isOfType(Vuforia::Anchor::getClassType())) {
-//                NSLog(@"Anchor Type");
-//            }
-//            if (trackable.isOfType(Vuforia::ObjectTargetRaw::getClassType())) {
-//                NSLog(@"Object Raw Type");
-//            }
-            
-//            if(result->isOfType(Vuforia::DeviceTrackableResult::getClassType())) {
-//                devicePoseTemp = result->getPose();
-//                mDevicePoseMatrix = SampleApplicationUtils::Matrix44FTranspose(SampleApplicationUtils::Matrix44FInverse(modelViewMatrix));
-//                mIsDeviceResultAvailable = YES;
-//            } else if(result->isOfType(Vuforia::AnchorResult::getClassType())) {
-//                mIsAnchorResultAvailable = YES;
-//                mAnchorResultsCount ++;
-//
-//                if(!strcmp(result->getTrackable().getName(), HIT_TEST_ANCHOR_NAME))
-//                {
-//                    renderAstronaut = YES;
-//                    mHitTestPoseMatrix = modelViewMatrix;
-//                }
-//
-//                if(!strcmp(result->getTrackable().getName(), MID_AIR_ANCHOR_NAME))
-//                {
-//                    renderDrone = YES;
-//                    mMidAirPoseMatrix = modelViewMatrix;
-//                }
-//            }
+                                     @"trackingStatus": trackingStatus};
 
             // send in Positional Device Trackers' information in a different way, via the camera matrix
-        if (!disablePositionalDeviceTracker) {
-            if (trackable.isOfType(Vuforia::DeviceTrackable::getClassType())) {
-                deviceTrackableResult = result;
-                if (cameraMatrixCompletionHandler) {
-                    cameraMatrixCompletionHandler(marker);
+            if (!disablePositionalDeviceTracker) {
+                if (trackable.isOfType(Vuforia::DeviceTrackable::getClassType())) {
+                    deviceTrackableResult = result;
+                    if (cameraMatrixCompletionHandler) {
+                        cameraMatrixCompletionHandler(marker);
+                    }
+                    continue;
                 }
-                continue;
             }
-        }
-        
-        if (!disableGroundPlaneTracker) {
+
             // send in Ground Plane Anchor information in a different way, via the groundPlane matrix
-            if (trackable.isOfType(Vuforia::Anchor::getClassType())) {
-                groundPlaneTrackableResult = result;
-                if (groundPlaneMatrixCompletionHandler) {
-                    groundPlaneMatrixCompletionHandler(marker);
+            if (!disableGroundPlaneTracker) {
+                if (trackable.isOfType(Vuforia::Anchor::getClassType())) {
+                    groundPlaneTrackableResult = result;
+                    if (groundPlaneMatrixCompletionHandler) {
+                        groundPlaneMatrixCompletionHandler(marker);
+                    }
+                    continue;
                 }
-                continue;
             }
-        }
 
-
-
-
-
-            if([marker[@"name"] isEqualToString:@"WorldReferenceXXXXXXXXXXXX"]){
-                     [self.markersFound addObject:marker];
-
+            // check if we need to filter out extended-tracked objects
+            if (self.extendedTrackingEnabled) {
+                 [self.markersFound addObject:marker];
             } else {
-
-                if (self.extendedTrackingEnabled) {
-                     [self.markersFound addObject:marker];
-                } else {
-                    if(![trackingStatus isEqualToString:@"EXTENDED_TRACKED"]) {
-                         [self.markersFound addObject:marker];
-                     }
+                if (![trackingStatus isEqualToString:@"EXTENDED_TRACKED"]) {
+                    [self.markersFound addObject:marker];
                 }
-
             }
-            
         }
         
     }
-
-
     
+    // regardless of whether it's frozen or not, trigger the javascript callback every frame with the set of detected objects
     if (visibleMarkersCompletionHandler) {
         visibleMarkersCompletionHandler(self.markersFound);
     }
