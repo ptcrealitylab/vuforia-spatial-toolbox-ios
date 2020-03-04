@@ -1,9 +1,9 @@
 //
 //  REWebView.m
-//  Reality Editor iOS
+//  Vuforia Spatial Toolbox
 //
 //  Created by Benjamin Reynolds on 7/2/18.
-//  Copyright © 2018 Reality Lab. All rights reserved.
+//  Copyright © 2018 PTC. All rights reserved.
 //
 // This is a customized WKWebView that initializes with correct configurations for the Reality Editor userinterface,
 // loads its interface from a self-hosted local HTTP server, and knows how to handle JS <-> Objective-C messages
