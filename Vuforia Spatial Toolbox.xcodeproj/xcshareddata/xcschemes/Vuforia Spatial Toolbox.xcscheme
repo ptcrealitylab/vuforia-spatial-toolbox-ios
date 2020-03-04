@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1010"
+   LastUpgradeVersion = "1130"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "43D0350820EAC02600AA1039"
                BuildableName = "Vuforia Spatial Toolbox.app"
-               BlueprintName = "Reality Editor iOS"
-               ReferencedContainer = "container:Reality Editor iOS.xcodeproj">
+               BlueprintName = "Vuforia Spatial Toolbox"
+               ReferencedContainer = "container:Vuforia Spatial Toolbox.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -27,15 +27,6 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "43D0350820EAC02600AA1039"
-            BuildableName = "Vuforia Spatial Toolbox.app"
-            BlueprintName = "Reality Editor iOS"
-            ReferencedContainer = "container:Reality Editor iOS.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <Testables>
       </Testables>
    </TestAction>
@@ -55,8 +46,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "43D0350820EAC02600AA1039"
             BuildableName = "Vuforia Spatial Toolbox.app"
-            BlueprintName = "Reality Editor iOS"
-            ReferencedContainer = "container:Reality Editor iOS.xcodeproj">
+            BlueprintName = "Vuforia Spatial Toolbox"
+            ReferencedContainer = "container:Vuforia Spatial Toolbox.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,8 +63,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "43D0350820EAC02600AA1039"
             BuildableName = "Vuforia Spatial Toolbox.app"
-            BlueprintName = "Reality Editor iOS"
-            ReferencedContainer = "container:Reality Editor iOS.xcodeproj">
+            BlueprintName = "Vuforia Spatial Toolbox"
+            ReferencedContainer = "container:Vuforia Spatial Toolbox.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
