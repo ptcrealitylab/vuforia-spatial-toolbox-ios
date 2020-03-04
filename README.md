@@ -1,39 +1,94 @@
-## One Reality App Setup Guide
+# Vuforia Spatial Toolbox
 
-There is now a **one-reality** branch of the iOS project
+## Installation
+How to build and run Vuforia Spatial Toolbox from your computer.
 
-- without openFrameworks
-- with a self-hosted Node.js server
+Note: you need to have [CocoaPods](https://guides.cocoapods.org/using/getting-started.html) installed, which you can get on MacOS using:
+
+```bash
+sudo gem install cocoapods
+```
+
+(Note: these instructions use SSH to clone from Git, but it can also be done with HTTPS)
 
 
+### Explanation
 
-### How to set up:
-
-0. Make sure you're on the **one-reality** branch of the RE-realityeditor-ios git repository
-1. Install cocoapods (like npm but for iOS frameworks) in the terminal using: `sudo gem install cocoapods`
-2. Run `pod install` in the project directory to set up the modules.
-3. Open the `bin/data` directory and download the **miniServerForIos** branch of the RE-server (https://github.com/PTCInc/RE-server/tree/miniServerForIos) into the folder. The server.js should have the path *bin/data/RE-server/server.js*
-4. Download the **one-reality** branch of the RE-userinterface (https://github.com/PTCInc/RE-userinterface/tree/one-reality) to the bin/data folder so that the index.html file has the path _bin/data/userinterface/index.html_
-5. Add the private _vuforiaKey.h_ file so that it has the path _Reality Editor iOS/vuforiaKey.h_
-6. Add the Vuforia Engine SDK. It is not included in the GitHub repo because it is too large (~100MB), so it should be downloaded separately from https://developer.vuforia.com/downloads/sdk. The resulting download will contain *Vuforia.framework* inside the build/ folder. Copy and paste *Vuforia.framework* into the top level directory of this repository. 
-7. Open Reality Editor iOS.**xcworkspace** (not the Reality Editor iOS.**xcodeproj** file). This opens a project with all of the modules included. If everything so far has succeeded, the project structure should look like this, and the project should compile:
-
-![project-structure](README-resources/project-structure.png)
-
-### How to update Vuforia Engine
-
-If a new version of the Vuforia Engine SDK is released (can be downloaded from https://developer.vuforia.com/downloads/sdk), it can take a varying amount of work to update the included SDK version.
-
-In principle, you can just close Xcode, delete the old Vuforia.framework from the project directory, paste in the new Vuforia.framework version, and open Xcode again.
-
-However, sometimes the APIs are not consistent from one version to another. The easiest way to update all integrations is to download the corresponding new version of the Vuforia Samples (Core Features) for iOS:  https://developer.vuforia.com/downloads/samples.
-
-In the *VuforiaSamples/Classes/SampleApplication* directory there is a list of Objective-C/C++ classes that closely mirrors the files in *RE-realityeditor-ios/Reality Editor iOS/Vuforia Application*. To update, you must merge the changes from the new SampleApplication to those files present in the Reality Editor Vuforia Application directory. You can mostly just replace the files with the new versions, but there are several additions to SampleApplicationSession and SampleAppRenderer in particular that must be copied to the new file versions. These changes are mostly isolated to regions surrounded by the following #pragma marks:
+1. Create a directory to hold the repositories.
 
 ```
-#pragma mark - Extensions to Vuforia Sample Application
-
- 	... changes ...
- 
-#pragma mark - 
+mkdir -p vuforia-spatial-toolbox
+cd vuforia-spatial-toolbox
 ```
+
+2) Clone the vuforia-spatial-toolbox-ios repo from GitHub. The master branches of all repositories should be stable.
+
+```
+git clone git@github.com:ptcrealitylab/vuforia-spatial-toolbox-ios.git
+cd vuforia-spatial-toolbox-ios
+```
+
+3) Clone the vuforia-spatial-edge-server into the bin/data directory of the app.
+
+```
+cd bin/data
+git clone git@github.com:ptcrealitylab/vuforia-spatial-edge-server.git
+cd vuforia-spatial-edge-server
+```
+
+4) Create an addons folder in the vuforia-spatial-edge-server and clone the vuforia-spatial-core-addon into that folder.
+
+```
+mkdir addons
+cd addons
+git clone git@github.com:ptcrealitylab/vuforia-spatial-core-addon.git
+cd ../
+```
+
+5) Run npm install in the vuforia-spatial-edge-server. You may have to go back here and manually run npm install for new node packages if they are missing when you try to run the app.
+
+```
+npm install
+```
+
+6) Clone the vuforia-spatial-toolbox-userinterface into the bin/data directory of the app, and rename the directory to userinterface.
+
+```
+cd ../
+git clone git@github.com:ptcrealitylab/vuforia-spatial-toolbox-userinterface.git
+mv vuforia-spatial-toolbox-userinterface userinterface
+```
+
+
+7) Go back to the top level directory of the iOS project, and install its dependencies using [CocoaPods](https://guides.cocoapods.org/using/getting-started.html) (run `sudo gem install cocoapods` first if `pod install` fails)
+
+```
+cd ../../
+pod install
+```
+
+
+8) Download Vuforia SDK version 8.6.7 from https://developer.vuforia.com/downloads/sdk (Click link for *vuforia-sdk-ios-8-6-7.zip (53.67 MB)*)
+
+- paste the Vuforia.framework file from the `build` directory of the download, into the `~/Documents/vuforia-spatial-toolbox/vuforia-spatial-toolbox-ios` directory
+
+
+9) Get the VuforiaKey.h file from Ben or Valentin, or download a license key from http://developer.vuforia.com. 
+
+- paste VuforiaKey.h into the `~/Documents/vuforia-spatial-toolbox/vuforia-spatial-toolbox-ios/Vuforia Spatial Toolbox` directory 
+
+It should look like:
+
+```
+//  vuforiaKey.h
+//  Licensed from http://developer.vuforia.com
+
+#ifndef vuforiaKey_h
+#define vuforiaKey_h
+
+const char* vuforiaKey = "Replace this string with your license key";
+
+#endif /* vuforiaKey_h */
+```
+
+10) When these files are in place, open Vuforia Spatial Toolbox.**xcworkspace**. Make sure to open the .xcworkspace and not the .xcodeproj, otherwise the dependencies won't load. Make sure Xcode is set up with your Apple developer profile for code signing. You should be able to compile and run the project (it won't run on the simulator, need to have an iOS device connected).
