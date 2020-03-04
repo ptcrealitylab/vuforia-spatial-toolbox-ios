@@ -1,11 +1,14 @@
 //
 //  ARManager.m
-//  Reality Editor iOS
+//  Vuforia Spatial Toolbox
 //
 //  Created by Benjamin Reynolds on 7/18/18.
-//  Copyright © 2018 Reality Lab. All rights reserved.
+//  Copyright © 2018 PTC. All rights reserved.
 //
-//  Currently using Vuforia as the AR framework
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+//
 
 #import "ARManager.h"
 

@@ -1,9 +1,9 @@
 //
 //  REWebView.h
-//  Reality Editor iOS
+//  Vuforia Spatial Toolbox
 //
 //  Created by Benjamin Reynolds on 7/2/18.
-//  Copyright © 2018 Reality Lab. All rights reserved.
+//  Copyright © 2018 PTC. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

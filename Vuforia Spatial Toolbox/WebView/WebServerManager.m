@@ -1,6 +1,6 @@
 //
 //  WebServerManager.m
-//  RealityEditor
+//  Vuforia Spatial Toolbox
 //
 //  Created by Benjamin Reynolds on 4/2/18.
 //
