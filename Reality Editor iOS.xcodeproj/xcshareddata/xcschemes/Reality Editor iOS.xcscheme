@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "43D0350820EAC02600AA1039"
-               BuildableName = "RE-worlds.app"
+               BuildableName = "Vuforia Spatial Toolbox.app"
                BlueprintName = "Reality Editor iOS"
                ReferencedContainer = "container:Reality Editor iOS.xcodeproj">
             </BuildableReference>
@@ -31,7 +31,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "43D0350820EAC02600AA1039"
-            BuildableName = "RE-worlds.app"
+            BuildableName = "Vuforia Spatial Toolbox.app"
             BlueprintName = "Reality Editor iOS"
             ReferencedContainer = "container:Reality Editor iOS.xcodeproj">
          </BuildableReference>
@@ -54,7 +54,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "43D0350820EAC02600AA1039"
-            BuildableName = "RE-worlds.app"
+            BuildableName = "Vuforia Spatial Toolbox.app"
             BlueprintName = "Reality Editor iOS"
             ReferencedContainer = "container:Reality Editor iOS.xcodeproj">
          </BuildableReference>
@@ -71,7 +71,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "43D0350820EAC02600AA1039"
-            BuildableName = "RE-worlds.app"
+            BuildableName = "Vuforia Spatial Toolbox.app"
             BlueprintName = "Reality Editor iOS"
             ReferencedContainer = "container:Reality Editor iOS.xcodeproj">
          </BuildableReference>

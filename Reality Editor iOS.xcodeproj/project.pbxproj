@@ -31,6 +31,7 @@
 		43277B13232165FF000162C1 /* BackgroundFlipped.vertsh in Resources */ = {isa = PBXBuildFile; fileRef = 43277B12232165FF000162C1 /* BackgroundFlipped.vertsh */; };
 		436CF092225693FB002E77C9 /* worldReferenceMarker in Resources */ = {isa = PBXBuildFile; fileRef = 436CF091225693FB002E77C9 /* worldReferenceMarker */; };
 		437B8AEC21025108006720F5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 437B8AEB21025108006720F5 /* AudioToolbox.framework */; };
+		437C3BC824104FDA00B0F977 /* RE-server in Resources */ = {isa = PBXBuildFile; fileRef = 437C3BC724104FDA00B0F977 /* RE-server */; };
 		4397878320FFB88500B3A9E5 /* JavaScriptAPIHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4397878220FFB88500B3A9E5 /* JavaScriptAPIHandler.mm */; };
 		4397878620FFC18B00B3A9E5 /* ARManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4397878520FFC18B00B3A9E5 /* ARManager.mm */; };
 		4397878920FFD03800B3A9E5 /* UDPManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4397878820FFD03800B3A9E5 /* UDPManager.mm */; };
@@ -53,7 +54,6 @@
 		43FC68EC22A5AA4B00F6D6DD /* Vuforia.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43FC68EA22A5AA4B00F6D6DD /* Vuforia.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A7034E652218B056006B01A6 /* Pods_Reality_Editor_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55AC56D1CA09AE8695064552 /* Pods_Reality_Editor_iOS.framework */; };
 		A7EE6C762218853B00F60723 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7EE6C752218853B00F60723 /* Images.xcassets */; };
-		A7F7A923221755D500692858 /* RE-server in Resources */ = {isa = PBXBuildFile; fileRef = A7F7A922221755D500692858 /* RE-server */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -106,6 +106,7 @@
 		43277B12232165FF000162C1 /* BackgroundFlipped.vertsh */ = {isa = PBXFileReference; lastKnownFileType = text; path = BackgroundFlipped.vertsh; sourceTree = "<group>"; };
 		436CF091225693FB002E77C9 /* worldReferenceMarker */ = {isa = PBXFileReference; lastKnownFileType = folder; path = worldReferenceMarker; sourceTree = "<group>"; };
 		437B8AEB21025108006720F5 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		437C3BC724104FDA00B0F977 /* RE-server */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "RE-server"; path = "../../../../vuforia-toolbox/vuforia-toolbox-ios/bin/data/RE-server"; sourceTree = "<group>"; };
 		4397878120FFB88500B3A9E5 /* JavaScriptAPIHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JavaScriptAPIHandler.h; sourceTree = "<group>"; };
 		4397878220FFB88500B3A9E5 /* JavaScriptAPIHandler.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = JavaScriptAPIHandler.mm; sourceTree = "<group>"; };
 		4397878420FFC18B00B3A9E5 /* ARManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARManager.h; sourceTree = "<group>"; };
@@ -142,7 +143,6 @@
 		55AC56D1CA09AE8695064552 /* Pods_Reality_Editor_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Reality_Editor_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		62FC7EC5CED3832D3BC793DC /* Pods-Reality Editor iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reality Editor iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		A7EE6C752218853B00F60723 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		A7F7A922221755D500692858 /* RE-server */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "RE-server"; path = "bin/data/RE-server"; sourceTree = SOURCE_ROOT; };
 		E121292531BDDE6690F2B7D0 /* Pods-Reality Editor iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reality Editor iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-Reality Editor iOS/Pods-Reality Editor iOS.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -222,6 +222,14 @@
 			path = resources;
 			sourceTree = "<group>";
 		};
+		437C3BC624104FC800B0F977 /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				437C3BC724104FDA00B0F977 /* RE-server */,
+			);
+			path = Server;
+			sourceTree = "<group>";
+		};
 		43AD95852214738700E5BB36 /* NodeJS */ = {
 			isa = PBXGroup;
 			children = (
@@ -229,14 +237,6 @@
 				43AD9587221473AA00E5BB36 /* NodeRunner.mm */,
 			);
 			path = NodeJS;
-			sourceTree = "<group>";
-		};
-		43AD958A2214740A00E5BB36 /* RealityServer */ = {
-			isa = PBXGroup;
-			children = (
-				A7F7A922221755D500692858 /* RE-server */,
-			);
-			path = RealityServer;
 			sourceTree = "<group>";
 		};
 		43ADDCEA2215DBA400E5BB36 /* AR */ = {
@@ -255,7 +255,6 @@
 		43D0350020EAC02600AA1039 = {
 			isa = PBXGroup;
 			children = (
-				43AD958A2214740A00E5BB36 /* RealityServer */,
 				43D0350B20EAC02600AA1039 /* Reality Editor iOS */,
 				43D0350A20EAC02600AA1039 /* Products */,
 				43D0355620EAC1FD00AA1039 /* Frameworks */,
@@ -274,6 +273,7 @@
 		43D0350B20EAC02600AA1039 /* Reality Editor iOS */ = {
 			isa = PBXGroup;
 			children = (
+				437C3BC624104FC800B0F977 /* Server */,
 				436CF090225693EB002E77C9 /* resources */,
 				A7EE6C752218853B00F60723 /* Images.xcassets */,
 				43ADDCEA2215DBA400E5BB36 /* AR */,
@@ -402,7 +402,6 @@
 				43D0351620EAC02600AA1039 /* Assets.xcassets in Resources */,
 				4304598120F7CDA800B54215 /* Line.vertsh in Resources */,
 				4304597F20F7CDA800B54215 /* DiffuseLightMaterials.vertsh in Resources */,
-				A7F7A923221755D500692858 /* RE-server in Resources */,
 				4304597A20F7CDA800B54215 /* Background.fragsh in Resources */,
 				43D0351420EAC02600AA1039 /* Main.storyboard in Resources */,
 				4304597C20F7CDA800B54215 /* DiffuseLight.fragsh in Resources */,
@@ -412,6 +411,7 @@
 				43277B13232165FF000162C1 /* BackgroundFlipped.vertsh in Resources */,
 				4304598420F7CDA800B54215 /* SimpleTexturedColor.fragsh in Resources */,
 				4304598320F7CDA800B54215 /* Simple.vertsh in Resources */,
+				437C3BC824104FDA00B0F977 /* RE-server in Resources */,
 				4304597B20F7CDA800B54215 /* Background.vertsh in Resources */,
 				4304598020F7CDA800B54215 /* Line.fragsh in Resources */,
 				4304597D20F7CDA800B54215 /* DiffuseLight.vertsh in Resources */,
