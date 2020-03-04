@@ -31,7 +31,7 @@
 		43277B13232165FF000162C1 /* BackgroundFlipped.vertsh in Resources */ = {isa = PBXBuildFile; fileRef = 43277B12232165FF000162C1 /* BackgroundFlipped.vertsh */; };
 		436CF092225693FB002E77C9 /* worldReferenceMarker in Resources */ = {isa = PBXBuildFile; fileRef = 436CF091225693FB002E77C9 /* worldReferenceMarker */; };
 		437B8AEC21025108006720F5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 437B8AEB21025108006720F5 /* AudioToolbox.framework */; };
-		437C3BC824104FDA00B0F977 /* RE-server in Resources */ = {isa = PBXBuildFile; fileRef = 437C3BC724104FDA00B0F977 /* RE-server */; };
+		437C3BC824104FDA00B0F977 /* vuforia-spatial-edge-server in Resources */ = {isa = PBXBuildFile; fileRef = 437C3BC724104FDA00B0F977 /* vuforia-spatial-edge-server */; };
 		4397878320FFB88500B3A9E5 /* JavaScriptAPIHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4397878220FFB88500B3A9E5 /* JavaScriptAPIHandler.mm */; };
 		4397878620FFC18B00B3A9E5 /* ARManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4397878520FFC18B00B3A9E5 /* ARManager.mm */; };
 		4397878920FFD03800B3A9E5 /* UDPManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4397878820FFD03800B3A9E5 /* UDPManager.mm */; };
@@ -107,7 +107,7 @@
 		43277B12232165FF000162C1 /* BackgroundFlipped.vertsh */ = {isa = PBXFileReference; lastKnownFileType = text; path = BackgroundFlipped.vertsh; sourceTree = "<group>"; };
 		436CF091225693FB002E77C9 /* worldReferenceMarker */ = {isa = PBXFileReference; lastKnownFileType = folder; path = worldReferenceMarker; sourceTree = "<group>"; };
 		437B8AEB21025108006720F5 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		437C3BC724104FDA00B0F977 /* RE-server */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "RE-server"; path = "../../../../vuforia-toolbox/vuforia-toolbox-ios/bin/data/RE-server"; sourceTree = "<group>"; };
+		437C3BC724104FDA00B0F977 /* vuforia-spatial-edge-server */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "vuforia-spatial-edge-server"; path = "../../../../vuforia-toolbox/vuforia-toolbox-ios/bin/data/vuforia-spatial-edge-server"; sourceTree = "<group>"; };
 		4397878120FFB88500B3A9E5 /* JavaScriptAPIHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JavaScriptAPIHandler.h; sourceTree = "<group>"; };
 		4397878220FFB88500B3A9E5 /* JavaScriptAPIHandler.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = JavaScriptAPIHandler.mm; sourceTree = "<group>"; };
 		4397878420FFC18B00B3A9E5 /* ARManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARManager.h; sourceTree = "<group>"; };
@@ -216,7 +216,7 @@
 		437C3BC624104FC800B0F977 /* Server */ = {
 			isa = PBXGroup;
 			children = (
-				437C3BC724104FDA00B0F977 /* RE-server */,
+				437C3BC724104FDA00B0F977 /* vuforia-spatial-edge-server */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -411,7 +411,7 @@
 				43277B13232165FF000162C1 /* BackgroundFlipped.vertsh in Resources */,
 				4304598420F7CDA800B54215 /* SimpleTexturedColor.fragsh in Resources */,
 				4304598320F7CDA800B54215 /* Simple.vertsh in Resources */,
-				437C3BC824104FDA00B0F977 /* RE-server in Resources */,
+				437C3BC824104FDA00B0F977 /* vuforia-spatial-edge-server in Resources */,
 				4304597B20F7CDA800B54215 /* Background.vertsh in Resources */,
 				4304598020F7CDA800B54215 /* Line.fragsh in Resources */,
 				4304597D20F7CDA800B54215 /* DiffuseLight.vertsh in Resources */,
