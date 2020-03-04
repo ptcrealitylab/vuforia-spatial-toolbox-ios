@@ -47,7 +47,7 @@
 
 - (void)startNode {
     NSLog(@"startNode");
-    NSString* srcPath = [[NSBundle mainBundle] pathForResource:@"RE-server/server.js" ofType:@""];
+    NSString* srcPath = [[NSBundle mainBundle] pathForResource:@"vuforia-spatial-edge-server/server.js" ofType:@""];
     NSLog(@"Path: %@", srcPath);
     NSArray* nodeArguments = [NSArray arrayWithObjects:
                               @"node",
