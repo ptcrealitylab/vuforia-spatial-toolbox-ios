@@ -246,7 +246,7 @@
 		43D0350020EAC02600AA1039 = {
 			isa = PBXGroup;
 			children = (
-				43D0350B20EAC02600AA1039 /* Reality Editor iOS */,
+				43D0350B20EAC02600AA1039 /* Vuforia Spatial Toolbox */,
 				43D0350A20EAC02600AA1039 /* Products */,
 				43D0355620EAC1FD00AA1039 /* Frameworks */,
 				C63ADFA54088049FC8073EE6 /* Pods */,
@@ -261,7 +261,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		43D0350B20EAC02600AA1039 /* Reality Editor iOS */ = {
+		43D0350B20EAC02600AA1039 /* Vuforia Spatial Toolbox */ = {
 			isa = PBXGroup;
 			children = (
 				437C3BC624104FC800B0F977 /* Server */,
@@ -293,7 +293,7 @@
 				43D0351A20EAC02600AA1039 /* Info.plist */,
 				43D0351B20EAC02600AA1039 /* main.m */,
 			);
-			path = "Reality Editor iOS";
+			path = "Vuforia Spatial Toolbox";
 			sourceTree = "<group>";
 		};
 		43D0352220EAC09A00AA1039 /* WebView */ = {
@@ -667,7 +667,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				INFOPLIST_FILE = "Reality Editor iOS/Info.plist";
+				INFOPLIST_FILE = "Vuforia Spatial Toolbox/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -749,7 +749,7 @@
 				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
-				INFOPLIST_FILE = "Reality Editor iOS/Info.plist";
+				INFOPLIST_FILE = "Vuforia Spatial Toolbox/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
