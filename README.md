@@ -92,3 +92,9 @@ const char* vuforiaKey = "Replace this string with your license key";
 ```
 
 10) When these files are in place, open Vuforia Spatial Toolbox.**xcworkspace**. Make sure to open the .xcworkspace and not the .xcodeproj, otherwise the dependencies won't load. Make sure Xcode is set up with your Apple developer profile for code signing. You should be able to compile and run the project (it won't run on the simulator, need to have an iOS device connected).
+
+### Notes
+
+If your log window is being spammed with `[Process] kill() returned unexpected
+error 1` check out [this StackOverflow
+answer](https://stackoverflow.com/a/58774271).
