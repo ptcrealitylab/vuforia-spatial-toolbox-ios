@@ -43,8 +43,8 @@ git clone git@github.com:ptcrealitylab/vuforia-spatial-edge-server.git
 cd vuforia-spatial-edge-server
 ```
 
-4) Create an addons folder in the vuforia-spatial-edge-server and clone the vuforia-spatial-core
--addon into that folder.
+4) Create an addons folder in the vuforia-spatial-edge-server and clone the
+vuforia-spatial-core-addon into that folder.
 
 ```
 mkdir addons
@@ -71,8 +71,8 @@ mv vuforia-spatial-toolbox-userinterface userinterface
 
 
 7) Go back to the top level directory of the iOS project, and install its dependencies using
- [CocoaPods](https://guides.cocoapods.org/using/getting-started.html) (run `sudo gem install
-  cocoapods` first if `pod install` fails)
+ [CocoaPods](https://guides.cocoapods.org/using/getting-started.html) (run
+ `sudo gem install cocoapods` first if `pod install` fails)
 
 ```
 cd ../../
