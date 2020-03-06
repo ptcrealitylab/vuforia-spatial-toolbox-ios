@@ -110,6 +110,15 @@ const char* vuforiaKey = "Replace this string with your license key";
    compile and run the project (it won't run on the simulator, need to have an iOS device
     connected).
 
+### Device compatibility
+
+While this codebase is fundamentally compatible with iPhones and iPads, it has currently only
+ been recently tested with iPhones. This has been developed primarily with iOS 11, 12, and 13,
+ and with device models iPhone 6S through 11 Pro. If you would like to use this with iPads or
+  otherwise improve the compatibility with additional devices and OS versions, your help in
+   testing the app on those platforms and identifying bugs will greatly accelerate the path towards
+    full compatibility for those devices (you can get involved on our [forum](https://forum.spatialtoolbox.vuforia.com).
+
 ### Notes
 
 If your log window is being spammed with `[Process] kill() returned unexpected
