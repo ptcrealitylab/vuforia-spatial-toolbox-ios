@@ -1,9 +1,9 @@
 # Vuforia Spatial Toolbox
 
 ## Read First
-The Vuforia Spatial Toolbox and Vuforia Spatial Edge Serve make up a shared research platform for exploring spatial computing as a community. We want to welcome you to join our community [forum.spatialtoolbox.vuforia.com](https://forum.spatialtoolbox.vuforia.com). 
+The Vuforia Spatial Toolbox and Vuforia Spatial Edge Serve make up a shared research platform for exploring spatial computing as a community. This research platform is not an out of the box production-ready enterprise solution. Please read the [MPL 2.0 license](LICENSE) before use.
 
-This research platform is not an out of the box production-ready enterprise solution. Please read the [MPL 2.0 license](LICENSE) before use.
+Join the conversations in our forum if you have questions, ideas want to collaborate or just say hi [forum.spatialtoolbox.vuforia.com](https://forum.spatialtoolbox.vuforia.com).
 
 ## Installation
 How to build and run Vuforia Spatial Toolbox from your computer.
