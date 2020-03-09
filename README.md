@@ -46,13 +46,8 @@ git clone git@github.com:ptcrealitylab/vuforia-spatial-edge-server.git
 cd vuforia-spatial-edge-server
 ```
 
-<<<<<<< HEAD
 4) Create an addons folder in the vuforia-spatial-edge-server and clone the
 vuforia-spatial-core-addon into that folder.
-=======
-4) Create an addons folder in the vuforia-spatial-edge-server and clone the vuforia-spatial-core
--addon into that folder.
->>>>>>> 08c573f... slight improvements to readme install instructions (shallow clone, etc)
 
 ```
 mkdir addons
@@ -69,13 +64,9 @@ npm install
 ```
 
 6) Clone the vuforia-spatial-toolbox-userinterface into the bin/data directory of the app, and
-<<<<<<< HEAD
- rename the directory to userinterface.
-=======
  rename the directory to "userinterface". This command performs a shallow clone to significantly
   reduce the download size. If you wish to make the shallow clone a deep clone in the future, you
    can run `git fetch --unshallow` in the userinterface directory.
->>>>>>> 08c573f... slight improvements to readme install instructions (shallow clone, etc)
 
 ```
 cd ../
