@@ -78,9 +78,9 @@ pod install
 - paste the Vuforia.framework file from the `build` directory of the download, into the `~/Documents/vuforia-spatial-toolbox/vuforia-spatial-toolbox-ios` directory
 
 
-9) Get the VuforiaKey.h file from Ben or Valentin, or download a license key from http://developer.vuforia.com. 
+9) Get a license key from http://developer.vuforia.com. 
 
-- paste VuforiaKey.h into the `~/Documents/vuforia-spatial-toolbox/vuforia-spatial-toolbox-ios/Vuforia Spatial Toolbox` directory 
+Create a vuforiaKey.h fiel:
 
 It should look like:
 
@@ -95,6 +95,8 @@ const char* vuforiaKey = "Replace this string with your license key";
 
 #endif /* vuforiaKey_h */
 ```
+
+- paste VuforiaKey.h into the `~/Documents/vuforia-spatial-toolbox/vuforia-spatial-toolbox-ios/Vuforia Spatial Toolbox` directory 
 
 10) When these files are in place, open Vuforia Spatial Toolbox.**xcworkspace**. Make sure to open the .xcworkspace and not the .xcodeproj, otherwise the dependencies won't load. Make sure Xcode is set up with your Apple developer profile for code signing. You should be able to compile and run the project (it won't run on the simulator, need to have an iOS device connected).
 
