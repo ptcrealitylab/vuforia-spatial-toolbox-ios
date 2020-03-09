@@ -473,7 +473,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Vuforia Spatial Toolbox/Pods-Vuforia Spatial Toolbox-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Vuforia Spatial Toolbox/Pods-Vuforia Spatial Toolbox-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
@@ -486,7 +486,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Vuforia Spatial Toolbox/Pods-Vuforia Spatial Toolbox-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Vuforia Spatial Toolbox/Pods-Vuforia Spatial Toolbox-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

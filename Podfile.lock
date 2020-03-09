@@ -25,7 +25,7 @@ DEPENDENCIES:
   - GCDWebServer (~> 3.0)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - AFNetworking
     - CocoaAsyncSocket
     - GCDWebServer
@@ -37,4 +37,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 3cf90547c689f2c4cc188fe344a78a1b272e5fa7
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.9.0
