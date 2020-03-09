@@ -131,7 +131,7 @@ While this codebase is fundamentally compatible with iPhones and iPads, it has c
    otherwise improve the compatibility with additional devices and OS versions, your help in
     testing the app on those platforms and identifying bugs will greatly accelerate the path towards
      full compatibility for those devices (you can get involved on our
-      [forum](https://forum.spatialtoolbox.vuforia.com).
+      [forum](https://forum.spatialtoolbox.vuforia.com)).
 
 ### Notes
 
