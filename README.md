@@ -84,8 +84,8 @@ cd ../../
 pod install
 ```
 
-8) Download Vuforia SDK version 8.6.x from https://developer.vuforia.com/downloads/sdk (Click the
- "Download for iOS" link for *vuforia-sdk-ios-8-6-x.zip*).
+8) Download Vuforia SDK version 8.6.x for iOS from https://developer.vuforia.com/downloads/sdk
+ (Click the "Download for iOS" link for *vuforia-sdk-ios-8-6-x.zip*).
 
 - Paste the Vuforia.framework file from the `build` directory of the download into the top level
  of the `vuforia-spatial-toolbox-ios` directory.
