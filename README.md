@@ -6,7 +6,7 @@ The Vuforia Spatial Toolbox and Vuforia Spatial Edge Server make up a shared res
 Join the conversations in our [discourse forum](https://forum.spatialtoolbox.vuforia.com) if you have questions, ideas want to collaborate or just say hi.
 
 ## Installation
-How to build and run Vuforia Spatial Toolbox from your computer.
+How to build and run Vuforia Spatial Toolbox iOS App from your Mac OS Computer.
 
 Note: you need to have [CocoaPods](https://guides.cocoapods.org/using/getting-started.html) installed, which you can get on MacOS using:
 
@@ -17,7 +17,7 @@ sudo gem install cocoapods
 (Note: these instructions use SSH to clone from Git, but it can also be done with HTTPS)
 
 
-### Explanation
+### Step by step Instruction
 
 1. Create a directory to hold the repositories.
 
