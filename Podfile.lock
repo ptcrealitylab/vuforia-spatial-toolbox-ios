@@ -13,9 +13,6 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking/NSURLSession (~> 3.0)
-  - AFNetworking/Reachability (~> 3.0)
-  - AFNetworking/Security (~> 3.0)
-  - AFNetworking/Serialization (~> 3.0)
   - CocoaAsyncSocket
   - GCDWebServer (~> 3.0)
 
@@ -30,6 +27,6 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   GCDWebServer: 8d67ee9f634b4bb91eb4b8aee440318a5fc6debd
 
-PODFILE CHECKSUM: b417afaace15216662973be017c816fbb9be46b2
+PODFILE CHECKSUM: 0f581365c9db2bc7e21a33d4d738b7a4379fed60
 
 COCOAPODS: 1.5.3
