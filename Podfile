@@ -8,6 +8,6 @@ target 'Vuforia Spatial Toolbox' do
   # Pods for Vuforia Spatial Toolbox
   pod 'CocoaAsyncSocket'
   pod 'GCDWebServer', '~> 3.0'
-  pod 'AFNetworking', '~> 3.0', :subspecs => ['Reachability', 'Serialization', 'Security', 'NSURLSession']
+  pod 'AFNetworking', '~> 3.0', :subspecs => ['NSURLSession']
 
 end
