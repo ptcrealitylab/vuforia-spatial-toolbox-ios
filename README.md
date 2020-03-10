@@ -129,11 +129,11 @@ While this codebase is fundamentally compatible with iPhones and iPads, it has c
 
 Please refer to our
 [documentation repository](https://github.com/ptcrealitylab/vuforia-spatial-toolbox-documentation)
-for additional tutorials, setup guides, and introductions to various aspects of the system.
-
-In particular, reading about the
+for additional tutorials, setup guides, and introductions to various aspects of the system. In
+particular, reading about the
 [system architecture](https://github.com/ptcrealitylab/vuforia-spatial-toolbox-documentation/blob/master/understandSystem/systemArchitecture.md)
-will give you an overview about how the aspects of the system fit together.
+will give you an overview about how the aspects of the system fit together. An in-depth setup guide
+will also be available soon.
 
 ### Notes
 
