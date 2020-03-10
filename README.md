@@ -115,7 +115,7 @@ const char* vuforiaKey = "Replace this string with your license key";
    compile and run the project (it won't run on the simulator; you need to have an iOS device
     connected).
 
-### Device compatibility
+### Device Compatibility
 
 While this codebase is fundamentally compatible with iPhones and iPads, it has currently only
  been recently tested with iPhones. This has been developed primarily with iOS 11, 12, and 13,
@@ -124,6 +124,16 @@ While this codebase is fundamentally compatible with iPhones and iPads, it has c
     testing the app on those platforms and identifying bugs will greatly accelerate the path towards
      full compatibility for those devices (you can get involved on our
       [forum](https://forum.spatialtoolbox.vuforia.com)).
+
+### Additional Documentation
+
+Please refer to our
+[documentation repository](https://github.com/ptcrealitylab/vuforia-spatial-toolbox-documentation)
+for additional tutorials, setup guides, and introductions to various aspects of the system.
+
+In particular, reading about the
+[system architecture](https://github.com/ptcrealitylab/vuforia-spatial-toolbox-documentation/blob/master/understandSystem/systemArchitecture.md)
+will give you an overview about how the aspects of the system fit together.
 
 ### Notes
 
