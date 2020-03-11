@@ -11,7 +11,7 @@
 //
 
 #import "FileManager.h"
-#import "AFNetworking.h"
+#import <AFNetworking/AFHTTPSessionManager.h>
 
 @implementation FileManager
 
