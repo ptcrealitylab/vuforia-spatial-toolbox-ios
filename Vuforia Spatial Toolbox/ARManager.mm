@@ -17,6 +17,7 @@
 #import <Vuforia/TrackerManager.h>
 #import <Vuforia/ObjectTracker.h>
 #import <Vuforia/PositionalDeviceTracker.h>
+#import <Vuforia/AreaTracker.h>
 #import <Vuforia/SmartTerrain.h>
 #import <Vuforia/HitTestResult.h>
 #import <Vuforia/Trackable.h>
@@ -45,6 +46,7 @@
     
     BOOL disableGroundPlaneTracker;
     BOOL disablePositionalDeviceTracker;
+    BOOL disableAreaTargetTracker;
 }
 
 @synthesize didStartAR;
@@ -71,6 +73,7 @@
         
         disablePositionalDeviceTracker = false;
         disableGroundPlaneTracker = false;
+        disableAreaTargetTracker = false;
     }
     return self;
 }
@@ -555,11 +558,19 @@
         Vuforia::Tracker* smartTerrain = trackerManager.initTracker(Vuforia::SmartTerrain::getClassType());
         if (smartTerrain == nullptr)
         {
-            NSLog(@"Failed to start SmartTerrain.");
+            NSLog(@"Failed to initialize SmartTerrain.");
             return NO;
         }
     }
     
+    if (!disableAreaTargetTracker) {
+        Vuforia::AreaTracker* areaTracker = static_cast<Vuforia::AreaTracker*>(trackerManager.initTracker(Vuforia::AreaTracker::getClassType()));
+        if (areaTracker == nullptr)
+        {
+            NSLog(@"Failed to initialize AreaTracker");
+        }
+    }
+
     NSLog(@"Initialized trackers");
     return YES;
 }
@@ -599,13 +610,25 @@
     
     // Start ground plane tracker
     if (!disableGroundPlaneTracker) {
-            Vuforia::Tracker* smartTerrain = trackerManager.getTracker(Vuforia::SmartTerrain::getClassType());
-            if (smartTerrain == nullptr || !smartTerrain->start())
-            {
-                NSLog(@"Failed to start SmartTerrain (ground plane)");
-                return NO;
-            }
-            NSLog(@"Successfully started SmartTerrain (ground plane)");
+        Vuforia::Tracker* smartTerrain = trackerManager.getTracker(Vuforia::SmartTerrain::getClassType());
+        if (smartTerrain == nullptr || !smartTerrain->start())
+        {
+            NSLog(@"Failed to start SmartTerrain (ground plane)");
+            return NO;
+        }
+        NSLog(@"Successfully started SmartTerrain (ground plane)");
+    }
+
+    // Start area target tracker
+    if (!disableAreaTargetTracker) {
+        NSLog(@"TODO: start area target tracker");
+        Vuforia::AreaTracker* areaTracker = static_cast<Vuforia::AreaTracker*>(trackerManager.getTracker(Vuforia::AreaTracker::getClassType()));
+        if (areaTracker == nullptr || !areaTracker->start())
+        {
+            NSLog(@"Failed to start Area Tracker");
+            return NO;
+        }
+        NSLog(@"Successfully started Area Tracker");
     }
 
     return true;
