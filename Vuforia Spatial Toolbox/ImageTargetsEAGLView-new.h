@@ -1,5 +1,5 @@
 /*===============================================================================
-Copyright (c) 2016 PTC Inc. All Rights Reserved.
+Copyright (c) 2020 PTC Inc. All Rights Reserved.
 
 Copyright (c) 2012-2015 Qualcomm Connected Experiences, Inc. All Rights Reserved.
 
@@ -13,10 +13,13 @@ countries.
 
 #import "Texture.h"
 #import "SampleApplicationSession.h"
+#import "SampleApplication3DModel.h"
 #import "SampleGLResourceHandler.h"
 #import "SampleAppRenderer.h"
+#import "SampleUIUtils.h"
 
-typedef void (^ MatrixStringCompletionHandler)(NSString *);
+#define kNumAugmentationTextures 4
+
 
 // EAGLView is a subclass of UIView and conforms to the informal protocol
 // UIGLViewProtocol
@@ -31,7 +34,7 @@ typedef void (^ MatrixStringCompletionHandler)(NSString *);
     GLuint defaultFramebuffer;
     GLuint colorRenderbuffer;
     GLuint depthRenderbuffer;
-    
+
     // Shader handles
     GLuint shaderProgramID;
     GLint vertexHandle;
@@ -40,10 +43,15 @@ typedef void (^ MatrixStringCompletionHandler)(NSString *);
     GLint mvpMatrixHandle;
     GLint texSampler2DHandle;
     
+    // Texture used when rendering augmentation
+    Texture* augmentationTexture[kNumAugmentationTextures];
+    
+    SampleApplication3DModel * buildingModel;
+    
     SampleAppRenderer * sampleAppRenderer;
 }
 
-- (id) initWithFrame:(CGRect)frame appSession:(SampleApplicationSession *)app;
+- (id) initWithFrame:(CGRect)frame appSession:(SampleApplicationSession *)app andSampleUIUpdater:(id<SampleAppsUIControl>)sampleAppsUIControl;
 
 - (void) finishOpenGLESCommands;
 - (void) freeOpenGLESResources;
@@ -51,15 +59,4 @@ typedef void (^ MatrixStringCompletionHandler)(NSString *);
 - (void) setOffTargetTrackingMode:(BOOL) enabled;
 - (void) configureVideoBackgroundWithCameraMode:(Vuforia::CameraDevice::MODE)cameraMode viewWidth:(float)viewWidth viewHeight:(float)viewHeight;
 - (void) updateRenderingPrimitives;
-
-- (NSString *)stringFromMatrix44F:(Vuforia::Matrix44F)vuforiaMatrix;
-- (Vuforia::Matrix44F)getProjectionMatrix;
-
-- (BOOL)isProjectionMatrixReady;
-
-- (GLchar *)getVideoBackgroundPixels;
-- (CGSize)getCurrentARViewBoundsSize;
-- (void)recordingStarted;
-- (void)recordingStopped;
-
 @end
