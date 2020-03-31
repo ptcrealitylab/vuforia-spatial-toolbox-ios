@@ -1,5 +1,5 @@
 /*===============================================================================
-Copyright (c) 2019 PTC Inc. All Rights Reserved.
+Copyright (c) 2020 PTC Inc. All Rights Reserved.
 
  Copyright (c) 2012-2015 Qualcomm Connected Experiences, Inc. All Rights Reserved.
  
@@ -10,7 +10,7 @@ Copyright (c) 2019 PTC Inc. All Rights Reserved.
 #import "SampleApplicationSession.h"
 #import "SampleApplicationUtils.h"
 #import <Vuforia/Vuforia.h>
-#import <Vuforia/Vuforia_iOS.h>
+#import <Vuforia/iOS/Vuforia_iOS.h>
 #import <Vuforia/CameraDevice.h>
 #import <Vuforia/PositionalDeviceTracker.h>
 #import <Vuforia/Renderer.h>
@@ -18,7 +18,9 @@ Copyright (c) 2019 PTC Inc. All Rights Reserved.
 #import <Vuforia/TrackerManager.h>
 #import <Vuforia/UpdateCallback.h>
 #import <Vuforia/VideoBackgroundConfig.h>
+#pragma mark - Spatial Toolbox Extensions to Vuforia Sample Application (import license key)
 #import "vuforiaKey.h"
+#pragma mark -
 
 #import <UIKit/UIKit.h>
 
@@ -138,7 +140,6 @@ namespace {
 #pragma mark - Spatial Toolbox Extensions to Vuforia Sample Application (Add Vuforia License Key Here)
         Vuforia::setInitParameters(self.vuforiaInitFlags,vuforiaKey);
 #pragma mark -
-        
         // Vuforia::init() will return positive numbers up to 100 as it progresses
         // towards success.  Negative numbers indicate error conditions
         NSInteger initSuccess = 0;
