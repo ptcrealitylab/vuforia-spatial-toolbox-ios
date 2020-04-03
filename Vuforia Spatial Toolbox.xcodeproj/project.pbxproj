@@ -347,7 +347,6 @@
 				43D0350620EAC02600AA1039 /* Frameworks */,
 				43D0350720EAC02600AA1039 /* Resources */,
 				43D041A420EACACB00AA1039 /* ShellScript */,
-				43D041A520EACC2400AA1039 /* ShellScript */,
 				4304599720F7D02900B54215 /* Embed Frameworks */,
 				FB5C829B10EB10A229ABCFD1 /* [CP] Embed Pods Frameworks */,
 			);
@@ -458,19 +457,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "rsync -avz --exclude=\".*\" \"${SRCROOT}/bin/data/\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\n";
-		};
-		43D041A520EACC2400AA1039 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "REVEAL_APP_PATH=$(mdfind kMDItemCFBundleIdentifier=\"com.ittybittyapps.Reveal2\" | head -n 1)\nBUILD_SCRIPT_PATH=\"${REVEAL_APP_PATH}/Contents/SharedSupport/Scripts/reveal_server_build_phase.sh\"\nif [ \"${REVEAL_APP_PATH}\" -a -e \"${BUILD_SCRIPT_PATH}\" ]; then\n\"${BUILD_SCRIPT_PATH}\"\nelse\necho \"Reveal Server not loaded: Cannot find a compatible Reveal app.\"\nfi\n";
 		};
 		FB5C829B10EB10A229ABCFD1 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
