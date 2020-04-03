@@ -284,6 +284,28 @@
     [self handleCustomRequest: message.body];
 }
 
+#pragma mark - WKNavigaionDelegate Protocol Implementaion
+
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
+{
+    if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
+        if (navigationAction.request.URL) {
+            NSLog(@"%@", navigationAction.request.URL.host);
+            if ([navigationAction.request.URL.resourceSpecifier containsString:@"spatialtoolbox.vuforia.com"] ||
+                [navigationAction.request.URL.resourceSpecifier containsString:@"github.com"]) {
+                if ([[UIApplication sharedApplication] canOpenURL:navigationAction.request.URL]) {
+                    [[UIApplication sharedApplication] openURL:navigationAction.request.URL];
+                    decisionHandler(WKNavigationActionPolicyCancel);
+                }
+            } else {
+                decisionHandler(WKNavigationActionPolicyAllow);
+            }
+        }
+    } else {
+        decisionHandler(WKNavigationActionPolicyAllow);
+    }
+}
+
 #pragma mark - JavaScriptCallbackDelegate Protocol Implementation
 
 - (void)callJavaScriptCallback:(NSString *)callback withArguments:(NSArray *)arguments
