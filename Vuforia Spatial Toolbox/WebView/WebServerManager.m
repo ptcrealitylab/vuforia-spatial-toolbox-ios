@@ -8,7 +8,6 @@
 // that hosts the Reality Editor userinterface (used to allows cross-origin access between iframes and source content)
 
 #import "WebServerManager.h"
-#import "GCDWebServer.h"
 #import "NodeRunner.h"
 
 @implementation WebServerManager
@@ -63,7 +62,7 @@
 //    if ([webServer serverURL]) {
    //     return [webServer "172.0"];
 //    } else {
-     return [NSURL URLWithString:@"http://127.0.0.1:8888/"];
+     return [NSURL URLWithString:@"http://127.0.0.1:49368/"];
 //    }
 }
 
