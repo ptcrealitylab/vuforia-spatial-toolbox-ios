@@ -7,13 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class GCDWebServer;
-
-@interface WebServerManager : NSObject {
-    GCDWebServer* webServer;
-}
-
-@property (nonatomic, retain) GCDWebServer* webServer;
+@interface WebServerManager : NSObject
 
 - (NSURL *)getServerURL;
 
