@@ -7,26 +7,20 @@ PODS:
   - AFNetworking/Security (3.2.1)
   - AFNetworking/Serialization (3.2.1)
   - CocoaAsyncSocket (7.6.3)
-  - GCDWebServer (3.4.2):
-    - GCDWebServer/Core (= 3.4.2)
-  - GCDWebServer/Core (3.4.2)
 
 DEPENDENCIES:
   - AFNetworking/NSURLSession (~> 3.0)
   - CocoaAsyncSocket
-  - GCDWebServer (~> 3.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AFNetworking
     - CocoaAsyncSocket
-    - GCDWebServer
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
-  GCDWebServer: 8d67ee9f634b4bb91eb4b8aee440318a5fc6debd
 
-PODFILE CHECKSUM: 0f581365c9db2bc7e21a33d4d738b7a4379fed60
+PODFILE CHECKSUM: 4eb2b783265d1283b4d1aed1e2e10c18911a0c2a
 
 COCOAPODS: 1.5.3
