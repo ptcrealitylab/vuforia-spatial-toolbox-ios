@@ -4,15 +4,12 @@
 //
 //  Created by Benjamin Reynolds on 4/2/18.
 //
-// This is a singleton class that manages a GCDWebServer instance which is a local HTTP server
-// that hosts the Reality Editor userinterface (used to allows cross-origin access between iframes and source content)
+// This is a singleton class that manages a NodeRunner instance which runs a local instance of the Spatial Edge Server
 
 #import "WebServerManager.h"
 #import "NodeRunner.h"
 
 @implementation WebServerManager
-
-@synthesize webServer;
 
 #pragma mark - Singleton Methods
 
@@ -58,12 +55,7 @@
 }
 
 - (NSURL *)getServerURL {
-    //(webServer.serverURL)?webServer.serverURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://0.0.0.0:%d", webServer.port]];
-//    if ([webServer serverURL]) {
-   //     return [webServer "172.0"];
-//    } else {
      return [NSURL URLWithString:@"http://127.0.0.1:49368/"];
-//    }
 }
 
 @end
