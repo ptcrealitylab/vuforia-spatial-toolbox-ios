@@ -249,7 +249,8 @@
     } else if ([functionName isEqualToString:@"startVideoRecording"]) {
         NSString* objectKey = (NSString *)arguments[@"objectKey"];
         NSString* objectIP = (NSString *)arguments[@"objectIP"];
-        [self.apiHandler startVideoRecording:objectKey ip:objectIP];
+        NSString* objectPort = (NSString *)arguments[@"objectPort"];
+        [self.apiHandler startVideoRecording:objectKey ip:objectIP port:objectPort];
         
     } else if ([functionName isEqualToString:@"stopVideoRecording"]) {
         NSString* videoId = (NSString *)arguments[@"videoId"];
