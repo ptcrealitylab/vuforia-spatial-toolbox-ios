@@ -39,7 +39,7 @@
 // This is a javascriptAPI-triggered function that starts recording the video feed from the camera background
 // The objectKey and IP are used to save the resulting video file at a certain location on a Reality Server
 // TODO: some optimization of startRecording and writeFrame should remove the slight lag while recording
-- (void)startRecording:(NSString *)objectKey ip:(NSString *)objectIP
+- (void)startRecordingWithoutAR:(NSString *)objectKey ip:(NSString *)objectIP port:(NSString *)objectPort
 {
     CGSize videoOutputSize = CGSizeMake(640, 360); // change this to compress the video to a smaller size. can go up to 1080p.
     float frameRate = 30; // change this to compress the video by recording more/less frames per second
@@ -105,6 +105,7 @@
     // save the object ID and IP so we can upload to correct server when it finishes
     self.objectID = objectKey;
     self.objectIP = objectIP;
+    self.objectPort = objectPort;
 }
 
 // this gets called at a fixed interval between startVideoRecording and stopVideoRecording
@@ -157,7 +158,7 @@
 
 // This is a javascriptAPI-triggered function that stops the recording that is currently active
 // The resulting video file is uploaded to the Reality Server specified by the objectKey and IP provided when startVideoRecording was called
-- (void)stopRecording:(NSString *)videoId
+- (void)stopRecordingWithoutAR:(NSString *)videoId
 {
     if (!isRecording) {
         return;
@@ -173,7 +174,7 @@
     
     // when the video finishes writing to disk (at path self.assetWriter.outputURL), upload it to the Reality Server (POST /object/:objectID/video/:videoID)
     [self.assetWriter finishWritingWithCompletionHandler:^{
-        NSString* urlEndpoint = [NSString stringWithFormat:@"http://%@:8080/object/%@/video/%@", self.objectIP, self.objectID, videoId];
+        NSString* urlEndpoint = [NSString stringWithFormat:@"http://%@:%@/object/%@/video/%@", self.objectIP, self.objectPort, self.objectID, videoId];
         [[FileManager sharedManager] uploadFileFromPath:self.assetWriter.outputURL toURL:urlEndpoint];
 
         self.assetWriterInput = nil;
@@ -189,7 +190,8 @@
 // Use startRecording and stopRecording instead, which only record the camera background, not the AR elements.
 
 // Source: https://github.com/anthonya1999/ReplayKit-iOS11-Recorder/blob/master/ReplayKit-iOS11-Recorder/ViewController.m
-- (void)startRecordingWithAR:(NSString *)objectKey ip:(NSString *)objectIP
+// TODO: fix startRecordingWithoutAR instead of using this
+- (void)startRecording:(NSString *)objectKey ip:(NSString *)objectIP port:(NSString *)objectPort
 {
     CGSize videoOutputSize = CGSizeMake(640, 360); // change this to compress the video to a smaller size. can go up to 1080p.
 
@@ -243,15 +245,17 @@
         if (!error) {
             NSLog(@"Recording started successfully.");
             
-            // save the object ID and IP so we can upload to correct server when it finishes
+            // save the object ID and IP and port so we can upload to correct server when it finishes
             self.objectID = objectKey;
             self.objectIP = objectIP;
+            self.objectPort = objectPort;
         }
     }];
 }
 
 // Stops the recording started with startRecordingWithAR, and uploads the result to the server specified when startRecordingWithAR was called.
-- (void)stopRecordingWithAR:(NSString *)videoId
+// TODO: fix stopRecordingWithoutAR instead of using this
+- (void)stopRecording:(NSString *)videoId
 {
     [self.screenRecorder stopCaptureWithHandler:^(NSError * _Nullable error) {
         if (!error) {
@@ -259,7 +263,8 @@
             [self.assetWriterInput markAsFinished];
             [self.assetWriter finishWritingWithCompletionHandler:^{
 
-                NSString* urlEndpoint = [NSString stringWithFormat:@"http://%@:8080/object/%@/video/%@", self.objectIP, self.objectID, videoId];
+                // in addition to IP and ID, port can be 8080 or 49369 depending on the server so we store it in another parameter
+                NSString* urlEndpoint = [NSString stringWithFormat:@"http://%@:%@/object/%@/video/%@", self.objectIP, self.objectPort, self.objectID, videoId];
                 [[FileManager sharedManager] uploadFileFromPath:self.assetWriter.outputURL toURL:urlEndpoint];
 
                 self.assetWriterInput = nil;

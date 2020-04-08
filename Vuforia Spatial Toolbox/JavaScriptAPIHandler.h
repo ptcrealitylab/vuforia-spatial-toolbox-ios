@@ -50,7 +50,7 @@
 - (void)startSpeechRecording;
 - (void)stopSpeechRecording;
 - (void)addSpeechListener:(NSString *)callback;
-- (void)startVideoRecording:(NSString *)objectKey ip:(NSString *)objectIP;
+- (void)startVideoRecording:(NSString *)objectKey ip:(NSString *)objectIP port:(NSString *)objectPort;
 - (void)stopVideoRecording:(NSString *)videoId;
 - (void)tap;
 - (void)focusCamera;
