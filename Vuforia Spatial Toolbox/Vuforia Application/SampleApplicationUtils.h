@@ -1,5 +1,5 @@
 /*===============================================================================
- Copyright (c) 2015-2018 PTC Inc. All Rights Reserved.
+ Copyright (c) 2020 PTC Inc. All Rights Reserved.
  
  Copyright (c) 2012-2015 Qualcomm Connected Experiences, Inc. All Rights Reserved.
  
@@ -19,6 +19,7 @@
 #import <Vuforia/Image.h>
 #import <Vuforia/Vectors.h>
 
+#import <utility>
 
 namespace SampleApplicationUtils
 {
@@ -89,8 +90,17 @@ namespace SampleApplicationUtils
                                   int screenWidth, int screenHeight, int cameraWidth, int cameraHeight,
                                   int * cameraX, int* cameraY, int * cameraDX, int * cameraDY);
     
-    // Creates an OpenGL texture handle from a Vuforia Image    
-    unsigned int createTexture(Vuforia::Image * image);
+    // Helper method that converts Vuforia pixel format to the GL
+    // format (first) and type.
+    std::pair<GLenum, GLenum> getGLFormatFromVuforia(Vuforia::PIXEL_FORMAT vuforiaFormat);
+    
+    // Creates an OpenGL texture handle from a Vuforia Image
+    unsigned int createTexture(const Vuforia::Image * image);
+    
+    // Updates an OpenGL texture from a Vuforia Image
+    void updateTexture(int textureID, const Vuforia::Image* image);
+    
+    void deleteTexture(unsigned int handle);
 }
 
 #endif  // __SHADERUTILS_H__

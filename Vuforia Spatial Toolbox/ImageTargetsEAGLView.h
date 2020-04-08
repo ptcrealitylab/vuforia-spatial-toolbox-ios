@@ -9,7 +9,7 @@ countries.
 
 #import <UIKit/UIKit.h>
 
-#import <Vuforia/UIGLViewProtocol.h>
+#import <Vuforia/iOS/UIGLViewProtocol.h>
 
 #import "Texture.h"
 #import "SampleApplicationSession.h"
