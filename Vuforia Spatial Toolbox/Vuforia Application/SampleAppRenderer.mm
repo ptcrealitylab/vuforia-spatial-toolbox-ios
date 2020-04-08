@@ -1,5 +1,5 @@
 /*===============================================================================
- Copyright (c) 2019 PTC Inc. All Rights Reserved.
+ Copyright (c) 2020 PTC Inc. All Rights Reserved.
  
  Copyright (c) 2012-2015 Qualcomm Connected Experiences, Inc. All Rights Reserved.
  
@@ -10,7 +10,7 @@
 #import "SampleAppRenderer.h"
 #import <UIKit/UIKit.h>
 
-#import <Vuforia/UIGLViewProtocol.h>
+#import <Vuforia/iOS/UIGLViewProtocol.h>
 #import <Vuforia/Renderer.h>
 #import <Vuforia/Vuforia.h>
 #import <Vuforia/TrackerManager.h>

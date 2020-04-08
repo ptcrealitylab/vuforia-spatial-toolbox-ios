@@ -1,5 +1,5 @@
 /*===============================================================================
- Copyright (c) 2018 PTC Inc. All Rights Reserved.
+ Copyright (c) 2020 PTC Inc. All Rights Reserved.
  
  Vuforia is a trademark of PTC Inc., registered in the United States and other
  countries.
@@ -45,14 +45,15 @@ void main() {
     vec3 reflectV = reflect(-L, N);
     
     // Get lighting terms
-    vec4 ambientTerm = u_lightColor;
+    vec4 ambientTerm = ambientColor;
     // Add diffuse term plus inverse back lighting with attenuation pow 2
     vec4 diffuseTerm = diffuseColor * max(dot(N, L), 0.0) + (diffuseColor * vec4(0.5)) * max(dot(N, IL), 0.0);
+    
     // Add specular lighting in the model it seems it has inverted normals in some modules from the model
     vec4 specularTerm = specularColor * pow(max(dot(reflectV, E), 0.0), shininess) + specularColor * pow(max(dot(-reflectV, E), 0.0), shininess);
     
     // + specularTerm;// Sum of three lightings
-    vec4 colorTerm = ambientTerm + diffuseTerm;
+    vec4 colorTerm = (ambientTerm + diffuseTerm)  * u_lightColor;
     colorTerm.a = u_transparency;
     gl_FragColor = colorTerm;  
 }

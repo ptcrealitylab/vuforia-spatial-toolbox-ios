@@ -22,7 +22,7 @@
 		4304598620F7CDA800B54215 /* Texture.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4304596920F7CDA700B54215 /* Texture.mm */; };
 		4304598820F7CDA800B54215 /* SampleApplicationShaderUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4304597220F7CDA700B54215 /* SampleApplicationShaderUtils.m */; };
 		4304598A20F7CDA800B54215 /* SampleApplicationSession.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4304597720F7CDA700B54215 /* SampleApplicationSession.mm */; };
-		4304598B20F7CDA800B54215 /* SampleApplicationUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4304597820F7CDA800B54215 /* SampleApplicationUtils.cpp */; };
+		4304598B20F7CDA800B54215 /* SampleApplicationUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4304597820F7CDA800B54215 /* SampleApplicationUtils.mm */; };
 		4304598C20F7CDA800B54215 /* SampleAppRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4304597920F7CDA800B54215 /* SampleAppRenderer.mm */; };
 		4304599420F7D01F00B54215 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43D0355720EAC1FE00AA1039 /* WebKit.framework */; };
 		4304599C20F7D0B300B54215 /* ImageTargetsEAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4304599B20F7D0B200B54215 /* ImageTargetsEAGLView.mm */; };
@@ -36,6 +36,7 @@
 		4397878620FFC18B00B3A9E5 /* ARManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4397878520FFC18B00B3A9E5 /* ARManager.mm */; };
 		4397878920FFD03800B3A9E5 /* UDPManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4397878820FFD03800B3A9E5 /* UDPManager.mm */; };
 		4397878C20FFD73F00B3A9E5 /* FileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4397878B20FFD73F00B3A9E5 /* FileManager.m */; };
+		4398A0652433DF9B00C11F85 /* SampleMath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4398A0632433DF9B00C11F85 /* SampleMath.mm */; };
 		43AD9580220E15AA00E5BB36 /* SpeechManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 43AD957F220E15AA00E5BB36 /* SpeechManager.m */; };
 		43AD9582220E172900E5BB36 /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43AD9581220E172900E5BB36 /* Speech.framework */; };
 		43AD9588221473AA00E5BB36 /* NodeRunner.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43AD9587221473AA00E5BB36 /* NodeRunner.mm */; };
@@ -96,7 +97,7 @@
 		4304597520F7CDA700B54215 /* SampleAppRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleAppRenderer.h; sourceTree = "<group>"; };
 		4304597620F7CDA700B54215 /* SampleGLResourceHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleGLResourceHandler.h; sourceTree = "<group>"; };
 		4304597720F7CDA700B54215 /* SampleApplicationSession.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SampleApplicationSession.mm; sourceTree = "<group>"; };
-		4304597820F7CDA800B54215 /* SampleApplicationUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SampleApplicationUtils.cpp; sourceTree = "<group>"; };
+		4304597820F7CDA800B54215 /* SampleApplicationUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SampleApplicationUtils.mm; sourceTree = "<group>"; };
 		4304597920F7CDA800B54215 /* SampleAppRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SampleAppRenderer.mm; sourceTree = "<group>"; };
 		4304599A20F7D0B200B54215 /* ImageTargetsEAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTargetsEAGLView.h; sourceTree = "<group>"; };
 		4304599B20F7D0B200B54215 /* ImageTargetsEAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageTargetsEAGLView.mm; sourceTree = "<group>"; };
@@ -116,6 +117,8 @@
 		4397878820FFD03800B3A9E5 /* UDPManager.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = UDPManager.mm; sourceTree = "<group>"; };
 		4397878A20FFD73F00B3A9E5 /* FileManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileManager.h; sourceTree = "<group>"; };
 		4397878B20FFD73F00B3A9E5 /* FileManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileManager.m; sourceTree = "<group>"; };
+		4398A0632433DF9B00C11F85 /* SampleMath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SampleMath.mm; sourceTree = "<group>"; };
+		4398A0642433DF9B00C11F85 /* SampleMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleMath.h; sourceTree = "<group>"; };
 		43AD957E220E15AA00E5BB36 /* SpeechManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpeechManager.h; sourceTree = "<group>"; };
 		43AD957F220E15AA00E5BB36 /* SpeechManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpeechManager.m; sourceTree = "<group>"; };
 		43AD9581220E172900E5BB36 /* Speech.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Speech.framework; path = System/Library/Frameworks/Speech.framework; sourceTree = SDKROOT; };
@@ -172,10 +175,12 @@
 				4304597720F7CDA700B54215 /* SampleApplicationSession.mm */,
 				4304596F20F7CDA700B54215 /* SampleApplicationShaderUtils.h */,
 				4304597220F7CDA700B54215 /* SampleApplicationShaderUtils.m */,
-				4304597820F7CDA800B54215 /* SampleApplicationUtils.cpp */,
+				4304597820F7CDA800B54215 /* SampleApplicationUtils.mm */,
 				4304596D20F7CDA700B54215 /* SampleApplicationUtils.h */,
 				4304597520F7CDA700B54215 /* SampleAppRenderer.h */,
 				4304597920F7CDA800B54215 /* SampleAppRenderer.mm */,
+				4398A0632433DF9B00C11F85 /* SampleMath.mm */,
+				4398A0642433DF9B00C11F85 /* SampleMath.h */,
 				4304597620F7CDA700B54215 /* SampleGLResourceHandler.h */,
 				4304595C20F7CDA600B54215 /* shaders */,
 				4304595B20F7CDA600B54215 /* Teapot.h */,
@@ -342,7 +347,6 @@
 				43D0350620EAC02600AA1039 /* Frameworks */,
 				43D0350720EAC02600AA1039 /* Resources */,
 				43D041A420EACACB00AA1039 /* ShellScript */,
-				43D041A520EACC2400AA1039 /* ShellScript */,
 				4304599720F7D02900B54215 /* Embed Frameworks */,
 				FB5C829B10EB10A229ABCFD1 /* [CP] Embed Pods Frameworks */,
 			);
@@ -454,19 +458,6 @@
 			shellPath = /bin/sh;
 			shellScript = "rsync -avz --exclude=\".*\" \"${SRCROOT}/bin/data/\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\n";
 		};
-		43D041A520EACC2400AA1039 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "REVEAL_APP_PATH=$(mdfind kMDItemCFBundleIdentifier=\"com.ittybittyapps.Reveal2\" | head -n 1)\nBUILD_SCRIPT_PATH=\"${REVEAL_APP_PATH}/Contents/SharedSupport/Scripts/reveal_server_build_phase.sh\"\nif [ \"${REVEAL_APP_PATH}\" -a -e \"${BUILD_SCRIPT_PATH}\" ]; then\n\"${BUILD_SCRIPT_PATH}\"\nelse\necho \"Reveal Server not loaded: Cannot find a compatible Reveal app.\"\nfi\n";
-		};
 		FB5C829B10EB10A229ABCFD1 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -509,8 +500,9 @@
 				4397878920FFD03800B3A9E5 /* UDPManager.mm in Sources */,
 				4304599C20F7D0B300B54215 /* ImageTargetsEAGLView.mm in Sources */,
 				4304598C20F7CDA800B54215 /* SampleAppRenderer.mm in Sources */,
+				4398A0652433DF9B00C11F85 /* SampleMath.mm in Sources */,
 				43AD9580220E15AA00E5BB36 /* SpeechManager.m in Sources */,
-				4304598B20F7CDA800B54215 /* SampleApplicationUtils.cpp in Sources */,
+				4304598B20F7CDA800B54215 /* SampleApplicationUtils.mm in Sources */,
 				43AD9588221473AA00E5BB36 /* NodeRunner.mm in Sources */,
 				43D0350E20EAC02600AA1039 /* AppDelegate.m in Sources */,
 			);

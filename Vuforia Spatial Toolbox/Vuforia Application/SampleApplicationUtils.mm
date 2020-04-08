@@ -1,5 +1,5 @@
 /*===============================================================================
- Copyright (c) 2015-2018 PTC Inc. All Rights Reserved.
+ Copyright (c) 2020 PTC Inc. All Rights Reserved.
  
  Copyright (c) 2012-2015 Qualcomm Connected Experiences, Inc. All Rights Reserved.
  
@@ -11,11 +11,21 @@
 #include <stdio.h>
 #include <string.h>
 #include "SampleApplicationUtils.h"
+#include "SampleMath.h"
 #include <stdlib.h>
 
+#import <Vuforia/Vuforia.h>
+#import <Vuforia/Renderer.h>
+#import <Vuforia/VideoBackgroundConfig.h>
+
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 namespace SampleApplicationUtils
 {
+    // Enable this flag to debug OpenGL errors
+    const bool DEBUG_GL = false;
+    
     // Print a 4x4 matrix
     void
     printMatrix(const float* mat)
@@ -29,9 +39,13 @@ namespace SampleApplicationUtils
     // Print GL error information
     void
     checkGlError(const char* operation)
-    { 
-        for (GLint error = glGetError(); error; error = glGetError()) {
-            printf("after %s() glError (0x%x)\n", operation, error);
+    {
+        if (DEBUG_GL)
+        {
+            for (GLint error = glGetError(); error; error = glGetError())
+            {
+                printf("after %s() glError (0x%x)\n", operation, error);
+            }
         }
     }
     
@@ -679,28 +693,21 @@ namespace SampleApplicationUtils
         }
     }
     
-    unsigned int
-    createTexture(Vuforia::Image * image)
+    std::pair<GLenum, GLenum>
+    getGLFormatFromVuforia(Vuforia::PIXEL_FORMAT vuforiaFormat)
     {
-        unsigned int glTextureID = -1;
+        GLenum format = GL_INVALID_ENUM;
+        GLenum type = GL_INVALID_ENUM;
         
-        glGenTextures(1, &glTextureID);
-        
-        glBindTexture(GL_TEXTURE_2D, glTextureID);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        
-        auto pixelFormat = image->getFormat();
-        
-        GLenum format;
-        GLenum type;
-        switch (pixelFormat)
+        switch (vuforiaFormat)
         {
             case Vuforia::UNKNOWN_FORMAT:
+            case Vuforia::NV12:
+            case Vuforia::NV21:
+            case Vuforia::YV12:
+            case Vuforia::YUV420P:
             case Vuforia::YUYV:
-                return -1;
+                break;
                 
             case Vuforia::RGB565:
                 type = GL_UNSIGNED_SHORT_5_6_5;
@@ -722,8 +729,35 @@ namespace SampleApplicationUtils
                 break;
                 
             default:
-                return -1;
+                break;
         }
+        
+        return std::make_pair(format, type);
+    }
+    
+    unsigned int
+    createTexture(const Vuforia::Image * image)
+    {
+        unsigned int glTextureID = -1;
+        
+        glGenTextures(1, &glTextureID);
+        
+        glBindTexture(GL_TEXTURE_2D, glTextureID);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        
+        auto pixelFormat = image->getFormat();
+        const auto formatTypePair = getGLFormatFromVuforia(pixelFormat);
+        if (formatTypePair.first == GL_INVALID_ENUM ||
+            formatTypePair.second == GL_INVALID_ENUM)
+        {
+            return -1;
+        }
+
+        GLenum format = formatTypePair.first;
+        GLenum type = formatTypePair.second;
         
         glTexImage2D(GL_TEXTURE_2D, 0, format , image->getWidth(), image->getHeight(), 0,
                      format, type, image->getPixels());
@@ -732,4 +766,114 @@ namespace SampleApplicationUtils
         return glTextureID;
     }
     
+    void
+    updateTexture(int textureID, const Vuforia::Image* image)
+    {
+        auto pixelFormat = image->getFormat();
+        const auto formatTypePair = getGLFormatFromVuforia(pixelFormat);
+        if (formatTypePair.first == GL_INVALID_ENUM ||
+            formatTypePair.second == GL_INVALID_ENUM)
+        {
+            printf("Invalid GL enum for texture substitution");
+            return;
+        }
+        
+        // Bind to the given texture
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0,
+                        image->getWidth(),
+                        image->getHeight(),
+                        formatTypePair.first,
+                        formatTypePair.second,
+                        image->getPixels());
+        
+        // Unbind
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+    
+    
+    void
+    deleteTexture(unsigned int handle)
+    {
+        
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDeleteTextures(1, & handle);
+    }
+    
+    
+    // ----------------------------------------------------------------------------
+    // Touch projection
+    // ----------------------------------------------------------------------------
+    bool
+    linePlaneIntersection(Vuforia::Vec3F lineStart, Vuforia::Vec3F lineEnd,
+                          Vuforia::Vec3F pointOnPlane, Vuforia::Vec3F planeNormal,
+                          Vuforia::Vec3F &intersection)
+    {
+        Vuforia::Vec3F lineDir = SampleMath::Vec3FSub(lineEnd, lineStart);
+        lineDir = SampleMath::Vec3FNormalize(lineDir);
+        
+        Vuforia::Vec3F planeDir = SampleMath::Vec3FSub(pointOnPlane, lineStart);
+        
+        float n = SampleMath::Vec3FDot(planeNormal, planeDir);
+        float d = SampleMath::Vec3FDot(planeNormal, lineDir);
+        
+        if (fabs(d) < 0.00000001) {
+            // Line is parallel to plane
+            return false;
+        }
+        
+        float dist = n / d;
+        
+        Vuforia::Vec3F offset = SampleMath::Vec3FScale(lineDir, dist);
+        intersection = SampleMath::Vec3FAdd(lineStart, offset);
+        
+        return true;
+    }
+    
+    
+    void
+    projectScreenPointToPlane(Vuforia::Vec2F point, Vuforia::Vec3F planeCenter, Vuforia::Vec3F planeNormal,
+                              Vuforia::Vec3F &intersection, Vuforia::Vec3F &lineStart, Vuforia::Vec3F &lineEnd,
+                              Vuforia::Matrix44F currentProjectionMatrix, Vuforia::Matrix44F modelViewMatrix)
+    {
+        CGSize viewSize = [[UIScreen mainScreen] bounds].size;
+    
+        
+        // Window Coordinates to Normalized Device Coordinates
+        Vuforia::VideoBackgroundConfig config = Vuforia::Renderer::getInstance().getVideoBackgroundConfig();
+        
+        
+        float halfScreenWidth = viewSize.height / 2.0f; // note use of height for width
+        float halfScreenHeight = viewSize.width / 2.0f; // likewise
+        
+        float halfViewportWidth = config.mSize.data[0] / 2.0f;
+        float halfViewportHeight = config.mSize.data[1] / 2.0f;
+        
+        float x = (point.data[0] - halfScreenWidth) / halfViewportWidth;
+        float y = (point.data[1] - halfScreenHeight) / halfViewportHeight * -1;
+        
+        Vuforia::Vec4F ndcNear(x, y, -1, 1);
+        Vuforia::Vec4F ndcFar(x, y, 1, 1);
+        
+        // Normalized Device Coordinates to Eye Coordinates
+        Vuforia::Matrix44F projectionMatrix = currentProjectionMatrix;
+        Vuforia::Matrix44F inverseProjMatrix = SampleMath::Matrix44FInverse(projectionMatrix);
+        
+        Vuforia::Vec4F pointOnNearPlane = SampleMath::Vec4FTransform(ndcNear, inverseProjMatrix);
+        Vuforia::Vec4F pointOnFarPlane = SampleMath::Vec4FTransform(ndcFar, inverseProjMatrix);
+        pointOnNearPlane = SampleMath::Vec4FDiv(pointOnNearPlane, pointOnNearPlane.data[3]);
+        pointOnFarPlane = SampleMath::Vec4FDiv(pointOnFarPlane, pointOnFarPlane.data[3]);
+        
+        // Eye Coordinates to Object Coordinates
+        Vuforia::Matrix44F inverseModelViewMatrix = SampleMath::Matrix44FInverse(modelViewMatrix);
+        
+        Vuforia::Vec4F nearWorld = SampleMath::Vec4FTransform(pointOnNearPlane, inverseModelViewMatrix);
+        Vuforia::Vec4F farWorld = SampleMath::Vec4FTransform(pointOnFarPlane, inverseModelViewMatrix);
+        
+        lineStart = Vuforia::Vec3F(nearWorld.data[0], nearWorld.data[1], nearWorld.data[2]);
+        lineEnd = Vuforia::Vec3F(farWorld.data[0], farWorld.data[1], farWorld.data[2]);
+        linePlaneIntersection(lineStart, lineEnd, planeCenter, planeNormal, intersection);
+    }
+
 }   // namespace ShaderUtils

@@ -17,6 +17,8 @@
 #import <Vuforia/TrackerManager.h>
 #import <Vuforia/ObjectTracker.h>
 #import <Vuforia/PositionalDeviceTracker.h>
+#import <Vuforia/AreaTracker.h>
+#import <Vuforia/AreaTarget.h>
 #import <Vuforia/SmartTerrain.h>
 #import <Vuforia/HitTestResult.h>
 #import <Vuforia/Trackable.h>
@@ -45,6 +47,7 @@
     
     BOOL disableGroundPlaneTracker;
     BOOL disablePositionalDeviceTracker;
+    BOOL disableAreaTargetTracker;
 }
 
 @synthesize didStartAR;
@@ -71,6 +74,7 @@
         
         disablePositionalDeviceTracker = false;
         disableGroundPlaneTracker = false;
+        disableAreaTargetTracker = false;
     }
     return self;
 }
@@ -190,33 +194,68 @@
 - (BOOL)addNewMarker:(NSString *)markerPath
 {
     NSLog(@"loadObjectTrackerDataSet (%@)", markerPath);
+    
+    // parse XML file at markerPath to see if it contains ImageTarget vs AreaTarget
+    NSString *content = [NSString stringWithContentsOfFile:markerPath encoding:NSUTF8StringEncoding error:nil];
+    BOOL isAreaTarget = [content containsString:@"AreaTarget"];
 
     Vuforia::DataSet * dataSet = NULL;
     
     // Get the Vuforia tracker manager image tracker
     Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
-    Vuforia::ObjectTracker* objectTracker = static_cast<Vuforia::ObjectTracker*>(trackerManager.getTracker(Vuforia::ObjectTracker::getClassType()));
     
-    if (NULL == objectTracker) {
-        NSLog(@"ERROR: failed to get the ObjectTracker from the tracker manager");
-    } else {
-        dataSet = objectTracker->createDataSet();
+    if (isAreaTarget) {
         
-        if (NULL != dataSet) {
-            NSLog(@"INFO: successfully loaded data set");
+        Vuforia::AreaTracker* areaTracker = static_cast<Vuforia::AreaTracker*>(trackerManager.getTracker(Vuforia::AreaTracker::getClassType()));
+        
+        if (NULL == areaTracker) {
+            NSLog(@"ERROR: failed to get the AreaTracker from the tracker manager");
+        } else {
+            dataSet = areaTracker->createDataSet();
             
-            // Load the data set from the app's resources location
-            if (!dataSet->load([markerPath cStringUsingEncoding:NSASCIIStringEncoding], Vuforia::STORAGE_ABSOLUTE)) {
-                NSLog(@"ERROR: failed to load data set");
-                objectTracker->destroyDataSet(dataSet);
-                dataSet = NULL;
-
-            } else {
-                objectTracker->activateDataSet(dataSet);
+            if (NULL != dataSet) {
+                NSLog(@"INFO: successfully loaded data set");
+                
+                if (Vuforia::DataSet::exists([markerPath UTF8String], Vuforia::STORAGE_ABSOLUTE))
+                {
+                    if (dataSet->load([markerPath UTF8String], Vuforia::STORAGE_ABSOLUTE)) {
+                        areaTracker->activateDataSet(dataSet);
+                    } else {
+                        NSLog(@"ERROR: failed to load data set");
+                        areaTracker->destroyDataSet(dataSet);
+                        dataSet = NULL;
+                    }
+                }
+            }
+            else {
+                NSLog(@"ERROR: failed to create data set");
             }
         }
-        else {
-            NSLog(@"ERROR: failed to create data set");
+        
+    } else {
+        Vuforia::ObjectTracker* objectTracker = static_cast<Vuforia::ObjectTracker*>(trackerManager.getTracker(Vuforia::ObjectTracker::getClassType()));
+        
+        if (NULL == objectTracker) {
+            NSLog(@"ERROR: failed to get the ObjectTracker from the tracker manager");
+        } else {
+            dataSet = objectTracker->createDataSet();
+            
+            if (NULL != dataSet) {
+                NSLog(@"INFO: successfully loaded data set");
+                
+                // Load the data set from the app's resources location
+                if (!dataSet->load([markerPath cStringUsingEncoding:NSASCIIStringEncoding], Vuforia::STORAGE_ABSOLUTE)) {
+                    NSLog(@"ERROR: failed to load data set");
+                    objectTracker->destroyDataSet(dataSet);
+                    dataSet = NULL;
+
+                } else {
+                    objectTracker->activateDataSet(dataSet);
+                }
+            }
+            else {
+                NSLog(@"ERROR: failed to create data set");
+            }
         }
     }
     
@@ -555,11 +594,19 @@
         Vuforia::Tracker* smartTerrain = trackerManager.initTracker(Vuforia::SmartTerrain::getClassType());
         if (smartTerrain == nullptr)
         {
-            NSLog(@"Failed to start SmartTerrain.");
+            NSLog(@"Failed to initialize SmartTerrain.");
             return NO;
         }
     }
     
+    if (!disableAreaTargetTracker) {
+        Vuforia::AreaTracker* areaTracker = static_cast<Vuforia::AreaTracker*>(trackerManager.initTracker(Vuforia::AreaTracker::getClassType()));
+        if (areaTracker == nullptr)
+        {
+            NSLog(@"Failed to initialize AreaTracker");
+        }
+    }
+
     NSLog(@"Initialized trackers");
     return YES;
 }
@@ -599,13 +646,25 @@
     
     // Start ground plane tracker
     if (!disableGroundPlaneTracker) {
-            Vuforia::Tracker* smartTerrain = trackerManager.getTracker(Vuforia::SmartTerrain::getClassType());
-            if (smartTerrain == nullptr || !smartTerrain->start())
-            {
-                NSLog(@"Failed to start SmartTerrain (ground plane)");
-                return NO;
-            }
-            NSLog(@"Successfully started SmartTerrain (ground plane)");
+        Vuforia::Tracker* smartTerrain = trackerManager.getTracker(Vuforia::SmartTerrain::getClassType());
+        if (smartTerrain == nullptr || !smartTerrain->start())
+        {
+            NSLog(@"Failed to start SmartTerrain (ground plane)");
+            return NO;
+        }
+        NSLog(@"Successfully started SmartTerrain (ground plane)");
+    }
+
+    // Start area target tracker
+    if (!disableAreaTargetTracker) {
+        NSLog(@"TODO: start area target tracker");
+        Vuforia::AreaTracker* areaTracker = static_cast<Vuforia::AreaTracker*>(trackerManager.getTracker(Vuforia::AreaTracker::getClassType()));
+        if (areaTracker == nullptr || !areaTracker->start())
+        {
+            NSLog(@"Failed to start Area Tracker");
+            return NO;
+        }
+        NSLog(@"Successfully started Area Tracker");
     }
 
     return true;
@@ -734,6 +793,14 @@
             } else { // TODO: check if we need to handle (status == TrackableResult::DETECTED or LIMITED or NO_POSE)
                 trackingStatus = @"TRACKED";
             };
+            
+            if (trackable.isOfType(Vuforia::AreaTarget::getClassType())) {
+                Vuforia::AreaTarget* areaTarget = (Vuforia::AreaTarget *)(&trackable);
+                NSString* targetId = [NSString stringWithUTF8String:areaTarget->getUniqueTargetId()];
+                if ([trackingStatus isEqualToString:@"EXTENDED_TRACKED"]) {
+                    trackingStatus = @"TRACKED";
+                }
+            }
 
             Vuforia::Matrix44F modelViewMatrixCorrected = Vuforia::Tool::convert2GLMatrix(result->getPose());
             // scale from meter to mm scale, so the UI can be backwards compatible with older Vuforia versions that used mm
