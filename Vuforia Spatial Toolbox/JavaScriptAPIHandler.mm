@@ -291,9 +291,9 @@
 }
 
 // objectKey is the ID of the object. objectIP is the IP of the server hosting this object.
-- (void)startVideoRecording:(NSString *)objectKey ip:(NSString *)objectIP
+- (void)startVideoRecording:(NSString *)objectKey ip:(NSString *)objectIP port:(NSString *)objectPort
 {
-    [[VideoRecordingManager sharedManager] startRecording:objectKey ip:objectIP];
+    [[VideoRecordingManager sharedManager] startRecording:objectKey ip:objectIP port:objectPort];
 }
 
 // videoID is a unique identifier for this video that will be used as its filename, so that the userinterface can load it from the server when ready.

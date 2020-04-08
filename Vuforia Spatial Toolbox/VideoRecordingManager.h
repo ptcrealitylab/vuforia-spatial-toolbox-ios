@@ -25,10 +25,11 @@
 
 @property (strong, nonatomic) NSString* objectIP;
 @property (strong, nonatomic) NSString* objectID;
+@property (strong, nonatomic) NSString* objectPort;
 
 @property (nonatomic, assign) id<VideoRecordingDelegate> videoRecordingDelegate;
 
-- (void)startRecording:(NSString *)objectKey ip:(NSString *)objectIP;
+- (void)startRecording:(NSString *)objectKey ip:(NSString *)objectIP port:(NSString *)objectPort;
 - (void)stopRecording:(NSString *)videoId;
 
 @end
