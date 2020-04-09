@@ -97,6 +97,19 @@
         NSLog(@"Could not initialise video background shader");
     }
     
+#pragma mark - Spatial Toolbox Extensions to Vuforia Sample Application (private properties)
+    self.videoRecordingShaderProgramID = [SampleApplicationShaderUtils createProgramWithVertexShaderFileName:@"BackgroundFlipped.vertsh"
+                                                                                      fragmentShaderFileName:@"Background.fragsh"];
+
+    if (0 < self.videoRecordingShaderProgramID) {
+        self.videoRecordingVertexHandle = glGetAttribLocation(self.videoRecordingShaderProgramID, "vertexPosition");
+        self.videoRecordingTexCoordHandle = glGetAttribLocation(self.videoRecordingShaderProgramID, "vertexTexCoord");
+        self.videoRecordingProjectionMatrixHandle = glGetUniformLocation(self.videoRecordingShaderProgramID, "projectionMatrix");
+        self.videoRecordingTexSampler2DHandle = glGetUniformLocation(self.videoRecordingShaderProgramID, "texSampler2D");
+    } else {
+        NSLog(@"Could not initialize video recording shader");
+    }
+#pragma mark -
 }
 
 
@@ -170,6 +183,13 @@
     
     glDisable(GL_SCISSOR_TEST);
     
+#pragma mark - Spatial Toolbox Extensions to Vuforia Sample Application
+    // reloads the pixel buffer containing the background every frame while the video is recording
+    if (isRecording) {
+        [self refreshBackgroundPixelBuffer];
+    }
+#pragma mark -
+
     mRenderer.end();
     
 }

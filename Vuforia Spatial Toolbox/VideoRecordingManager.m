@@ -39,7 +39,7 @@
 // This is a javascriptAPI-triggered function that starts recording the video feed from the camera background
 // The objectKey and IP are used to save the resulting video file at a certain location on a Reality Server
 // TODO: some optimization of startRecording and writeFrame should remove the slight lag while recording
-- (void)startRecordingWithoutAR:(NSString *)objectKey ip:(NSString *)objectIP port:(NSString *)objectPort
+- (void)startRecording:(NSString *)objectKey ip:(NSString *)objectIP port:(NSString *)objectPort
 {
     CGSize videoOutputSize = CGSizeMake(640, 360); // change this to compress the video to a smaller size. can go up to 1080p.
     float frameRate = 30; // change this to compress the video by recording more/less frames per second
@@ -52,7 +52,7 @@
     NSError *error = nil;
 
     // generates a random filename and saves to temp file directory before uploading to server
-    NSString *videoOutPath = [temporaryDirectory stringByAppendingPathComponent:[[NSString stringWithFormat:@"%u", arc4random() % 1000] stringByAppendingPathExtension:@"mp4"]];
+    NSString *videoOutPath = [temporaryDirectory stringByAppendingPathComponent:[[NSString stringWithFormat:@"%u", arc4random() % 10000] stringByAppendingPathExtension:@"mp4"]];
     
     // uses AVAssetWriter to write the camera stream to an mp4 file
     self.assetWriter = [AVAssetWriter assetWriterWithURL:[NSURL fileURLWithPath:videoOutPath] fileType:AVFileTypeMPEG4 error:&error];
@@ -158,7 +158,7 @@
 
 // This is a javascriptAPI-triggered function that stops the recording that is currently active
 // The resulting video file is uploaded to the Reality Server specified by the objectKey and IP provided when startVideoRecording was called
-- (void)stopRecordingWithoutAR:(NSString *)videoId
+- (void)stopRecording:(NSString *)videoId
 {
     if (!isRecording) {
         return;
@@ -191,14 +191,14 @@
 
 // Source: https://github.com/anthonya1999/ReplayKit-iOS11-Recorder/blob/master/ReplayKit-iOS11-Recorder/ViewController.m
 // TODO: fix startRecordingWithoutAR instead of using this
-- (void)startRecording:(NSString *)objectKey ip:(NSString *)objectIP port:(NSString *)objectPort
+- (void)startRecordingWithAR:(NSString *)objectKey ip:(NSString *)objectIP port:(NSString *)objectPort
 {
     CGSize videoOutputSize = CGSizeMake(640, 360); // change this to compress the video to a smaller size. can go up to 1080p.
 
     NSError *error = nil;
     
     // generates a random filename and saves to temp file directory before uploading to server
-    NSString *videoOutPath = [temporaryDirectory stringByAppendingPathComponent:[[NSString stringWithFormat:@"%u", arc4random() % 1000] stringByAppendingPathExtension:@"mp4"]];
+    NSString *videoOutPath = [temporaryDirectory stringByAppendingPathComponent:[[NSString stringWithFormat:@"%u", arc4random() % 10000] stringByAppendingPathExtension:@"mp4"]];
     self.assetWriter = [AVAssetWriter assetWriterWithURL:[NSURL fileURLWithPath:videoOutPath] fileType:AVFileTypeMPEG4 error:&error];
     
     NSDictionary *compressionProperties = @{AVVideoProfileLevelKey         : AVVideoProfileLevelH264BaselineAutoLevel,
@@ -255,7 +255,7 @@
 
 // Stops the recording started with startRecordingWithAR, and uploads the result to the server specified when startRecordingWithAR was called.
 // TODO: fix stopRecordingWithoutAR instead of using this
-- (void)stopRecording:(NSString *)videoId
+- (void)stopRecordingWithAR:(NSString *)videoId
 {
     [self.screenRecorder stopCaptureWithHandler:^(NSError * _Nullable error) {
         if (!error) {
