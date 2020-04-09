@@ -190,7 +190,6 @@
 // Use startRecording and stopRecording instead, which only record the camera background, not the AR elements.
 
 // Source: https://github.com/anthonya1999/ReplayKit-iOS11-Recorder/blob/master/ReplayKit-iOS11-Recorder/ViewController.m
-// TODO: fix startRecordingWithoutAR instead of using this
 - (void)startRecordingWithAR:(NSString *)objectKey ip:(NSString *)objectIP port:(NSString *)objectPort
 {
     CGSize videoOutputSize = CGSizeMake(640, 360); // change this to compress the video to a smaller size. can go up to 1080p.
@@ -254,7 +253,6 @@
 }
 
 // Stops the recording started with startRecordingWithAR, and uploads the result to the server specified when startRecordingWithAR was called.
-// TODO: fix stopRecordingWithoutAR instead of using this
 - (void)stopRecordingWithAR:(NSString *)videoId
 {
     [self.screenRecorder stopCaptureWithHandler:^(NSError * _Nullable error) {
