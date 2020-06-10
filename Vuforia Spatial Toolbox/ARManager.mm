@@ -166,8 +166,6 @@
            
            // Get the runtime image source
            Vuforia::RuntimeImageSource* runtimeImageSource = objectTracker->getRuntimeImageSource();
-           
-           float targetWidthMeters = 1.0;
 
            // Load the data set from the given path.
            if (!runtimeImageSource->setFile([imagePath UTF8String], Vuforia::STORAGE_ABSOLUTE, targetWidthMeters, [objectID UTF8String]))
