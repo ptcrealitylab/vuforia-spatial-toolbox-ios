@@ -6,7 +6,12 @@
 //  Copyright © 2020 Reality Lab. All rights reserved.
 //
 
+// Instructions: When you change the simulator, change this string to match the targeted device
+#define DEVICE_NAME @"iPhone11,2"
+
 #import "ViewController.h"
+#import "REWebViewSimplified.h"
+#import <sys/utsname.h>
 
 @interface ViewController ()
 
@@ -18,37 +23,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    CGRect frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-    
-    // Create the configuration with the user content controller
-    WKUserContentController *userContentController = [WKUserContentController new];
-    [userContentController addScriptMessageHandler:self name:@"realityEditor"];
-    
-    WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
-    configuration.userContentController = userContentController;
-    configuration.allowsInlineMediaPlayback = YES;
-    configuration.requiresUserActionForMediaPlayback = NO;
-
-    self.webView = [[WKWebView alloc] initWithFrame:frame configuration:configuration];
-    
-//    [self.webView addObserver:self forKeyPath:@"loading" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:nil];
-    
-    // set delegate
-    [self.webView setNavigationDelegate:self];
-    [self.webView setUIDelegate:self];
-    
-    // make it transparent
-    [self.webView setOpaque:NO];
-    [self.webView setBackgroundColor:[UIColor clearColor]];
-    [self.webView.window makeKeyAndVisible];
-    
-    // make it scrollable
-    [[self.webView scrollView] setScrollEnabled:NO];
-    [[self.webView scrollView] setBounces:NO];
-//    [REWebView allowDisplayingKeyboardWithoutUserAction];
-
-    // start the web server singleton as soon as possible to minimize loading times
-//    [self initializeWebServer];
+    self.webView = [[REWebViewSimplified alloc] initWithDelegate:self];
     
     NSURL* url = [[NSBundle mainBundle] URLForResource:@"index" withExtension:@"html" subdirectory:@"userinterface"];
     [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
@@ -66,6 +41,20 @@
     NSString* callback = messageBody[@"callback"]; // optional
 
     NSLog(@"Received custom request: %@", functionName);
+    
+    if ([functionName isEqualToString:@"getDeviceReady"]) {
+        
+        // This method doesn't work on the simulator so we manually use the DEVICE_NAME constant instead
+        /*
+        struct utsname systemInfo;
+        uname(&systemInfo);
+        NSString* deviceName = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+        */
+        
+        NSString* deviceName = DEVICE_NAME;
+        
+        [self callJavaScriptCallback:callback withArguments:@[[NSString stringWithFormat:@"'%@'", deviceName]]];
+    }
 }
 
 #pragma mark - WKScriptMessageHandler Protocol Implementation
@@ -99,19 +88,17 @@
 
 #pragma mark - JavaScriptCallbackDelegate Protocol Implementation
 
-//- (void)callJavaScriptCallback:(NSString *)callback withArguments:(NSArray *)arguments
-//{
-////    if (!self.callbacksEnabled) return;
-//
-//    if (callback) {
-//        if (arguments && arguments.count > 0) {
-//            for (int i=0; i < arguments.count; i++) {
-//                callback = [callback stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"__ARG%i__", (i+1)] withString:arguments[i]];
-//            }
-//        }
-////        NSLog(@"Calling JavaScript callback: %@", callback);
-//        [self.webView runJavaScriptFromString:callback];
-//    }
-//}
+- (void)callJavaScriptCallback:(NSString *)callback withArguments:(NSArray *)arguments
+{
+    if (callback) {
+        if (arguments && arguments.count > 0) {
+            for (int i=0; i < arguments.count; i++) {
+                callback = [callback stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"__ARG%i__", (i+1)] withString:arguments[i]];
+            }
+        }
+        NSLog(@"Calling JavaScript callback: %@", callback);
+        [self.webView runJavaScriptFromString:callback];
+    }
+}
 
 @end

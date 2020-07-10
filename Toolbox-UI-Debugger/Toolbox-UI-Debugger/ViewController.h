@@ -9,9 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <WebKit/WebKit.h>
 
+@class REWebViewSimplified;
+
 @interface ViewController : UIViewController<WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler>
 
-@property (nonatomic, strong) WKWebView* webView;
+@property (nonatomic, strong) REWebViewSimplified* webView;
 
 @end
 
