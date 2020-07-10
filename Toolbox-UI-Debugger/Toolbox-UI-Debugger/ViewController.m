@@ -6,12 +6,8 @@
 //  Copyright © 2020 Reality Lab. All rights reserved.
 //
 
-// Instructions: When you change the simulator, change this string to match the targeted device
-#define DEVICE_NAME @"iPhone11,2"
-
 #import "ViewController.h"
 #import "REWebViewSimplified.h"
-#import <sys/utsname.h>
 
 @interface ViewController ()
 
@@ -43,16 +39,8 @@
     NSLog(@"Received custom request: %@", functionName);
     
     if ([functionName isEqualToString:@"getDeviceReady"]) {
-        
-        // This method doesn't work on the simulator so we manually use the DEVICE_NAME constant instead
-        /*
-        struct utsname systemInfo;
-        uname(&systemInfo);
-        NSString* deviceName = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
-        */
-        
-        NSString* deviceName = DEVICE_NAME;
-        
+        // This works on the simulator only, make sure not to copy this implementation of getDeviceReady into the AR app
+        NSString* deviceName = [NSString stringWithCString:getenv("SIMULATOR_MODEL_IDENTIFIER") encoding:NSUTF8StringEncoding];
         [self callJavaScriptCallback:callback withArguments:@[[NSString stringWithFormat:@"'%@'", deviceName]]];
     }
 }
