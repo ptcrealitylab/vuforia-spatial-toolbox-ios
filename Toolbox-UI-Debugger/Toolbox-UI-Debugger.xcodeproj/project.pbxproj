@@ -17,6 +17,7 @@
 		43827DD92437CCD600994A7A /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43827DD82437CCD600994A7A /* WebKit.framework */; };
 		43827DDB2437CCDF00994A7A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43827DDA2437CCDF00994A7A /* UIKit.framework */; };
 		43827DDD2437CEDD00994A7A /* userinterface in Resources */ = {isa = PBXBuildFile; fileRef = 43827DDC2437CEDD00994A7A /* userinterface */; };
+		43EE015924B8D781005659F0 /* REWebViewSimplified.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43EE015824B8D781005659F0 /* REWebViewSimplified.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,8 @@
 		43827DD82437CCD600994A7A /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		43827DDA2437CCDF00994A7A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		43827DDC2437CEDD00994A7A /* userinterface */ = {isa = PBXFileReference; lastKnownFileType = folder; name = userinterface; path = ../../bin/data/userinterface; sourceTree = "<group>"; };
+		43EE015724B8D781005659F0 /* REWebViewSimplified.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = REWebViewSimplified.h; sourceTree = "<group>"; };
+		43EE015824B8D781005659F0 /* REWebViewSimplified.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = REWebViewSimplified.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +80,8 @@
 				43827DC22437CCB500994A7A /* SceneDelegate.m */,
 				43827DC42437CCB500994A7A /* ViewController.h */,
 				43827DC52437CCB500994A7A /* ViewController.m */,
+				43EE015724B8D781005659F0 /* REWebViewSimplified.h */,
+				43EE015824B8D781005659F0 /* REWebViewSimplified.mm */,
 				43827DC72437CCB500994A7A /* Main.storyboard */,
 				43827DCA2437CCB500994A7A /* Assets.xcassets */,
 				43827DCC2437CCB500994A7A /* LaunchScreen.storyboard */,
@@ -166,6 +171,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				43EE015924B8D781005659F0 /* REWebViewSimplified.mm in Sources */,
 				43827DC62437CCB500994A7A /* ViewController.m in Sources */,
 				43827DC02437CCB500994A7A /* AppDelegate.m in Sources */,
 				43827DD12437CCB500994A7A /* main.m in Sources */,
