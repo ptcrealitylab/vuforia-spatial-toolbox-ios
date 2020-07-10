@@ -1,12 +1,15 @@
 //
-//  REWebView.m
+//  REWebViewSimplified.mm
 //  Vuforia Spatial Toolbox
 //
 //  Created by Benjamin Reynolds on 7/2/18.
 //  Copyright © 2018 PTC. All rights reserved.
 //
 // This is a customized WKWebView that initializes with correct configurations for the Reality Editor userinterface,
-// loads its interface from a self-hosted local HTTP server, and knows how to handle JS <-> Objective-C messages
+//  and knows how to handle JS <-> Objective-C messages
+//
+// This is a modified version of REWebView.m, which removes all references to the Node.js server
+// as that server is unnecessary for debugging layout of the app UI
 
 #import "REWebViewSimplified.h"
 #import <objc/runtime.h>
@@ -17,18 +20,7 @@
 // and sets a delegate to handle script messages sent to the iOS code from JavaScript
 - (id)initWithDelegate:(id<WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler>)delegate
 {
-    // automatically make it fullscreen
-    CGRect frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-    
-    // initialize the UIWebView instance
-
-//    CGFloat xOffset = 0;
-//#ifdef IS_IOS11orHIGHER
-//    UILayoutGuide* layoutGuide = [[UIApplication sharedApplication] keyWindow].safeAreaLayoutGuide;
-//    xOffset = layoutGuide.layoutFrame.origin.x;
-//#endif
-//
-//    frame = CGRectMake(-1 * xOffset, 0, xOffset + [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+    // initialize the WKWebView instance
 
     // Create the configuration with the user content controller
     WKUserContentController *userContentController = [WKUserContentController new];
@@ -39,6 +31,9 @@
     configuration.allowsInlineMediaPlayback = YES;
     configuration.requiresUserActionForMediaPlayback = NO;
     
+    // make it fullscreen
+    CGRect frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+
     if (self = [super initWithFrame:frame configuration:configuration]) {
 
         // set delegate
@@ -123,7 +118,6 @@
     
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     [self clearCache];
-//    [self loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString]]];
     [self loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0f]];
 }
 
