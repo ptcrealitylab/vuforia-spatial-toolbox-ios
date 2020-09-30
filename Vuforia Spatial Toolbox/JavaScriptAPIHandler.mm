@@ -139,6 +139,8 @@
 {
     __block JavaScriptAPIHandler *blocksafeSelf = self; // https://stackoverflow.com/a/5023583/1190267
 
+    [[ARManager sharedManager] startGroundPlaneTracker]; // start the ground plane tracker if it isn't already set
+    
     [[ARManager sharedManager] setGroundPlaneMatrixCompletionHandler:^(NSDictionary *groundPlaneMarker) {
         NSString* groundPlaneMatrix = groundPlaneMarker[@"modelViewMatrix"];
         [blocksafeSelf->delegate callJavaScriptCallback:callback withArguments:@[groundPlaneMatrix]];

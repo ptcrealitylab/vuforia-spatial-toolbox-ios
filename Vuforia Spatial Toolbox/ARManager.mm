@@ -411,18 +411,14 @@
     const float DEFAULT_HEIGHT_ABOVE_GROUND = 1.4f;
     BOOL shouldCreateAnchor = YES;
 
-//    const Vuforia::State state = Vuforia::TrackerManager::getInstance().getStateUpdater().updateState();
-//    Vuforia::StateUpdater &stateUpdater = Vuforia::TrackerManager::getStateUpdater();
-
     const Vuforia::State state = Vuforia::TrackerManager::getInstance().getStateUpdater().getLatestState();
-
-//    const Vuforia::State state = Vuforia::TrackerManager::getStateUpdater();
 
     BOOL isAnchorResultAvailable = [self performHitTestWithNormalizedTouchPointX:hitTestX andNormalizedTouchPointY:hitTestY withDeviceHeightInMeters:DEFAULT_HEIGHT_ABOVE_GROUND toCreateAnchor:shouldCreateAnchor andStateToUse:state];
 
     return isAnchorResultAvailable;
 }
 
+// also stops the groundplane tracking if it successfully places an anchor
 - (BOOL) performHitTestWithNormalizedTouchPointX:(float)normalizedTouchPointX
                         andNormalizedTouchPointY:(float)normalizedTouchPointY
                         withDeviceHeightInMeters:(float) deviceHeightInMeters
@@ -445,7 +441,7 @@
 
     Vuforia::Vec2F hitTestPoint(normalizedTouchPointX, normalizedTouchPointY);
     Vuforia::SmartTerrain::HITTEST_HINT hitTestHint = Vuforia::SmartTerrain::HITTEST_HINT_NONE; // hit test hint is currently unused
-
+    
     // A hit test is performed for a given State at normalized screen coordinates.
     // The deviceHeight is an developer provided assumption as explained on
     // definition of DEFAULT_HEIGHT_ABOVE_GROUND.
@@ -457,56 +453,26 @@
 
         if (createAnchor)
         {
-//            if(mCurrentMode == SAMPLE_APP_INTERACTIVE_MODE)
-//            {
-                // Destroy previous hit test anchor if needed
-                if (mHitTestAnchor != nullptr)
-                {
-                    NSLog(@"Destroying hit test anchor with name '%s'", HIT_TEST_ANCHOR_NAME);
-                    bool result = deviceTracker->destroyAnchor(mHitTestAnchor);
-                    NSLog(@"%s hit test anchor", (result ? "Successfully destroyed" : "Failed to destroy"));
-                }
+            // Destroy previous hit test anchor if needed
+            if (mHitTestAnchor != nullptr)
+            {
+                NSLog(@"Destroying hit test anchor with name '%s'", HIT_TEST_ANCHOR_NAME);
+                bool result = deviceTracker->destroyAnchor(mHitTestAnchor);
+                NSLog(@"%s hit test anchor", (result ? "Successfully destroyed" : "Failed to destroy"));
+            }
 
-                mHitTestAnchor = deviceTracker->createAnchor(HIT_TEST_ANCHOR_NAME, *hitTestResult);
-                if (mHitTestAnchor != nullptr)
-                {
-                    NSLog(@"Successfully created hit test anchor with name '%s'", mHitTestAnchor->getName());
-                }
-                else
-                {
-                    NSLog(@"Failed to create hit test anchor");
-                }
-//            }
-//            else if(mCurrentMode == SAMPLE_APP_FURNITURE_MODE)
-//            {
-//                // Destroy previous hit test anchor if needed
-//                if (mFurnitureAnchor != nullptr)
-//                {
-//                    NSLog(@"Destroying hit test anchor with name '%s'", FURNITURE_ANCHOR_NAME);
-//                    bool result = deviceTracker->destroyAnchor(mFurnitureAnchor);
-//                    NSLog(@"%s hit test anchor", (result ? "Successfully destroyed" : "Failed to destroy"));
-//                }
-//
-//                mFurnitureAnchor = deviceTracker->createAnchor(FURNITURE_ANCHOR_NAME, *hitTestResult);
-//                if (mFurnitureAnchor != nullptr)
-//                {
-//                    NSLog(@"Successfully created hit test anchor with name '%s'", mFurnitureAnchor->getName());
-//
-//                    [mFurniture setTransparency:1.0f];
-//                }
-//                else
-//                {
-//                    NSLog(@"Failed to create hit test anchor");
-//                }
-//
-//                mIsFurnitureBeingDragged = NO;
-//            }
+            mHitTestAnchor = deviceTracker->createAnchor(HIT_TEST_ANCHOR_NAME, *hitTestResult);
+            if (mHitTestAnchor != nullptr)
+            {
+                NSLog(@"Successfully created hit test anchor with name '%s'", mHitTestAnchor->getName());
+                [self stopGroundPlaneTracker];
+                NSLog(@"Stopped groundplane because we found the ground!");
+            }
+            else
+            {
+                NSLog(@"Failed to create hit test anchor");
+            }
         }
-
-//        if(mCurrentMode == SAMPLE_APP_FURNITURE_MODE)
-//            mFurnitureTranslationPoseMatrix = Vuforia::Tool::convertPose2GLMatrix(hitTestResult->getPose());
-
-        NSLog(@"Successfully placed anchor on ground plane");
 
         mReticlePose = Vuforia::Tool::convertPose2GLMatrix(hitTestResult->getPose());
         return YES;
@@ -642,16 +608,7 @@
         NSLog(@"Successfully started DeviceTracker");
     }
     
-    // Start ground plane tracker
-    if (!disableGroundPlaneTracker) {
-        Vuforia::Tracker* smartTerrain = trackerManager.getTracker(Vuforia::SmartTerrain::getClassType());
-        if (smartTerrain == nullptr || !smartTerrain->start())
-        {
-            NSLog(@"Failed to start SmartTerrain (ground plane)");
-            return NO;
-        }
-        NSLog(@"Successfully started SmartTerrain (ground plane)");
-    }
+    // [self startGroundPlaneTracker]; // don't start groundplane until something needs it (via getGroundPlaneMatrixStream)
 
     // Start area target tracker
     if (!disableAreaTargetTracker) {
@@ -688,9 +645,55 @@
         deviceTracker->stop();
     }
     
+    [self stopGroundPlaneTracker];
+    
+    // Start area target tracker
+    if (!disableAreaTargetTracker) {
+        Vuforia::AreaTracker* areaTracker = static_cast<Vuforia::AreaTracker*>(trackerManager.getTracker(Vuforia::AreaTracker::getClassType()));
+        if (areaTracker == 0) {
+            NSLog(@"Error stopping area tracker");
+            return false;
+        }
+        areaTracker->stop();
+    }
+    
     NSLog(@"doStopTrackers");
     return true;
 }
+
+- (bool) startGroundPlaneTracker
+{
+    // Start ground plane tracker
+    if (!disableGroundPlaneTracker) {
+        Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
+        Vuforia::Tracker* smartTerrain = trackerManager.getTracker(Vuforia::SmartTerrain::getClassType());
+        if (smartTerrain == nullptr || !smartTerrain->start())
+        {
+            NSLog(@"Failed to start SmartTerrain (ground plane)");
+            return NO;
+        }
+        NSLog(@"Successfully started SmartTerrain (ground plane)");
+        return true;
+    } else {
+        NSLog(@"Ground Plane Tracker is permanently disabled via hard-coded flag. Cannot start.");
+    }
+    return false;
+}
+
+- (bool) stopGroundPlaneTracker
+{
+    Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
+    
+    Vuforia::Tracker* smartTerrain = trackerManager.getTracker(Vuforia::SmartTerrain::getClassType());
+    if (smartTerrain == 0) {
+        NSLog(@"Error stopping groundplane tracker");
+        return false;
+    }
+    smartTerrain->stop();
+    NSLog(@"stopGroundPlaneTracker");
+    return true;
+}
+
 
 - (BOOL) doUnloadTrackersData
 {
