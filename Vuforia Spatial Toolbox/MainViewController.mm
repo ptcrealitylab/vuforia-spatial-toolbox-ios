@@ -192,6 +192,9 @@
     } else if ([functionName isEqualToString:@"getGroundPlaneMatrixStream"]) {
         [self.apiHandler getGroundPlaneMatrixStream:callback];
 
+    } else if ([functionName isEqualToString:@"acceptGroundPlaneAndStop"]) {
+        [self.apiHandler acceptGroundPlaneAndStop];
+
     } else if ([functionName isEqualToString:@"getScreenshot"]) {
         NSString* size = (NSString *)arguments[@"size"];
         [self.apiHandler getScreenshot:size callback:callback];

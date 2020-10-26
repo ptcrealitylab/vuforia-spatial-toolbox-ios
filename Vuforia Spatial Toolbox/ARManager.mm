@@ -465,7 +465,7 @@
             if (mHitTestAnchor != nullptr)
             {
                 NSLog(@"Successfully created hit test anchor with name '%s'", mHitTestAnchor->getName());
-                [self stopGroundPlaneTracker];
+//                [self stopGroundPlaneTracker];
                 NSLog(@"Stopped groundplane because we found the ground!");
             }
             else
@@ -666,6 +666,17 @@
     // Start ground plane tracker
     if (!disableGroundPlaneTracker) {
         Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
+
+        Vuforia::PositionalDeviceTracker* deviceTracker = static_cast<Vuforia::PositionalDeviceTracker*> (trackerManager.getTracker(Vuforia::PositionalDeviceTracker::getClassType()));
+        // Destroy previous hit test anchor if needed
+        if (deviceTracker != nullptr && mHitTestAnchor != nullptr)
+        {
+            NSLog(@"Destroying hit test anchor with name '%s'", HIT_TEST_ANCHOR_NAME);
+            bool result = deviceTracker->destroyAnchor(mHitTestAnchor);
+            NSLog(@"%s hit test anchor", (result ? "Successfully destroyed" : "Failed to destroy"));
+            mHitTestAnchor = nullptr;
+        }
+        
         Vuforia::Tracker* smartTerrain = trackerManager.getTracker(Vuforia::SmartTerrain::getClassType());
         if (smartTerrain == nullptr || !smartTerrain->start())
         {

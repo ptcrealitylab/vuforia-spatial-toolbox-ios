@@ -147,6 +147,11 @@
     }];
 }
 
+- (void)acceptGroundPlaneAndStop
+{
+    [[ARManager sharedManager] stopGroundPlaneTracker];
+}
+
 // TODO: actually use size when getting screenshot
 - (void)getScreenshot:(NSString *)size callback:(NSString *)callback
 {

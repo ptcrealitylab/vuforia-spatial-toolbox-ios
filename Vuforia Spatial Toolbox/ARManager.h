@@ -64,5 +64,6 @@ typedef void (^ MatrixStringCompletionHandler)(NSString *);
 - (bool)tryPlacingGroundAnchorAtScreenX:(float)normalizedScreenX andScreenY:(float)normalizedScreenY;
 
 - (bool)startGroundPlaneTracker;
+- (bool)stopGroundPlaneTracker;
 
 @end
