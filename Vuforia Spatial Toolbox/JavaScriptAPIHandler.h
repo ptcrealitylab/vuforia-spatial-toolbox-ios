@@ -35,6 +35,7 @@
 - (void)getMatrixStream:(NSString *)callback;
 - (void)getCameraMatrixStream:(NSString *)callback;
 - (void)getGroundPlaneMatrixStream:(NSString *)callback;
+- (void)acceptGroundPlaneAndStop;
 - (void)getScreenshot:(NSString *)size callback:(NSString *)callback;
 - (void)setPause;
 - (void)setResume;
