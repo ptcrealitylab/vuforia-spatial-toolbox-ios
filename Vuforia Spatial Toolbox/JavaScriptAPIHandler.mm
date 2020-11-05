@@ -139,7 +139,8 @@
 {
     __block JavaScriptAPIHandler *blocksafeSelf = self; // https://stackoverflow.com/a/5023583/1190267
 
-    [[ARManager sharedManager] startGroundPlaneTracker]; // start the ground plane tracker if it isn't already set
+    // start the smartTerrain tracker (and reset groundplane origin anchor if already set)
+    [[ARManager sharedManager] startGroundPlaneTracker];
     
     [[ARManager sharedManager] setGroundPlaneMatrixCompletionHandler:^(NSDictionary *groundPlaneMarker) {
         NSString* groundPlaneMatrix = groundPlaneMarker[@"modelViewMatrix"];
