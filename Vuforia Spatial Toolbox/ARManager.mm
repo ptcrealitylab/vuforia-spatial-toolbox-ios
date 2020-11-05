@@ -418,7 +418,6 @@
     return isAnchorResultAvailable;
 }
 
-// also stops the groundplane tracking if it successfully places an anchor
 - (BOOL) performHitTestWithNormalizedTouchPointX:(float)normalizedTouchPointX
                         andNormalizedTouchPointY:(float)normalizedTouchPointY
                         withDeviceHeightInMeters:(float) deviceHeightInMeters
@@ -465,8 +464,6 @@
             if (mHitTestAnchor != nullptr)
             {
                 NSLog(@"Successfully created hit test anchor with name '%s'", mHitTestAnchor->getName());
-//                [self stopGroundPlaneTracker];
-                NSLog(@"Stopped groundplane because we found the ground!");
             }
             else
             {
@@ -608,8 +605,6 @@
         NSLog(@"Successfully started DeviceTracker");
     }
     
-    // [self startGroundPlaneTracker]; // don't start groundplane until something needs it (via getGroundPlaneMatrixStream)
-
     // Start area target tracker
     if (!disableAreaTargetTracker) {
         NSLog(@"TODO: start area target tracker");
@@ -621,6 +616,8 @@
         }
         NSLog(@"Successfully started Area Tracker");
     }
+
+    // unlike other trackers, don't start groundplane until something needs it (via getGroundPlaneMatrixStream)
 
     return true;
 }
@@ -644,10 +641,7 @@
         }
         deviceTracker->stop();
     }
-    
-    [self stopGroundPlaneTracker];
-    
-    // Start area target tracker
+        
     if (!disableAreaTargetTracker) {
         Vuforia::AreaTracker* areaTracker = static_cast<Vuforia::AreaTracker*>(trackerManager.getTracker(Vuforia::AreaTracker::getClassType()));
         if (areaTracker == 0) {
@@ -656,6 +650,8 @@
         }
         areaTracker->stop();
     }
+    
+    [self stopGroundPlaneTracker];
     
     NSLog(@"doStopTrackers");
     return true;
