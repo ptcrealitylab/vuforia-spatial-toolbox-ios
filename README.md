@@ -11,6 +11,8 @@ have questions, ideas want to collaborate or just say hi.
 ## Installation
 How to build and run Vuforia Spatial Toolbox iOS App from your Mac OS Computer.
 
+This [video tutorial](https://www.youtube.com/watch?v=WpS9BUmHAOo) will guide you through the subsequent installation process for compiling and running the iOS app from source code. If you just want to get the app on your phone as quickly as possible, you can simply download it from the iOS App Store.
+
 Note: you need to have [CocoaPods](https://guides.cocoapods.org/using/getting-started.html)
 installed, which you can get on MacOS using:
 
