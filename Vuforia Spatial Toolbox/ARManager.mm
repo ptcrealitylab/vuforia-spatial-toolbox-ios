@@ -701,7 +701,6 @@
     return true;
 }
 
-
 - (BOOL) doUnloadTrackersData
 {
     Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
@@ -736,9 +735,22 @@
 - (bool) doDeinitTrackers
 {
     Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
+
+    // object tracker
     trackerManager.deinitTracker(Vuforia::ObjectTracker::getClassType());
+
+    // additional enabled trackers
+
     if (!disablePositionalDeviceTracker) {
         trackerManager.deinitTracker(Vuforia::PositionalDeviceTracker::getClassType());
+    }
+
+    if (!disableGroundPlaneTracker) {
+        trackerManager.deinitTracker(Vuforia::SmartTerrain::getClassType());
+    }
+
+    if (!disableAreaTargetTracker) {
+        trackerManager.deinitTracker(Vuforia::AreaTracker::getClassType());
     }
     
     NSLog(@"doDeinitTrackers");
@@ -788,6 +800,7 @@
 
             if(result->getStatus() != Vuforia::TrackableResult::DETECTED &&
                result->getStatus() != Vuforia::TrackableResult::TRACKED &&
+               result->getStatus() != Vuforia::TrackableResult::LIMITED &&
                result->getStatus() != Vuforia::TrackableResult::EXTENDED_TRACKED) {
                 continue;
             }
@@ -829,6 +842,9 @@
             // send in Positional Device Trackers' information in a different way, via the camera matrix
             if (!disablePositionalDeviceTracker) {
                 if (trackable.isOfType(Vuforia::DeviceTrackable::getClassType())) {
+                    // if (result->getStatus() == Vuforia::TrackableResult::LIMITED) {
+                    //     NSLog(@"Limited tracking (%u)", result->getStatusInfo()); // TODO: send reason for limited tracking status to userinterface
+                    // }
                     deviceTrackableResult = result;
                     if (cameraMatrixCompletionHandler) {
                         cameraMatrixCompletionHandler(marker);
