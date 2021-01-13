@@ -278,6 +278,9 @@
 
     } else if ([functionName isEqualToString:@"enableOrientationChanges"]) {
         [self.apiHandler enableOrientationChanges:callback]; // the callback triggers whenever device orientation changes
+    
+    } else if ([functionName isEqualToString:@"subscribeToAppLifeCycleEvents"]) {
+        [self.apiHandler subscribeToAppLifeCycleEvents:callback];
     }
 }
 

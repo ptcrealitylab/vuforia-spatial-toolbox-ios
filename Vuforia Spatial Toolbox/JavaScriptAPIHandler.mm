@@ -355,4 +355,14 @@
     }];
 }
 
+// triggers callbacks to notify the UI when the app is moved to background or resumed
+- (void)subscribeToAppLifeCycleEvents:(NSString *)callback
+{
+    __block JavaScriptAPIHandler *blocksafeSelf = self; // https://stackoverflow.com/a/5023583/1190267
+
+    [[DeviceStateManager sharedManager] subscribeToAppLifeCycleEvents:^(NSString *eventName) {
+        [blocksafeSelf->delegate callJavaScriptCallback:callback withArguments:@[[NSString stringWithFormat:@"'%@'", eventName]]];
+    }];
+}
+
 @end
