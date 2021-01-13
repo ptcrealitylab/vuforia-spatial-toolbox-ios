@@ -21,6 +21,7 @@ typedef void (^ CompletionHandlerWithString)(NSString *);
 
 + (id)sharedManager;
 - (void)enableOrientationChanges:(CompletionHandlerWithString)completionHandler;
+- (void)subscribeToAppLifeCycleEvents:(CompletionHandlerWithString)completionHandler;
 
 @property (nonatomic, strong) UIView* viewToRotate;
 

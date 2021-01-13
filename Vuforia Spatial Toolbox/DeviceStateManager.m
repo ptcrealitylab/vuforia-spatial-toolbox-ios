@@ -15,6 +15,7 @@
 @implementation DeviceStateManager
 {
     CompletionHandlerWithString orientationCompletionHandler;
+    CompletionHandlerWithString lifeCycleCompletionHandler;
 }
 
 + (id)sharedManager
@@ -109,6 +110,56 @@
     } else {
         [self.viewToRotate setTransform:CGAffineTransformMakeRotation(0)];
     }
+}
+
+// begins listening for app life-cycle events, and store the callback handle
+- (void)subscribeToAppLifeCycleEvents:(CompletionHandlerWithString)completionHandler
+{
+    lifeCycleCompletionHandler = completionHandler;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
+}
+
+- (void)appDidBecomeActive:(NSNotification*)notification
+{
+    [self sendLifeCycleEvent:@"appDidBecomeActive"];
+}
+
+- (void)appWillResignActive:(NSNotification*)notification
+{
+    [self sendLifeCycleEvent:@"appWillResignActive"];
+}
+
+- (void)appDidEnterBackground:(NSNotification *)notification
+{
+    [self sendLifeCycleEvent:@"appDidEnterBackground"];
+}
+
+- (void)appWillEnterForeground:(NSNotification *)notification
+{
+    [self sendLifeCycleEvent:@"appWillEnterForeground"];
+}
+
+- (void)appWillTerminate:(NSNotification*)note
+{
+    [self sendLifeCycleEvent:@"appWillTerminate"];
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
+}
+
+- (void)sendLifeCycleEvent:(NSString *)eventName
+{
+    if (lifeCycleCompletionHandler == nil) { return; }
+    
+    lifeCycleCompletionHandler(eventName);
 }
 
 @end
