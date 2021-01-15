@@ -811,9 +811,42 @@
 
             if (result->getStatus() == Vuforia::TrackableResult::EXTENDED_TRACKED) {
                 trackingStatus = @"EXTENDED_TRACKED";
-            } else { // TODO: check if we need to handle (status == TrackableResult::DETECTED or LIMITED or NO_POSE)
+            } else if (result->getStatus() == Vuforia::TrackableResult::LIMITED) {
+                trackingStatus = @"LIMITED";
+            } else { // TODO: check if we need to handle (status == TrackableResult::DETECTED or NO_POSE)
                 trackingStatus = @"TRACKED";
             };
+            
+            NSString* trackingStatusInfo;
+            /*
+             NORMAL,                             ///< Status is normal, ie not \ref NO_POSE or \ref LIMITED.
+             UNKNOWN,                            ///< Unknown reason for the tracking status.
+             INITIALIZING,                       ///< The tracking system is currently initializing.
+             RELOCALIZING,                       ///< The tracking system is currently relocalizing.
+             EXCESSIVE_MOTION,                   ///< The device is moving too fast.
+             INSUFFICIENT_FEATURES,              ///< There are insufficient features available in the scene.
+             INSUFFICIENT_LIGHT,                 ///< There is insufficient light available in the scene.
+             NO_DETECTION_RECOMMENDING_GUIDANCE  ///< Could not snap the target
+             */
+            if (result->getStatusInfo() == Vuforia::TrackableResult::NORMAL) {
+                trackingStatusInfo = @"NORMAL";
+            } else if (result->getStatusInfo() == Vuforia::TrackableResult::UNKNOWN) {
+                trackingStatusInfo = @"UNKNOWN";
+            } else if (result->getStatusInfo() == Vuforia::TrackableResult::INITIALIZING) {
+                trackingStatusInfo = @"INITIALIZING";
+            } else if (result->getStatusInfo() == Vuforia::TrackableResult::RELOCALIZING) {
+                trackingStatusInfo = @"RELOCALIZING";
+            } else if (result->getStatusInfo() == Vuforia::TrackableResult::EXCESSIVE_MOTION) {
+                trackingStatusInfo = @"EXCESSIVE_MOTION";
+            } else if (result->getStatusInfo() == Vuforia::TrackableResult::INSUFFICIENT_FEATURES) {
+                trackingStatusInfo = @"INSUFFICIENT_FEATURES";
+            } else if (result->getStatusInfo() == Vuforia::TrackableResult::INSUFFICIENT_LIGHT) {
+                trackingStatusInfo = @"INSUFFICIENT_LIGHT";
+            } else if (result->getStatusInfo() == Vuforia::TrackableResult::NO_DETECTION_RECOMMENDING_GUIDANCE) {
+                trackingStatusInfo = @"NO_DETECTION_RECOMMENDING_GUIDANCE";
+            } else {
+                trackingStatusInfo = @"UNKNOWN";
+            }
             
             if (trackable.isOfType(Vuforia::AreaTarget::getClassType())) {
                 Vuforia::AreaTarget* areaTarget = (Vuforia::AreaTarget *)(&trackable);
@@ -837,14 +870,16 @@
 
             NSDictionary* marker = @{@"name": [NSString stringWithUTF8String:trackable.getName()],
                                      @"modelViewMatrix": [self stringFromMatrix44F:modelViewMatrixCorrected],
-                                     @"trackingStatus": trackingStatus};
+                                     @"trackingStatus": trackingStatus,
+                                     @"trackingStatusInfo": trackingStatusInfo
+            };
 
             // send in Positional Device Trackers' information in a different way, via the camera matrix
             if (!disablePositionalDeviceTracker) {
                 if (trackable.isOfType(Vuforia::DeviceTrackable::getClassType())) {
-                    // if (result->getStatus() == Vuforia::TrackableResult::LIMITED) {
-                    //     NSLog(@"Limited tracking (%u)", result->getStatusInfo()); // TODO: send reason for limited tracking status to userinterface
-                    // }
+//                     if (result->getStatus() == Vuforia::TrackableResult::LIMITED) {
+//                         NSLog(@"Limited tracking (%u)", result->getStatusInfo());
+//                     }
                     deviceTrackableResult = result;
                     if (cameraMatrixCompletionHandler) {
                         cameraMatrixCompletionHandler(marker);
@@ -885,6 +920,54 @@
 - (void)enableExtendedTracking:(BOOL)newState
 {
     self.extendedTrackingEnabled = newState;
+}
+
+- (void)restartDeviceTracker
+{
+    Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
+
+    /*
+    [self pauseAR];
+    
+    Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
+
+    if (!disablePositionalDeviceTracker) {
+        
+//        Vuforia::Tracker* deviceTracker = trackerManager.getTracker(Vuforia::PositionalDeviceTracker::getClassType());
+//        if (deviceTracker == 0) {
+//            NSLog(@"Error stopping device tracker");
+//            return;
+//        }
+//        deviceTracker->stop();
+        
+        if (!trackerManager.deinitTracker(Vuforia::PositionalDeviceTracker::getClassType())) {
+            NSLog(@"Failed to de-initialize DeviceTracker in reinit method");
+            return;
+        }
+        
+        Vuforia::Tracker* newDeviceTracker = trackerManager.initTracker(Vuforia::PositionalDeviceTracker::getClassType());
+        if (newDeviceTracker == nullptr)
+        {
+            NSLog(@"Failed to initialize DeviceTracker in reinit method");
+            return;
+        }
+        
+//        if (!newDeviceTracker->start())
+//        {
+//            NSLog(@"Failed to start DeviceTracker");
+//            return;
+//        }
+//        NSLog(@"Successfully started DeviceTracker");
+    }
+    
+    [self resumeAR];
+     */
+
+//    Vuforia::Tracker* deviceTracker = trackerManager.getTracker(Vuforia::PositionalDeviceTracker::getClassType());
+    Vuforia::PositionalDeviceTracker* deviceTracker = static_cast<Vuforia::PositionalDeviceTracker*> (trackerManager.getTracker(Vuforia::PositionalDeviceTracker::getClassType()));
+    deviceTracker->reset();
+    
+    NSLog(@"Successfully re-initialized DeviceTracker");
 }
 
 @end
