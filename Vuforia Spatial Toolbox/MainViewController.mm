@@ -281,6 +281,9 @@
     
     } else if ([functionName isEqualToString:@"subscribeToAppLifeCycleEvents"]) {
         [self.apiHandler subscribeToAppLifeCycleEvents:callback];
+    
+    } else if ([functionName isEqualToString:@"restartDeviceTracker"]) {
+        [self.apiHandler restartDeviceTracker];
     }
 }
 
