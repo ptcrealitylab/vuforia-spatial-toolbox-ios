@@ -62,5 +62,6 @@
 // TODO: add authenticateTouch(?)
 - (void)enableOrientationChanges:(NSString *)callback;
 - (void)subscribeToAppLifeCycleEvents:(NSString *)callback;
+- (void)restartDeviceTracker;
 
 @end
