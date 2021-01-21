@@ -49,7 +49,9 @@
         [self setOpaque:NO];
         [self setBackgroundColor:[UIColor clearColor]];
         [self.window makeKeyAndVisible];
-        
+        [self setAllowsLinkPreview:NO];
+        [self setAllowsBackForwardNavigationGestures:NO];
+
         // make it scrollable
         [[self scrollView] setScrollEnabled:NO];
         [[self scrollView] setBounces:NO];
