@@ -877,9 +877,6 @@
             // send in Positional Device Trackers' information in a different way, via the camera matrix
             if (!disablePositionalDeviceTracker) {
                 if (trackable.isOfType(Vuforia::DeviceTrackable::getClassType())) {
-//                     if (result->getStatus() == Vuforia::TrackableResult::LIMITED) {
-//                         NSLog(@"Limited tracking (%u)", result->getStatusInfo());
-//                     }
                     deviceTrackableResult = result;
                     if (cameraMatrixCompletionHandler) {
                         cameraMatrixCompletionHandler(marker);
@@ -925,46 +922,11 @@
 - (void)restartDeviceTracker
 {
     Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
-
-    /*
-    [self pauseAR];
     
-    Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
-
-    if (!disablePositionalDeviceTracker) {
-        
-//        Vuforia::Tracker* deviceTracker = trackerManager.getTracker(Vuforia::PositionalDeviceTracker::getClassType());
-//        if (deviceTracker == 0) {
-//            NSLog(@"Error stopping device tracker");
-//            return;
-//        }
-//        deviceTracker->stop();
-        
-        if (!trackerManager.deinitTracker(Vuforia::PositionalDeviceTracker::getClassType())) {
-            NSLog(@"Failed to de-initialize DeviceTracker in reinit method");
-            return;
-        }
-        
-        Vuforia::Tracker* newDeviceTracker = trackerManager.initTracker(Vuforia::PositionalDeviceTracker::getClassType());
-        if (newDeviceTracker == nullptr)
-        {
-            NSLog(@"Failed to initialize DeviceTracker in reinit method");
-            return;
-        }
-        
-//        if (!newDeviceTracker->start())
-//        {
-//            NSLog(@"Failed to start DeviceTracker");
-//            return;
-//        }
-//        NSLog(@"Successfully started DeviceTracker");
-    }
-    
-    [self resumeAR];
-     */
-
-//    Vuforia::Tracker* deviceTracker = trackerManager.getTracker(Vuforia::PositionalDeviceTracker::getClassType());
     Vuforia::PositionalDeviceTracker* deviceTracker = static_cast<Vuforia::PositionalDeviceTracker*> (trackerManager.getTracker(Vuforia::PositionalDeviceTracker::getClassType()));
+    
+    // reset() clears all anchors from the positional device tracker, effectively moving its (0,0,0) to the current position
+    // this fixes issues if the tracker was stuck in LIMITED:ROLOCALIZING status
     deviceTracker->reset();
     
     NSLog(@"Successfully re-initialized DeviceTracker");
