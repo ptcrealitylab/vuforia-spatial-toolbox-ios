@@ -1,6 +1,6 @@
 [submodule "bin/data/vuforia-spatial-toolbox-userinterface"]
 	path = bin/data/vuforia-spatial-toolbox-userinterface
-	url = git@github.com:ptcrealitylab/vuforia-spatial-toolbox-userinterface.git
+	url = https://github.com/ptcrealitylab/vuforia-spatial-toolbox-userinterface.git
 [submodule "bin/data/vuforia-spatial-edge-server"]
 	path = bin/data/vuforia-spatial-edge-server
-	url = git@github.com:ptcrealitylab/vuforia-spatial-edge-server.git
+	url = https://github.com/ptcrealitylab/vuforia-spatial-edge-server.git
