@@ -56,7 +56,7 @@ npm install
 ```
 
 6. Download the latest Vuforia SDK for iOS from https://developer.vuforia.com/downloads/sdk
-   (Click the "Download for iOS" link for *vuforia-sdk-ios-9-4-x.zip*).
+   (Click the "Download for iOS" link for *vuforia-sdk-ios-\[version-number\].zip*).
 
    This project was last updated with Vuforia SDK version: `9.6.4`
 
@@ -66,7 +66,7 @@ npm install
    compiling the app, please consult the [forum](https://forum.spatialtoolbox.vuforia.com).
 
 7. Get a Vuforia Engine license key from http://developer.vuforia.com by logging in and navigating
-   to `Develop > License Manager > Get Development Key`.
+   to `Develop > License Manager > Get Development Key`. The name of your key doesn't matter.
 
    Create a new file in the `vuforia-spatial-toolbox-ios/Vuforia Spatial Toolbox` directory named
    `vuforiaKey.h` and copy-and-paste the following contents into it. Replace the `vuforiaKey` const
@@ -86,9 +86,11 @@ const char* vuforiaKey = "Replace this string with your license key";
 
 8. When these files are in place, open Vuforia Spatial Toolbox.**xcworkspace**. Make sure to
    open the .xcworkspace and not the .xcodeproj, otherwise the dependencies won't load. Make sure
-   Xcode is set up with your Apple developer profile for code signing. You should be able to
-   compile and run the project (it won't run on the simulator; you need to have an iOS device
-   connected).
+   Xcode is set up with your Apple developer profile for code signing (in Xcode, click on the Vufora Spatial Toolbox
+   project file to view its properties, click on Vuforia Spatial Toolbox under "Targets", and go to the "Signing
+   & Capabilities" tab. You will need to add an Apple Developer account to Xcode to proceed. When all is set up, you
+   should be able to compile and run the project on your iOS device (it won't run on the simulator; you need to have an
+   iOS device connected).
 
 ### Device Compatibility
 
