@@ -129,12 +129,12 @@
 {
     __block JavaScriptAPIHandler *blocksafeSelf = self; // https://stackoverflow.com/a/5023583/1190267
     
-    // old method just sends matrix
-//    [[ARManager sharedManager] setCameraMatrixCompletionHandler:^(NSDictionary *cameraMarker) {
-//        NSString* cameraMatrix = cameraMarker[@"modelViewMatrix"];
-//        [blocksafeSelf->delegate callJavaScriptCallback:callback withArguments:@[cameraMatrix]];
-//    }];
-
+    // old method just sent matrix
+    // [[ARManager sharedManager] setCameraMatrixCompletionHandler:^(NSDictionary *cameraMarker) {
+    //     NSString* cameraMatrix = cameraMarker[@"modelViewMatrix"];
+    //     [blocksafeSelf->delegate callJavaScriptCallback:callback withArguments:@[cameraMatrix]];
+    // }];
+    
     // new method also sends tracking status and tracking status info
     
     [[ARManager sharedManager] setCameraMatrixCompletionHandler:^(NSDictionary *cameraMarker) {
@@ -143,14 +143,8 @@
         NSString* trackingStatus = cameraMarker[@"trackingStatus"];
         NSString* trackingStatusInfo = cameraMarker[@"trackingStatusInfo"];
         
-//        NSDictionary* marker = @{@"name": [NSString stringWithUTF8String:trackable.getName()],
-//                                 @"modelViewMatrix": [self stringFromMatrix44F:modelViewMatrixCorrected],
-//                                 @"trackingStatus": trackingStatus,
-//                                 @"trackingStatusInfo": trackingStatusInfo
-//        }
-        
         NSString* javascriptObject = [NSString stringWithFormat:@"{ 'matrix': %@, 'status': '%@', 'statusInfo': '%@' }", cameraMatrix, trackingStatus, trackingStatusInfo];
-                                 
+        
         [blocksafeSelf->delegate callJavaScriptCallback:callback withArguments:@[javascriptObject]];
         
     }];
