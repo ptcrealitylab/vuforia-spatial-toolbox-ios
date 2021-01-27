@@ -45,7 +45,6 @@
 		43D0350E20EAC02600AA1039 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 43D0350D20EAC02600AA1039 /* AppDelegate.m */; };
 		43D0351120EAC02600AA1039 /* MainViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43D0351020EAC02600AA1039 /* MainViewController.mm */; };
 		43D0351420EAC02600AA1039 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43D0351220EAC02600AA1039 /* Main.storyboard */; };
-		43D0351620EAC02600AA1039 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43D0351520EAC02600AA1039 /* Assets.xcassets */; };
 		43D0351920EAC02600AA1039 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43D0351720EAC02600AA1039 /* LaunchScreen.storyboard */; };
 		43D0351C20EAC02600AA1039 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 43D0351B20EAC02600AA1039 /* main.m */; };
 		43D0352520EAC16B00AA1039 /* WebServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 43D0352420EAC16B00AA1039 /* WebServerManager.m */; };
@@ -131,7 +130,6 @@
 		43D0350F20EAC02600AA1039 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		43D0351020EAC02600AA1039 /* MainViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MainViewController.mm; sourceTree = "<group>"; };
 		43D0351320EAC02600AA1039 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		43D0351520EAC02600AA1039 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		43D0351820EAC02600AA1039 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		43D0351A20EAC02600AA1039 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		43D0351B20EAC02600AA1039 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -293,7 +291,6 @@
 				43D32AA3231F0B11003B7889 /* VideoRecordingDelegate.h */,
 				430D4DAD22832FD3006E5CBF /* VideoRecordingManager.m */,
 				43D0351220EAC02600AA1039 /* Main.storyboard */,
-				43D0351520EAC02600AA1039 /* Assets.xcassets */,
 				43D0351720EAC02600AA1039 /* LaunchScreen.storyboard */,
 				43D0351A20EAC02600AA1039 /* Info.plist */,
 				43D0351B20EAC02600AA1039 /* main.m */,
@@ -403,7 +400,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				43D0351920EAC02600AA1039 /* LaunchScreen.storyboard in Resources */,
-				43D0351620EAC02600AA1039 /* Assets.xcassets in Resources */,
 				4304598120F7CDA800B54215 /* Line.vertsh in Resources */,
 				4304597F20F7CDA800B54215 /* DiffuseLightMaterials.vertsh in Resources */,
 				4304597A20F7CDA800B54215 /* Background.fragsh in Resources */,
