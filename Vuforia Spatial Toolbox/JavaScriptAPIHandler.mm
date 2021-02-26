@@ -385,4 +385,13 @@
     [[ARManager sharedManager] restartDeviceTracker];
 }
 
+- (void)setOrientation:(NSString *)orientation withCallback:(NSString *)callback
+{
+    __block JavaScriptAPIHandler *blocksafeSelf = self;
+
+    [[DeviceStateManager sharedManager] setInterfaceOrientation:orientation withCallback:^() {
+        [blocksafeSelf->delegate callJavaScriptCallback:callback withArguments:nil];
+    }];
+}
+
 @end

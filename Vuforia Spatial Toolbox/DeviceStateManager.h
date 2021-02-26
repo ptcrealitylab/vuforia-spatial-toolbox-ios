@@ -16,12 +16,14 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^ CompletionHandlerWithString)(NSString *);
+typedef void (^ CompletionHandler)(void);
 
 @interface DeviceStateManager : NSObject
 
 + (id)sharedManager;
 - (void)enableOrientationChanges:(CompletionHandlerWithString)completionHandler;
 - (void)subscribeToAppLifeCycleEvents:(CompletionHandlerWithString)completionHandler;
+- (void)setInterfaceOrientation:(NSString *)orientation withCallback:(CompletionHandler)completionHandler;
 
 @property (nonatomic, strong) UIView* viewToRotate;
 

@@ -162,4 +162,20 @@
     lifeCycleCompletionHandler(eventName);
 }
 
+- (void)setInterfaceOrientation:(NSString *)orientation withCallback:(CompletionHandler)completionHandler
+{
+    if ([orientation isEqualToString:@"portrait"]) {
+        [[UIDevice currentDevice] setValue:[NSNumber numberWithInt:UIDeviceOrientationPortrait] forKey:@"orientation"];
+    } else if ([orientation isEqualToString:@"landscapeLeft"]) {
+        [[UIDevice currentDevice] setValue:[NSNumber numberWithInt:UIDeviceOrientationLandscapeLeft] forKey:@"orientation"];
+    } else if ([orientation isEqualToString:@"landscapeRight"]) {
+        [[UIDevice currentDevice] setValue:[NSNumber numberWithInt:UIDeviceOrientationLandscapeRight] forKey:@"orientation"];
+    } else if ([orientation isEqualToString:@"portraitUpsideDown"]) {
+        [[UIDevice currentDevice] setValue:[NSNumber numberWithInt:UIDeviceOrientationPortraitUpsideDown] forKey:@"orientation"];
+    }
+    
+    completionHandler();
+}
+
+
 @end
