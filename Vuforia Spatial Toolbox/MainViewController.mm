@@ -34,7 +34,7 @@
 }
 
 - (void)viewDidLoad {
-    
+
     AVCaptureDevice *captureDevice = [self cameraWithPosition:AVCaptureDevicePositionBack];
     NSArray* availFormat=captureDevice.formats;
     NSLog(@"captureDevice formats: %@", availFormat);
@@ -75,6 +75,10 @@
 
     [[DeviceStateManager sharedManager] setViewToRotate:self.webView];
 }
+
+//- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+//    return UIInterfaceOrientationMaskPortrait;
+//}
 
 - (void)showLoadingLabel
 {
@@ -284,6 +288,10 @@
     
     } else if ([functionName isEqualToString:@"restartDeviceTracker"]) {
         [self.apiHandler restartDeviceTracker];
+    
+    } else if ([functionName isEqualToString:@"setOrientation"]) {
+        NSString* orientationString = (NSString *)arguments[@"orientationString"];
+        [self.apiHandler setOrientation:orientationString withCallback:callback];
     }
 }
 

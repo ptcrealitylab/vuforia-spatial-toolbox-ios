@@ -63,5 +63,6 @@
 - (void)enableOrientationChanges:(NSString *)callback;
 - (void)subscribeToAppLifeCycleEvents:(NSString *)callback;
 - (void)restartDeviceTracker;
+- (void)setOrientation:(NSString *)orientation withCallback:(NSString *)callback;
 
 @end
