@@ -11,6 +11,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FileManager.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

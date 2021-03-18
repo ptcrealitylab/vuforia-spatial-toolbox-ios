@@ -21,9 +21,49 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
+                                                    UIUserNotificationTypeBadge |
+                                                    UIUserNotificationTypeSound);
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes categories:nil];
+    [application registerUserNotificationSettings:settings];
     return YES;
 }
 
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
+    if (notificationSettings.types != UIUserNotificationTypeNone) {
+        NSLog(@"didRegisterUser");
+        [application registerForRemoteNotifications];
+    }
+}
+
+// Handle remote notification registration.
+- (void)application:(UIApplication *)app
+        didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
+    NSLog(@"notification I'm here btw");
+    const char *data = [devToken bytes];
+    NSMutableString *token = [NSMutableString string];
+
+    for (NSUInteger i = 0; i < [devToken length]; i++) {
+        [token appendFormat:@"%02.2hhX", data[i]];
+    }
+    NSLog(@"Did get notification device token: %@", token);
+    [[FileManager sharedManager] setStorage:@"SETUP:NOTIFICATIONDEVICETOKEN" message:token];
+//    NSString *bodyData = [NSString stringWithFormat:@"userId=hmm&key=%@", token];
+//
+//    NSMutableURLRequest *postRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://TODO"]];
+//
+//    // Set the request's content type to application/x-www-form-urlencoded
+//    [postRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+//    // Designate the request a POST request and specify its body data
+//    [postRequest setHTTPMethod:@"POST"];
+//    [postRequest setHTTPBody:[NSData dataWithBytes:[bodyData UTF8String] length:strlen([bodyData UTF8String])]];
+}
+
+- (void)application:(UIApplication *)app
+        didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+    // The token is not currently available.
+    NSLog(@"Remote notification support is unavailable due to error: %@", err);
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
