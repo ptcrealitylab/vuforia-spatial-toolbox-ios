@@ -708,7 +708,7 @@
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ptc.vuforia-spatial-toolbox";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ptc.vuforia-spatial-toolbox-vst";
 				PRODUCT_NAME = "Vuforia Spatial Toolbox";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -790,7 +790,7 @@
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ptc.vuforia-spatial-toolbox";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ptc.vuforia-spatial-toolbox-vst";
 				PRODUCT_NAME = "Vuforia Spatial Toolbox";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -50,6 +50,8 @@
     }
 
     NSString* filePath = [containingDirectory stringByAppendingPathComponent:lastPathComponent];
+    NSLog(@"originalFilePath: %@", originalFilePath);
+    NSLog(@"filePath: %@", filePath);
     return filePath;
 }
 
