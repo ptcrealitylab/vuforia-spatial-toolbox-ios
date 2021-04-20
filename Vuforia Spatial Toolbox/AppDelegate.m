@@ -21,19 +21,42 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
-                                                    UIUserNotificationTypeBadge |
-                                                    UIUserNotificationTypeSound);
-    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes categories:nil];
-    [application registerUserNotificationSettings:settings];
+    [self requestPushNotificationPermissions];
+
     return YES;
 }
-
-- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
-    if (notificationSettings.types != UIUserNotificationTypeNone) {
-        NSLog(@"didRegisterUser");
-        [application registerForRemoteNotifications];
-    }
+- (void)requestPushNotificationPermissions {
+    // Adapted from https://medium.com/@jovan2018/ios-push-notifications-14ee90df162e
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    center.delegate = self;
+    [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
+        switch (settings.authorizationStatus) {
+            // User hasn't accepted or rejected permissions yet. This block shows the allow/deny dialog
+            case UNAuthorizationStatusNotDetermined:
+                center.delegate = self;
+                [center requestAuthorizationWithOptions:(UNAuthorizationOptionSound | UNAuthorizationOptionAlert | UNAuthorizationOptionBadge) completionHandler:^(BOOL granted, NSError * _Nullable error) {
+                     if (granted) {
+                         dispatch_async(dispatch_get_main_queue(), ^{
+                             [[UIApplication sharedApplication] registerForRemoteNotifications];
+                         });
+                     } else {
+                         // notify user to enable push notification permission in settings
+                         NSLog(@"please enable notifications");
+                     }
+                 }];
+                break;
+            case UNAuthorizationStatusDenied:
+                NSLog(@"please enable notifications");
+                break;
+            case UNAuthorizationStatusAuthorized:
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[UIApplication sharedApplication] registerForRemoteNotifications];
+                });
+                break;
+            default:
+                break;
+        }
+    }];
 }
 
 // Handle remote notification registration.
@@ -59,10 +82,20 @@
 //    [postRequest setHTTPBody:[NSData dataWithBytes:[bodyData UTF8String] length:strlen([bodyData UTF8String])]];
 }
 
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+       willPresentNotification:(UNNotification *)notification
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler {
+    completionHandler(UNNotificationPresentationOptionAlert);
+}
+
 - (void)application:(UIApplication *)app
         didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
     // The token is not currently available.
     NSLog(@"Remote notification support is unavailable due to error: %@", err);
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    NSLog(@"didReceiveRemoteNotification: %@", userInfo);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

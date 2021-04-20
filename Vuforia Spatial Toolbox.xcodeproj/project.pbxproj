@@ -73,6 +73,7 @@
 
 /* Begin PBXFileReference section */
 		15D2F59CA93BAE880871DC0A /* Pods-Vuforia Spatial Toolbox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vuforia Spatial Toolbox.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Vuforia Spatial Toolbox/Pods-Vuforia Spatial Toolbox.debug.xcconfig"; sourceTree = "<group>"; };
+		1AD53A592625E1370034CB73 /* Vuforia Spatial Toolbox.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Vuforia Spatial Toolbox.entitlements"; sourceTree = "<group>"; };
 		4304595B20F7CDA600B54215 /* Teapot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Teapot.h; sourceTree = "<group>"; };
 		4304595D20F7CDA600B54215 /* Background.fragsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Background.fragsh; sourceTree = "<group>"; };
 		4304595E20F7CDA600B54215 /* Background.vertsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Background.vertsh; sourceTree = "<group>"; };
@@ -267,6 +268,7 @@
 		43D0350B20EAC02600AA1039 /* Vuforia Spatial Toolbox */ = {
 			isa = PBXGroup;
 			children = (
+				1AD53A592625E1370034CB73 /* Vuforia Spatial Toolbox.entitlements */,
 				437C3BC624104FC800B0F977 /* Server */,
 				436CF090225693EB002E77C9 /* resources */,
 				A7EE6C752218853B00F60723 /* Images.xcassets */,
@@ -643,10 +645,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = "Vuforia Spatial Toolbox/Vuforia Spatial Toolbox.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = W88G8YNU4K;
+				DEVELOPMENT_TEAM = NAKQL4P3R6;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -708,7 +711,7 @@
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ptc.vuforia-spatial-toolbox";
+				PRODUCT_BUNDLE_IDENTIFIER = com.solaria.commDemo;
 				PRODUCT_NAME = "Vuforia Spatial Toolbox";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -723,10 +726,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = "Vuforia Spatial Toolbox/Vuforia Spatial Toolbox.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = W88G8YNU4K;
+				DEVELOPMENT_TEAM = NAKQL4P3R6;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -790,7 +794,7 @@
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ptc.vuforia-spatial-toolbox";
+				PRODUCT_BUNDLE_IDENTIFIER = com.solaria.commDemo;
 				PRODUCT_NAME = "Vuforia Spatial Toolbox";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";

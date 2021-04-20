@@ -11,6 +11,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <UserNotifications/UserNotifications.h>
 #import "FileManager.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
@@ -20,3 +21,5 @@
 
 @end
 
+@interface AppDelegate() <UNUserNotificationCenterDelegate>
+@end
