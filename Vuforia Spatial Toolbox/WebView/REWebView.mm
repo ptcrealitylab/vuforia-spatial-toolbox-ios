@@ -172,4 +172,19 @@
                                            completionHandler:^{}];
 }
 
+- (void)setAspectRatio:(float)ratio
+{
+    CGRect newFrame = self.frame;
+    if (ratio == 0) {
+        newFrame.size.width = [UIScreen mainScreen].bounds.size.width;
+        newFrame.size.height = [UIScreen mainScreen].bounds.size.height;
+    } else {
+        newFrame.size.width = [UIScreen mainScreen].bounds.size.height * ratio;
+        newFrame.size.height = [UIScreen mainScreen].bounds.size.height;
+    }
+    [self setFrame:newFrame];
+    [self setCenter:CGPointMake([UIScreen mainScreen].bounds.size.width/2, [UIScreen mainScreen].bounds.size.height/2)];
+    [self reload];
+}
+
 @end
