@@ -36,8 +36,7 @@
 {
     #pragma mark - Spatial Toolbox Extensions to Vuforia Sample Application (private fields)
     BOOL isRecording;
-    CGSize maxScreenSize; // if the screen is bigger than this, we clip it when writing to video
-    GLchar pixels[(1920) * (1080) * 4 + 1]; // allocates at least enough memory for the video, since we don't know the exact screen resolution until runtime. sized to fit the 1080p video. ensure maxScreenSize is set to the same dimensions. the +1 shifts the buffer from RGBA to ARGB. bad side effect is that alpha channel is shifted by 1 pixel, but because the alph channel is uniform it doesn't matter
+    GLchar* pixels;
     #pragma mark -
 }
 // SampleApplicationControl delegate (receives callbacks in response to particular
@@ -78,6 +77,11 @@
     if (self) {
         self.control = control;
         [self setNearPlane:nearPlane farPlane:farPlane];
+
+        // allocate memory for the video. the +1 shifts the buffer from RGBA to ARGB.
+        // (the only bad side effect is that alpha channel is shifted by 1 pixel, but because the alph channel is uniform it doesn't matter)
+        CGSize screenSize = [self getCurrentARViewBoundsSize];
+        pixels = new GLchar[(screenSize.width) * (screenSize.height) * 4 + 1];
     }
     return self;
 }
