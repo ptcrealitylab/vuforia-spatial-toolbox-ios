@@ -276,6 +276,10 @@
         //        [self.apiHandler clearCache];
         [self.webView clearCache]; // currently apiHandler doesnt have a reference to webView
 
+    } else if ([functionName isEqualToString:@"setAspectRatio"]) {
+        float ratio = [arguments[@"ratio"] floatValue];
+        [self.webView setAspectRatio:ratio];
+        
     } else if ([functionName isEqualToString:@"enableOrientationChanges"]) {
         [self.apiHandler enableOrientationChanges:callback]; // the callback triggers whenever device orientation changes
     

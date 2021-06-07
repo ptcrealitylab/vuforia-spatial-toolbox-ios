@@ -17,5 +17,6 @@
 - (void)loadInterfaceFromURL:(NSString *)urlString;
 - (void)runJavaScriptFromString:(NSString *)script;
 - (void)clearCache;
+- (void)setAspectRatio:(float)ratio;
 
 @end
