@@ -13,7 +13,7 @@ DEPENDENCIES:
   - CocoaAsyncSocket
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  trunk:
     - AFNetworking
     - CocoaAsyncSocket
 
