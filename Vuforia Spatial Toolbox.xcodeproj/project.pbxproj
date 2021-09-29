@@ -41,6 +41,7 @@
 		B578F2662704C63100E4875C /* FileDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B578F2632704C63000E4875C /* FileDownloadManager.swift */; };
 		B578F2672704C63100E4875C /* DeviceStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B578F2642704C63100E4875C /* DeviceStateManager.swift */; };
 		B578F2692704C67700E4875C /* VideoRecordingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B578F2682704C67700E4875C /* VideoRecordingManager.swift */; };
+		B578F26B2704C6A300E4875C /* ARManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B578F26A2704C6A300E4875C /* ARManager.swift */; };
 		B9ED0143F1F7FFD5390F81D8 /* Pods_Vuforia_Spatial_Toolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C61AA94AEC19B8B5307AF63 /* Pods_Vuforia_Spatial_Toolbox.framework */; };
 /* End PBXBuildFile section */
 
@@ -110,6 +111,7 @@
 		B578F2632704C63000E4875C /* FileDownloadManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDownloadManager.swift; sourceTree = "<group>"; };
 		B578F2642704C63100E4875C /* DeviceStateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceStateManager.swift; sourceTree = "<group>"; };
 		B578F2682704C67700E4875C /* VideoRecordingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoRecordingManager.swift; sourceTree = "<group>"; };
+		B578F26A2704C6A300E4875C /* ARManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +160,7 @@
 		43ADDCEA2215DBA400E5BB36 /* AR */ = {
 			isa = PBXGroup;
 			children = (
+				B578F26A2704C6A300E4875C /* ARManager.swift */,
 				B578F2462704C08800E4875C /* iOS */,
 				B578F2382704C07F00E4875C /* CrossPlatform */,
 				4304599D20F7DFDE00B54215 /* vuforiaKey.h */,
@@ -426,6 +429,7 @@
 				43D0351C20EAC02600AA1039 /* main.m in Sources */,
 				43AD9580220E15AA00E5BB36 /* SpeechManager.m in Sources */,
 				B578F2442704C07F00E4875C /* VuMatrixToString.cpp in Sources */,
+				B578F26B2704C6A300E4875C /* ARManager.swift in Sources */,
 				B578F2502704C08800E4875C /* MetalRenderer.swift in Sources */,
 				B578F2592704C4CC00E4875C /* AppDelegate.swift in Sources */,
 				B578F2542704C08800E4875C /* VuforiaView.swift in Sources */,
