@@ -13,7 +13,6 @@
 		436CF092225693FB002E77C9 /* worldReferenceMarker in Resources */ = {isa = PBXBuildFile; fileRef = 436CF091225693FB002E77C9 /* worldReferenceMarker */; };
 		437B8AEC21025108006720F5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 437B8AEB21025108006720F5 /* AudioToolbox.framework */; };
 		437C3BC824104FDA00B0F977 /* vuforia-spatial-edge-server in Resources */ = {isa = PBXBuildFile; fileRef = 437C3BC724104FDA00B0F977 /* vuforia-spatial-edge-server */; };
-		4397878320FFB88500B3A9E5 /* JavaScriptAPIHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4397878220FFB88500B3A9E5 /* JavaScriptAPIHandler.mm */; };
 		4397878920FFD03800B3A9E5 /* UDPManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4397878820FFD03800B3A9E5 /* UDPManager.mm */; };
 		4397878C20FFD73F00B3A9E5 /* FileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4397878B20FFD73F00B3A9E5 /* FileManager.m */; };
 		43AD9580220E15AA00E5BB36 /* SpeechManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 43AD957F220E15AA00E5BB36 /* SpeechManager.m */; };
@@ -21,8 +20,6 @@
 		43AD9588221473AA00E5BB36 /* NodeRunner.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43AD9587221473AA00E5BB36 /* NodeRunner.mm */; };
 		43ADDCE02214784900E5BB36 /* NodeMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43ADDCDE2214784200E5BB36 /* NodeMobile.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		43ADDCE12214784900E5BB36 /* NodeMobile.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43ADDCDE2214784200E5BB36 /* NodeMobile.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		43D0350E20EAC02600AA1039 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 43D0350D20EAC02600AA1039 /* AppDelegate.m */; };
-		43D0351120EAC02600AA1039 /* MainViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43D0351020EAC02600AA1039 /* MainViewController.mm */; };
 		43D0351420EAC02600AA1039 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43D0351220EAC02600AA1039 /* Main.storyboard */; };
 		43D0351920EAC02600AA1039 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43D0351720EAC02600AA1039 /* LaunchScreen.storyboard */; };
 		43D0351C20EAC02600AA1039 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 43D0351B20EAC02600AA1039 /* main.m */; };
@@ -41,6 +38,9 @@
 		B578F2522704C08800E4875C /* shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = B578F24A2704C08800E4875C /* shaders.metal */; };
 		B578F2532704C08800E4875C /* VuforiaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B578F24B2704C08800E4875C /* VuforiaViewController.swift */; };
 		B578F2542704C08800E4875C /* VuforiaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B578F24C2704C08800E4875C /* VuforiaView.swift */; };
+		B578F2592704C4CC00E4875C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B578F2582704C4CC00E4875C /* AppDelegate.swift */; };
+		B578F25B2704C50000E4875C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B578F25A2704C4FF00E4875C /* MainViewController.swift */; };
+		B578F25D2704C51000E4875C /* JavaScriptAPIHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B578F25C2704C50F00E4875C /* JavaScriptAPIHandler.swift */; };
 		B9ED0143F1F7FFD5390F81D8 /* Pods_Vuforia_Spatial_Toolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C61AA94AEC19B8B5307AF63 /* Pods_Vuforia_Spatial_Toolbox.framework */; };
 /* End PBXBuildFile section */
 
@@ -68,8 +68,6 @@
 		436CF091225693FB002E77C9 /* worldReferenceMarker */ = {isa = PBXFileReference; lastKnownFileType = folder; path = worldReferenceMarker; sourceTree = "<group>"; };
 		437B8AEB21025108006720F5 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		437C3BC724104FDA00B0F977 /* vuforia-spatial-edge-server */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "vuforia-spatial-edge-server"; path = "bin/data/vuforia-spatial-edge-server"; sourceTree = SOURCE_ROOT; };
-		4397878120FFB88500B3A9E5 /* JavaScriptAPIHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JavaScriptAPIHandler.h; sourceTree = "<group>"; };
-		4397878220FFB88500B3A9E5 /* JavaScriptAPIHandler.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = JavaScriptAPIHandler.mm; sourceTree = "<group>"; };
 		4397878720FFD03800B3A9E5 /* UDPManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UDPManager.h; sourceTree = "<group>"; };
 		4397878820FFD03800B3A9E5 /* UDPManager.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = UDPManager.mm; sourceTree = "<group>"; };
 		4397878A20FFD73F00B3A9E5 /* FileManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileManager.h; sourceTree = "<group>"; };
@@ -81,10 +79,6 @@
 		43AD9587221473AA00E5BB36 /* NodeRunner.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NodeRunner.mm; sourceTree = "<group>"; };
 		43ADDCDE2214784200E5BB36 /* NodeMobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NodeMobile.framework; sourceTree = "<group>"; };
 		43D0350920EAC02600AA1039 /* Vuforia Spatial Toolbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Vuforia Spatial Toolbox.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		43D0350C20EAC02600AA1039 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		43D0350D20EAC02600AA1039 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		43D0350F20EAC02600AA1039 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
-		43D0351020EAC02600AA1039 /* MainViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MainViewController.mm; sourceTree = "<group>"; };
 		43D0351320EAC02600AA1039 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		43D0351820EAC02600AA1039 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		43D0351A20EAC02600AA1039 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -120,6 +114,9 @@
 		B578F24D2704C08800E4875C /* VisibleTargets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VisibleTargets.h; sourceTree = "<group>"; };
 		B578F24E2704C08800E4875C /* VuforiaWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VuforiaWrapper.h; sourceTree = "<group>"; };
 		B578F2572704C39100E4875C /* Vuforia Spatial Toolbox-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Vuforia Spatial Toolbox-Bridging-Header.h"; sourceTree = "<group>"; };
+		B578F2582704C4CC00E4875C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B578F25A2704C4FF00E4875C /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		B578F25C2704C50F00E4875C /* JavaScriptAPIHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JavaScriptAPIHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,12 +199,9 @@
 				A7EE6C752218853B00F60723 /* Images.xcassets */,
 				43ADDCEA2215DBA400E5BB36 /* AR */,
 				43AD95852214738700E5BB36 /* NodeJS */,
-				43D0350C20EAC02600AA1039 /* AppDelegate.h */,
-				43D0350D20EAC02600AA1039 /* AppDelegate.m */,
-				43D0350F20EAC02600AA1039 /* MainViewController.h */,
-				43D0351020EAC02600AA1039 /* MainViewController.mm */,
-				4397878120FFB88500B3A9E5 /* JavaScriptAPIHandler.h */,
-				4397878220FFB88500B3A9E5 /* JavaScriptAPIHandler.mm */,
+				B578F2582704C4CC00E4875C /* AppDelegate.swift */,
+				B578F25A2704C4FF00E4875C /* MainViewController.swift */,
+				B578F25C2704C50F00E4875C /* JavaScriptAPIHandler.swift */,
 				43D0352220EAC09A00AA1039 /* WebView */,
 				4397878720FFD03800B3A9E5 /* UDPManager.h */,
 				4397878820FFD03800B3A9E5 /* UDPManager.mm */,
@@ -430,17 +424,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B578F25D2704C51000E4875C /* JavaScriptAPIHandler.swift in Sources */,
+				B578F25B2704C50000E4875C /* MainViewController.swift in Sources */,
 				B578F2512704C08800E4875C /* VuforiaWrapper.mm in Sources */,
 				B578F2532704C08800E4875C /* VuforiaViewController.swift in Sources */,
 				430D4DAE22832FD3006E5CBF /* VideoRecordingManager.m in Sources */,
 				B578F24F2704C08800E4875C /* VisibleTargets.mm in Sources */,
-				43D0351120EAC02600AA1039 /* MainViewController.mm in Sources */,
 				43D0355520EAC1E200AA1039 /* REWebView.mm in Sources */,
 				B578F2432704C07F00E4875C /* AppController.cpp in Sources */,
 				B578F2452704C07F00E4875C /* tiny_obj_loader.cpp in Sources */,
 				43F4A497240425D700564391 /* DeviceStateManager.m in Sources */,
 				43D0352520EAC16B00AA1039 /* WebServerManager.m in Sources */,
-				4397878320FFB88500B3A9E5 /* JavaScriptAPIHandler.mm in Sources */,
 				B578F2522704C08800E4875C /* shaders.metal in Sources */,
 				4397878C20FFD73F00B3A9E5 /* FileManager.m in Sources */,
 				43D0351C20EAC02600AA1039 /* main.m in Sources */,
@@ -448,9 +442,9 @@
 				43AD9580220E15AA00E5BB36 /* SpeechManager.m in Sources */,
 				B578F2442704C07F00E4875C /* VuMatrixToString.cpp in Sources */,
 				B578F2502704C08800E4875C /* MetalRenderer.swift in Sources */,
+				B578F2592704C4CC00E4875C /* AppDelegate.swift in Sources */,
 				B578F2542704C08800E4875C /* VuforiaView.swift in Sources */,
 				43AD9588221473AA00E5BB36 /* NodeRunner.mm in Sources */,
-				43D0350E20EAC02600AA1039 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -604,7 +598,7 @@
 				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				INFOPLIST_FILE = "Vuforia Spatial Toolbox/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -688,7 +682,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
 				INFOPLIST_FILE = "Vuforia Spatial Toolbox/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
