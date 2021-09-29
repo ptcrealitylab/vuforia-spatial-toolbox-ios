@@ -58,9 +58,9 @@ npm install
 6. Download the latest Vuforia SDK for iOS from https://developer.vuforia.com/downloads/sdk
    (Click the "Download for iOS" link for *vuforia-sdk-ios-\[version-number\].zip*).
 
-   This project was last updated with Vuforia SDK version: `9.6.4`
+   This project was last updated with Vuforia SDK version: `10.2.5`
 
- - Paste the Vuforia.framework file from the `build` directory of the download into the top level
+ - Paste the VuforiaEngine.framework file from the `build` directory of the download into the top level
    of the `vuforia-spatial-toolbox-ios` directory.
  - If the latest Vuforia SDK version has been updated beyond this documentation and you have trouble
    compiling the app, please consult the [forum](https://forum.spatialtoolbox.vuforia.com).
