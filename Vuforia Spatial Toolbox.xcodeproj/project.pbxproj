@@ -19,9 +19,6 @@
 		43ADDCE12214784900E5BB36 /* NodeMobile.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43ADDCDE2214784200E5BB36 /* NodeMobile.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		43D0351420EAC02600AA1039 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43D0351220EAC02600AA1039 /* Main.storyboard */; };
 		43D0351920EAC02600AA1039 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43D0351720EAC02600AA1039 /* LaunchScreen.storyboard */; };
-		43D0351C20EAC02600AA1039 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 43D0351B20EAC02600AA1039 /* main.m */; };
-		43FC68EB22A5AA4B00F6D6DD /* Vuforia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43FC68EA22A5AA4B00F6D6DD /* Vuforia.framework */; };
-		43FC68EC22A5AA4B00F6D6DD /* Vuforia.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43FC68EA22A5AA4B00F6D6DD /* Vuforia.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A7EE6C762218853B00F60723 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7EE6C752218853B00F60723 /* Images.xcassets */; };
 		B578F2432704C07F00E4875C /* AppController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B578F23B2704C07F00E4875C /* AppController.cpp */; };
 		B578F2442704C07F00E4875C /* VuMatrixToString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B578F23E2704C07F00E4875C /* VuMatrixToString.cpp */; };
@@ -42,6 +39,9 @@
 		B578F2672704C63100E4875C /* DeviceStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B578F2642704C63100E4875C /* DeviceStateManager.swift */; };
 		B578F2692704C67700E4875C /* VideoRecordingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B578F2682704C67700E4875C /* VideoRecordingManager.swift */; };
 		B578F26B2704C6A300E4875C /* ARManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B578F26A2704C6A300E4875C /* ARManager.swift */; };
+		B578F26D2704C76600E4875C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B578F26C2704C76500E4875C /* SceneDelegate.swift */; };
+		B578F26F2704C80D00E4875C /* VuforiaEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B578F26E2704C80D00E4875C /* VuforiaEngine.framework */; };
+		B578F2702704E38A00E4875C /* VuforiaEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B578F26E2704C80D00E4875C /* VuforiaEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B9ED0143F1F7FFD5390F81D8 /* Pods_Vuforia_Spatial_Toolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C61AA94AEC19B8B5307AF63 /* Pods_Vuforia_Spatial_Toolbox.framework */; };
 /* End PBXBuildFile section */
 
@@ -52,8 +52,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				B578F2702704E38A00E4875C /* VuforiaEngine.framework in Embed Frameworks */,
 				43ADDCE12214784900E5BB36 /* NodeMobile.framework in Embed Frameworks */,
-				43FC68EC22A5AA4B00F6D6DD /* Vuforia.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -77,9 +77,7 @@
 		43D0351320EAC02600AA1039 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		43D0351820EAC02600AA1039 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		43D0351A20EAC02600AA1039 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		43D0351B20EAC02600AA1039 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		43D0355720EAC1FE00AA1039 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
-		43FC68EA22A5AA4B00F6D6DD /* Vuforia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Vuforia.framework; sourceTree = "<group>"; };
 		4C61AA94AEC19B8B5307AF63 /* Pods_Vuforia_Spatial_Toolbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Vuforia_Spatial_Toolbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F95EB11AD202237717B3485 /* Pods-Vuforia Spatial Toolbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vuforia Spatial Toolbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-Vuforia Spatial Toolbox/Pods-Vuforia Spatial Toolbox.release.xcconfig"; sourceTree = "<group>"; };
 		A7EE6C752218853B00F60723 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -112,6 +110,8 @@
 		B578F2642704C63100E4875C /* DeviceStateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceStateManager.swift; sourceTree = "<group>"; };
 		B578F2682704C67700E4875C /* VideoRecordingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoRecordingManager.swift; sourceTree = "<group>"; };
 		B578F26A2704C6A300E4875C /* ARManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARManager.swift; sourceTree = "<group>"; };
+		B578F26C2704C76500E4875C /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		B578F26E2704C80D00E4875C /* VuforiaEngine.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = VuforiaEngine.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,8 +124,8 @@
 				437B8AEC21025108006720F5 /* AudioToolbox.framework in Frameworks */,
 				4304599420F7D01F00B54215 /* WebKit.framework in Frameworks */,
 				43ADDCE02214784900E5BB36 /* NodeMobile.framework in Frameworks */,
-				43FC68EB22A5AA4B00F6D6DD /* Vuforia.framework in Frameworks */,
 				B9ED0143F1F7FFD5390F81D8 /* Pods_Vuforia_Spatial_Toolbox.framework in Frameworks */,
+				B578F26F2704C80D00E4875C /* VuforiaEngine.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,6 +196,7 @@
 				43ADDCEA2215DBA400E5BB36 /* AR */,
 				43AD95852214738700E5BB36 /* NodeJS */,
 				B578F2582704C4CC00E4875C /* AppDelegate.swift */,
+				B578F26C2704C76500E4875C /* SceneDelegate.swift */,
 				B578F25A2704C4FF00E4875C /* MainViewController.swift */,
 				B578F25C2704C50F00E4875C /* JavaScriptAPIHandler.swift */,
 				43D0352220EAC09A00AA1039 /* WebView */,
@@ -208,7 +209,6 @@
 				43D0351220EAC02600AA1039 /* Main.storyboard */,
 				43D0351720EAC02600AA1039 /* LaunchScreen.storyboard */,
 				43D0351A20EAC02600AA1039 /* Info.plist */,
-				43D0351B20EAC02600AA1039 /* main.m */,
 			);
 			path = "Vuforia Spatial Toolbox";
 			sourceTree = "<group>";
@@ -225,7 +225,7 @@
 		43D0355620EAC1FD00AA1039 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				43FC68EA22A5AA4B00F6D6DD /* Vuforia.framework */,
+				B578F26E2704C80D00E4875C /* VuforiaEngine.framework */,
 				430D4DAA22832F60006E5CBF /* ReplayKit.framework */,
 				43ADDCDE2214784200E5BB36 /* NodeMobile.framework */,
 				43AD9581220E172900E5BB36 /* Speech.framework */,
@@ -420,13 +420,13 @@
 				B578F2662704C63100E4875C /* FileDownloadManager.swift in Sources */,
 				B578F2532704C08800E4875C /* VuforiaViewController.swift in Sources */,
 				B578F2692704C67700E4875C /* VideoRecordingManager.swift in Sources */,
+				B578F26D2704C76600E4875C /* SceneDelegate.swift in Sources */,
 				B578F24F2704C08800E4875C /* VisibleTargets.mm in Sources */,
 				B578F2432704C07F00E4875C /* AppController.cpp in Sources */,
 				B578F2452704C07F00E4875C /* tiny_obj_loader.cpp in Sources */,
 				B578F25F2704C5A600E4875C /* REWebView.swift in Sources */,
 				B578F2612704C5BF00E4875C /* WebServerManager.swift in Sources */,
 				B578F2522704C08800E4875C /* shaders.metal in Sources */,
-				43D0351C20EAC02600AA1039 /* main.m in Sources */,
 				43AD9580220E15AA00E5BB36 /* SpeechManager.m in Sources */,
 				B578F2442704C07F00E4875C /* VuMatrixToString.cpp in Sources */,
 				B578F26B2704C6A300E4875C /* ARManager.swift in Sources */,
