@@ -5,6 +5,9 @@ vuforiaKey.h
 Vuforia.framework
 Vuforia.framework/
 Vuforia.framework/Vuforia
+VuforiaEngine.framework
+VuforiaEngine.framework/
+VuforiaEngine.framework/VuforiaEngine
 
 # osx directory files
 .DS_Store/
