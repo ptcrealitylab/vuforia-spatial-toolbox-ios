@@ -117,6 +117,12 @@ class JavaScriptAPIHandler {
                 let videoId = args["videoId"] as? String
                 stopVideoRecording(videoId: videoId)
             }
+        case "areaTargetCaptureStart":
+            areaTargetCaptureStart()
+        case "areaTargetCaptureStop":
+            areaTargetCaptureStop()
+        case "areaTargetCaptureGenerate":
+            areaTargetCaptureGenerate()
         default:
             print("no function match detected for \(functionName)")
         }
@@ -379,5 +385,14 @@ class JavaScriptAPIHandler {
     }
     func restartDeviceTracker() {
         // TODO: implement this, it's already getting called when phone tracking is bad
+    }
+    func areaTargetCaptureStart() {
+        cAreaTargetCaptureStart();
+    }
+    func areaTargetCaptureStop() {
+        cAreaTargetCaptureStop();
+    }
+    func areaTargetCaptureGenerate() {
+        cAreaTargetCaptureGenerate();
     }
 }

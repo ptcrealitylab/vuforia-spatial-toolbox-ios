@@ -21,6 +21,15 @@ countries.
 
 AppController controller;
 
+//#ifdef VUFORIA_FEATURE_AREA_TARGET_CAPTURE // TODO: make it conditionally compiled
+
+#include "CaptureController.h"
+
+CaptureController captureController;
+
+
+//#endif /* VUFORIA_FEATURE_AREA_TARGET_CAPTURE */
+
 struct
 {
     void* callbackClass = nullptr;
@@ -541,4 +550,16 @@ VuImageInfo* cGetCameraFrameImage() {
 
 void cVuforiaCleanupStateMemory() {
     controller.cleanupStateMemory();
+}
+
+bool cAreaTargetCaptureStart() {
+    return captureController.areaTargetCaptureStart();
+}
+
+bool cAreaTargetCaptureStop() {
+    return captureController.areaTargetCaptureStop();
+}
+
+bool cAreaTargetCaptureGenerate() {
+    return captureController.areaTargetCaptureGenerate();
 }

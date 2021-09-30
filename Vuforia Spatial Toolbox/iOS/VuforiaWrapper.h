@@ -124,6 +124,10 @@ typedef struct
 /// Instance of the struct populated with model data for use in Swift
 extern Models_t Models;
 
+bool cAreaTargetCaptureStart();
+bool cAreaTargetCaptureStop();
+bool cAreaTargetCaptureGenerate();
+
 #ifdef __cplusplus
 };
 #endif

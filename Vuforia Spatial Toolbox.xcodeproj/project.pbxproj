@@ -20,6 +20,7 @@
 		43D0351420EAC02600AA1039 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43D0351220EAC02600AA1039 /* Main.storyboard */; };
 		43D0351920EAC02600AA1039 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43D0351720EAC02600AA1039 /* LaunchScreen.storyboard */; };
 		A7EE6C762218853B00F60723 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7EE6C752218853B00F60723 /* Images.xcassets */; };
+		B50809332705F97600186F0D /* CaptureController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B50809312705F97600186F0D /* CaptureController.cpp */; };
 		B578F2432704C07F00E4875C /* AppController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B578F23B2704C07F00E4875C /* AppController.cpp */; };
 		B578F2442704C07F00E4875C /* VuMatrixToString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B578F23E2704C07F00E4875C /* VuMatrixToString.cpp */; };
 		B578F2452704C07F00E4875C /* tiny_obj_loader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B578F2412704C07F00E4875C /* tiny_obj_loader.cpp */; };
@@ -81,6 +82,8 @@
 		4C61AA94AEC19B8B5307AF63 /* Pods_Vuforia_Spatial_Toolbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Vuforia_Spatial_Toolbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F95EB11AD202237717B3485 /* Pods-Vuforia Spatial Toolbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vuforia Spatial Toolbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-Vuforia Spatial Toolbox/Pods-Vuforia Spatial Toolbox.release.xcconfig"; sourceTree = "<group>"; };
 		A7EE6C752218853B00F60723 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		B50809312705F97600186F0D /* CaptureController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CaptureController.cpp; sourceTree = "<group>"; };
+		B50809322705F97600186F0D /* CaptureController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CaptureController.h; sourceTree = "<group>"; };
 		B578F2392704C07F00E4875C /* MemoryStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryStream.h; sourceTree = "<group>"; };
 		B578F23A2704C07F00E4875C /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		B578F23B2704C07F00E4875C /* AppController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AppController.cpp; sourceTree = "<group>"; };
@@ -240,6 +243,8 @@
 		B50808F72705F6C300186F0D /* PrivateInternal */ = {
 			isa = PBXGroup;
 			children = (
+				B50809322705F97600186F0D /* CaptureController.h */,
+				B50809312705F97600186F0D /* CaptureController.cpp */,
 			);
 			path = PrivateInternal;
 			sourceTree = "<group>";
@@ -429,6 +434,7 @@
 				B578F2532704C08800E4875C /* VuforiaViewController.swift in Sources */,
 				B578F2692704C67700E4875C /* VideoRecordingManager.swift in Sources */,
 				B578F26D2704C76600E4875C /* SceneDelegate.swift in Sources */,
+				B50809332705F97600186F0D /* CaptureController.cpp in Sources */,
 				B578F24F2704C08800E4875C /* VisibleTargets.mm in Sources */,
 				B578F2432704C07F00E4875C /* AppController.cpp in Sources */,
 				B578F2452704C07F00E4875C /* tiny_obj_loader.cpp in Sources */,
