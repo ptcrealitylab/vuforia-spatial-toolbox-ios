@@ -1,5 +1,6 @@
 #key files
 vuforiaKey.h
+areaTargetKeys.h
 
 #Vuforia SDK is too large to push to git
 Vuforia.framework
