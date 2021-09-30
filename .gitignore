@@ -9,6 +9,9 @@ VuforiaEngine.framework
 VuforiaEngine.framework/
 VuforiaEngine.framework/VuforiaEngine
 
+Vuforia Spatial Toolbox/PrivateInternal
+Vuforia Spatial Toolbox/PrivateInternal/
+
 # osx directory files
 .DS_Store/
 .DS_Store

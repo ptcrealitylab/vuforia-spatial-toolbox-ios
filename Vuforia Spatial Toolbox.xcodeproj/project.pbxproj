@@ -161,6 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				B578F26A2704C6A300E4875C /* ARManager.swift */,
+				B50808F72705F6C300186F0D /* PrivateInternal */,
 				B578F2462704C08800E4875C /* iOS */,
 				B578F2382704C07F00E4875C /* CrossPlatform */,
 				4304599D20F7DFDE00B54215 /* vuforiaKey.h */,
@@ -234,6 +235,13 @@
 				4C61AA94AEC19B8B5307AF63 /* Pods_Vuforia_Spatial_Toolbox.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B50808F72705F6C300186F0D /* PrivateInternal */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = PrivateInternal;
 			sourceTree = "<group>";
 		};
 		B578F2382704C07F00E4875C /* CrossPlatform */ = {
