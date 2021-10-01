@@ -110,7 +110,7 @@ bool AppController::startAR()
     } else {
         LOG("Successfully set image format to RGB888");
     }
-
+    
     LOG("Successfully started Vuforia");
     return true;
 }
@@ -1351,4 +1351,14 @@ void AppController::cleanupStateMemory()
     }
     mVuforiaState = nullptr;
     LOG("Cleaned up Vuforia state");
+}
+
+VuEngine* AppController::getVuforiaEngineRef()
+{
+    return mEngine;
+}
+
+VuObserver* AppController::getDevicePoseObserverRef()
+{
+    return mDevicePoseObserver;
 }

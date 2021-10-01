@@ -82,6 +82,8 @@ void initAR(VuforiaInitConfig config, int target)
     
     // Call AppController to initialize Vuforia ...
     controller.initAR(initConfig, target, vuforiaKey);
+    
+    captureController.initWithAppController(&controller);
 }
 
 
@@ -562,4 +564,12 @@ bool cAreaTargetCaptureStop() {
 
 bool cAreaTargetCaptureGenerate() {
     return captureController.areaTargetCaptureGenerate();
+}
+
+//void initCaptureController(VuEngine* engine) {
+//    captureController.initWithEngine(engine);
+//}
+
+void cSetAreaTargetOutputFolder(const char* path) {
+    captureController.setAreaTargetOutputFolder(path);
 }

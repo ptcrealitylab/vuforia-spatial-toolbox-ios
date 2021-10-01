@@ -140,6 +140,9 @@ public:
     VuImageInfo* getCameraFrameImage();
     bool setImageFormat();
     void cleanupStateMemory();
+    
+    VuEngine* getVuforiaEngineRef();
+    VuObserver* getDevicePoseObserverRef();
 
 private: // methods
     

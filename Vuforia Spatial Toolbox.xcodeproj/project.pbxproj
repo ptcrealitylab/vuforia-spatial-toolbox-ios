@@ -84,6 +84,7 @@
 		A7EE6C752218853B00F60723 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B50809312705F97600186F0D /* CaptureController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CaptureController.cpp; sourceTree = "<group>"; };
 		B50809322705F97600186F0D /* CaptureController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CaptureController.h; sourceTree = "<group>"; };
+		B508093527063AD800186F0D /* areaTargetKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = areaTargetKeys.h; sourceTree = "<group>"; };
 		B578F2392704C07F00E4875C /* MemoryStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryStream.h; sourceTree = "<group>"; };
 		B578F23A2704C07F00E4875C /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		B578F23B2704C07F00E4875C /* AppController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AppController.cpp; sourceTree = "<group>"; };
@@ -168,6 +169,7 @@
 				B578F2462704C08800E4875C /* iOS */,
 				B578F2382704C07F00E4875C /* CrossPlatform */,
 				4304599D20F7DFDE00B54215 /* vuforiaKey.h */,
+				B508093527063AD800186F0D /* areaTargetKeys.h */,
 			);
 			name = AR;
 			sourceTree = "<group>";

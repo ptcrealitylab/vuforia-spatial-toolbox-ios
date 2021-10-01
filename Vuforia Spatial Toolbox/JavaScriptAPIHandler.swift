@@ -387,6 +387,8 @@ class JavaScriptAPIHandler {
         // TODO: implement this, it's already getting called when phone tracking is bad
     }
     func areaTargetCaptureStart() {
+        // set AT output path
+        cSetAreaTargetOutputFolder(FileDownloadManager.shared.getTempDirectoryPath(directoryName: "areaTargets"));
         cAreaTargetCaptureStart();
     }
     func areaTargetCaptureStop() {

@@ -124,9 +124,11 @@ typedef struct
 /// Instance of the struct populated with model data for use in Swift
 extern Models_t Models;
 
+void initCaptureController(VuEngine* engine);
 bool cAreaTargetCaptureStart();
 bool cAreaTargetCaptureStop();
 bool cAreaTargetCaptureGenerate();
+void cSetAreaTargetOutputFolder(const char* path);
 
 #ifdef __cplusplus
 };

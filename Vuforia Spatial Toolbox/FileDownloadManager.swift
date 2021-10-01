@@ -55,6 +55,19 @@ class FileDownloadManager {
         return filePath.absoluteString
     }
     
+    func getTempDirectoryPath(directoryName: String) -> String {
+        guard let tempDir = URL(string: NSTemporaryDirectory()) else { return ""; }
+        let directory = tempDir.appendingPathComponent(directoryName);
+        do {
+            // create containing directory otherwise cannot save
+            try FileManager.default.createDirectory(atPath: directory.absoluteString, withIntermediateDirectories: true, attributes: nil)
+        } catch {
+            print("error creating directory at path: \(directory.absoluteString)")
+            return ""
+        }
+        return directory.absoluteString
+    }
+    
     func getFileExists(fileName: String) -> Bool {
         let filePath = self.getTempFilePath(originalFilePath: fileName)
         return FileManager.default.fileExists(atPath: filePath)
