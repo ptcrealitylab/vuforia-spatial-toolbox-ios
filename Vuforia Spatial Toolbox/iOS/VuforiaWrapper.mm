@@ -504,10 +504,17 @@ typedef struct MarkerCallbacks
            
 }MarkerCallbacks;
 
+typedef struct StatusCallback
+{
+    void * classPtr;
+    void(*callback)(void *, const char*, const char*);
+}StatusCallback;
+
 //can be inited in some method. Must also be released somewhere. Or can be used with shared_ptr
 static Callbacks * cameraCallbacks = new Callbacks();
 static MarkerCallbacks * visibleMarkersCallbacks = new MarkerCallbacks();
 static Callbacks * projectionCallbacks = new Callbacks();
+static StatusCallback * areaTargetStatusCallback = new StatusCallback();
 
 void setCameraMatrixCallback(void * classPtr, void(*callback)(void *, const char*))
 {
@@ -554,8 +561,14 @@ void cVuforiaCleanupStateMemory() {
     controller.cleanupStateMemory();
 }
 
-bool cAreaTargetCaptureStart() {
-    return captureController.areaTargetCaptureStart();
+bool cAreaTargetCaptureStart(void * classPtr, void(*callback)(void *, const char*, const char*))
+{
+    areaTargetStatusCallback->classPtr = classPtr;
+    areaTargetStatusCallback->callback = callback;
+    
+    return captureController.areaTargetCaptureStart([&](const char* statusString, const char* statusInfoString) {
+        areaTargetStatusCallback->callback(areaTargetStatusCallback->classPtr, statusString, statusInfoString);
+    });
 }
 
 bool cAreaTargetCaptureStop() {

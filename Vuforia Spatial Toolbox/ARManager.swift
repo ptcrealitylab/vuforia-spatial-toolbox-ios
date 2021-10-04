@@ -12,6 +12,7 @@ typealias CompletionHandler = () -> ()
 typealias MarkerCompletionHandler = ([String:String]) -> ()
 typealias MatrixStringCompletionHandler = (String) -> ()
 typealias MarkerListCompletionHandler = ([ProcessedObservation]) -> ()
+typealias StatusCompletionHandler = (String, String) -> ()
 
 struct ProcessedObservation {
     var name: String
@@ -37,7 +38,8 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
     var cameraMatrixCompletionHandler: MarkerCompletionHandler?
     var projectionMatrixCompletionHandler: MatrixStringCompletionHandler?
     var groundPlaneMatrixCompletionHandler: MarkerCompletionHandler?
-    
+    var areaTargetStatusCallback: StatusCompletionHandler?
+
     var isExtendedTrackingEnabled = false
     
     var pathToXmlContents:[String: String] = [String: String]()
@@ -374,6 +376,32 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
         isExtendedTrackingEnabled = true
     }
     
+    func startAreaTargetCapture(statusCallback: @escaping StatusCompletionHandler) {
+        areaTargetStatusCallback = statusCallback;
+        print("set cameraMatrixCompletionHandler")
+        
+        // set AT output path
+        cSetAreaTargetOutputFolder(FileDownloadManager.shared.getTempDirectoryPath(directoryName: "areaTargets"));
+        
+        // Uses callback pattern from http://www.perry.cz/clanky/swift.html
+        // and https://stackoverflow.com/questions/33294620/how-to-cast-self-to-unsafemutablepointervoid-type-in-swift
+        cAreaTargetCaptureStart(bridge(self), {(observer, status, statusInfo) -> Void in
+            // Extract pointer to `self` from void pointer:
+            let mySelf = Unmanaged<ARManager>.fromOpaque(observer!).takeUnretainedValue()
+            // Call instance method:
+            if let _status = status, let _statusInfo = statusInfo {
+                // TODO: BEN - also get tracking status and tracking status info
+                mySelf.handleAreaTargetCaptureStatus(status: String(cString: _status), statusInfo: String(cString: _statusInfo))
+            }
+        });
+    }
+    
+    func handleAreaTargetCaptureStatus(status: String?, statusInfo: String?) {
+        if let _status = status, let _statusInfo = statusInfo {
+            areaTargetStatusCallback?(_status, _statusInfo);
+        }
+    }
+    
     func parseSize(sizeString: String?) -> Float? {
         guard let _string = sizeString else { return nil }
         let arr = _string.split(separator: " ")
@@ -436,6 +464,7 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
     
     // MARK: - VideoRecordingSource
     
+    // TODO: remove this, we don't need it anymore, we use getCameraFrameImage instead
     func getVideoBackgroundPixels() -> [GLchar] {
         print("->start: cGetVideoBackgroundPixels")
         cGetVideoBackgroundPixels()
@@ -448,6 +477,7 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
         return info;
     }
     
+    // TODO: remove this, we can get bounds from cameraFrameImage
     func getCurrentARViewBoundsSize() -> CGSize {
         return CGSize.zero
     }

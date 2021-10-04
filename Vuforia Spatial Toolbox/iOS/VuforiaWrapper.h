@@ -125,7 +125,7 @@ typedef struct
 extern Models_t Models;
 
 void initCaptureController(VuEngine* engine);
-bool cAreaTargetCaptureStart();
+bool cAreaTargetCaptureStart(void * classPtr, void(*callback)(void *, const char*, const char *));
 bool cAreaTargetCaptureStop();
 bool cAreaTargetCaptureGenerate();
 void cSetAreaTargetOutputFolder(const char* path);

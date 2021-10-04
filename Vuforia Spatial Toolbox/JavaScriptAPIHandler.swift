@@ -118,7 +118,7 @@ class JavaScriptAPIHandler {
                 stopVideoRecording(videoId: videoId)
             }
         case "areaTargetCaptureStart":
-            areaTargetCaptureStart()
+            areaTargetCaptureStart(callback: callback)
         case "areaTargetCaptureStop":
             areaTargetCaptureStop()
         case "areaTargetCaptureGenerate":
@@ -386,10 +386,17 @@ class JavaScriptAPIHandler {
     func restartDeviceTracker() {
         // TODO: implement this, it's already getting called when phone tracking is bad
     }
-    func areaTargetCaptureStart() {
-        // set AT output path
-        cSetAreaTargetOutputFolder(FileDownloadManager.shared.getTempDirectoryPath(directoryName: "areaTargets"));
-        cAreaTargetCaptureStart();
+    func areaTargetCaptureStart(callback: String?) {
+        // run this on background thread so it doesn't freeze the entire app with its while-sleep loop
+        DispatchQueue.global(qos: .userInitiated).async {
+//            print("This is run on a background queue")
+            ARManager.shared.startAreaTargetCapture(statusCallback: { status, statusInfo in
+                DispatchQueue.main.async {
+//                    print("This is run on the main queue, after the previous code in outer block")
+                    self.delegate?.callJavaScriptCallback(callback: callback, arguments: self.stringifyEachArg(args: [status, statusInfo]))
+                }
+            });
+        }
     }
     func areaTargetCaptureStop() {
         cAreaTargetCaptureStop();
