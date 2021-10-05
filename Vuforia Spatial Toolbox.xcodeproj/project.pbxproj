@@ -271,14 +271,14 @@
 		B578F2462704C08800E4875C /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				B578F24E2704C08800E4875C /* VuforiaWrapper.h */,
+				B578F2492704C08800E4875C /* VuforiaWrapper.mm */,
+				B578F24D2704C08800E4875C /* VisibleTargets.h */,
 				B578F2472704C08800E4875C /* VisibleTargets.mm */,
 				B578F2482704C08800E4875C /* MetalRenderer.swift */,
-				B578F2492704C08800E4875C /* VuforiaWrapper.mm */,
 				B578F24A2704C08800E4875C /* shaders.metal */,
 				B578F24B2704C08800E4875C /* VuforiaViewController.swift */,
 				B578F24C2704C08800E4875C /* VuforiaView.swift */,
-				B578F24D2704C08800E4875C /* VisibleTargets.h */,
-				B578F24E2704C08800E4875C /* VuforiaWrapper.h */,
 			);
 			path = iOS;
 			sourceTree = "<group>";

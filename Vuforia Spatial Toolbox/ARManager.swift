@@ -13,6 +13,8 @@ typealias MarkerCompletionHandler = ([String:String]) -> ()
 typealias MatrixStringCompletionHandler = (String) -> ()
 typealias MarkerListCompletionHandler = ([ProcessedObservation]) -> ()
 typealias StatusCompletionHandler = (String, String) -> ()
+typealias ProgressCompletionHandler = (Float) -> ()
+typealias SuccessOrErrorCompletionHandler = (Bool, String?) -> ()
 
 struct ProcessedObservation {
     var name: String
@@ -39,6 +41,8 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
     var projectionMatrixCompletionHandler: MatrixStringCompletionHandler?
     var groundPlaneMatrixCompletionHandler: MarkerCompletionHandler?
     var areaTargetStatusCallback: StatusCompletionHandler?
+    var areaTargetProgressCallback: ProgressCompletionHandler?
+    var areaTargetSuccessCallback: SuccessOrErrorCompletionHandler?
 
     var isExtendedTrackingEnabled = false
     
@@ -378,7 +382,6 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
     
     func startAreaTargetCapture(statusCallback: @escaping StatusCompletionHandler) {
         areaTargetStatusCallback = statusCallback;
-        print("set cameraMatrixCompletionHandler")
         
         // set AT output path
         cSetAreaTargetOutputFolder(FileDownloadManager.shared.getTempDirectoryPath(directoryName: "areaTargets"));
@@ -399,6 +402,50 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
     func handleAreaTargetCaptureStatus(status: String?, statusInfo: String?) {
         if let _status = status, let _statusInfo = statusInfo {
             areaTargetStatusCallback?(_status, _statusInfo);
+        }
+    }
+    
+    func stopAreaTargetCapture(successCallback: @escaping SuccessOrErrorCompletionHandler) {
+        areaTargetSuccessCallback = successCallback;
+        
+        // Uses callback pattern from http://www.perry.cz/clanky/swift.html
+        // and https://stackoverflow.com/questions/33294620/how-to-cast-self-to-unsafemutablepointervoid-type-in-swift
+        cAreaTargetCaptureStop(bridge(self), {(observer, success, errorMessage) -> Void in
+            // Extract pointer to `self` from void pointer:
+            let mySelf = Unmanaged<ARManager>.fromOpaque(observer!).takeUnretainedValue()
+            // Call instance method:
+            var error:String? = nil
+            if let _errorMessage = errorMessage  {
+                error = String(cString: _errorMessage)
+            }
+//            if let _status = status, let _statusInfo = statusInfo {
+                // TODO: BEN - also get tracking status and tracking status info
+                mySelf.handleAreaTargetCaptureSuccess(success: success, errorMessage: error)
+//            }
+        });
+    }
+    
+    func handleAreaTargetCaptureSuccess(success: Bool, errorMessage: String?) {
+        areaTargetSuccessCallback?(success, errorMessage);
+    }
+    
+    func onAreaTargetGenerateProgress(progressCallback: @escaping ProgressCompletionHandler) {
+        areaTargetProgressCallback = progressCallback;
+
+        // Uses callback pattern from http://www.perry.cz/clanky/swift.html
+        // and https://stackoverflow.com/questions/33294620/how-to-cast-self-to-unsafemutablepointervoid-type-in-swift
+        cOnAreaTargetCaptureProgress(bridge(self), {(observer, progress) -> Void in
+            // Extract pointer to `self` from void pointer:
+            let mySelf = Unmanaged<ARManager>.fromOpaque(observer!).takeUnretainedValue()
+            // Call instance method:
+            // TODO: BEN - also get tracking status and tracking status info
+            mySelf.handleAreaTargetCaptureProgress(progress: progress);
+        });
+    }
+    
+    func handleAreaTargetCaptureProgress(progress: Float?) {
+        if let _progress = progress {
+            areaTargetProgressCallback?(_progress);
         }
     }
     

@@ -126,9 +126,10 @@ extern Models_t Models;
 
 void initCaptureController(VuEngine* engine);
 bool cAreaTargetCaptureStart(void * classPtr, void(*callback)(void *, const char*, const char *));
-bool cAreaTargetCaptureStop();
+bool cAreaTargetCaptureStop(void * classPtr, void(*callback)(void *, bool, const char *));
 bool cAreaTargetCaptureGenerate();
 void cSetAreaTargetOutputFolder(const char* path);
+void cOnAreaTargetCaptureProgress(void * classPtr, void(*callback)(void *, float));
 
 #ifdef __cplusplus
 };

@@ -120,9 +120,11 @@ class JavaScriptAPIHandler {
         case "areaTargetCaptureStart":
             areaTargetCaptureStart(callback: callback)
         case "areaTargetCaptureStop":
-            areaTargetCaptureStop()
+            areaTargetCaptureStop(callback: callback)
         case "areaTargetCaptureGenerate":
             areaTargetCaptureGenerate()
+        case "onAreaTargetGenerateProgress":
+            onAreaTargetGenerateProgress(callback: callback)
         default:
             print("no function match detected for \(functionName)")
         }
@@ -137,8 +139,11 @@ class JavaScriptAPIHandler {
         return stringified
     }
     
-    private func stringifyArg(_ arg: String) -> String {
-        return "\"\(arg)\""
+    private func stringifyArg(_ arg: String?) -> String {
+        guard let _arg = arg else {
+            return "null"
+        }
+        return "\"\(_arg)\""
     }
     
     // MARK: - APIs
@@ -398,8 +403,17 @@ class JavaScriptAPIHandler {
             });
         }
     }
-    func areaTargetCaptureStop() {
-        cAreaTargetCaptureStop();
+    func onAreaTargetGenerateProgress(callback: String?) {
+        ARManager.shared.onAreaTargetGenerateProgress(progressCallback: { progress in
+            self.delegate?.callJavaScriptCallback(callback: callback, arguments: [String(progress)])
+        });
+    }
+    func areaTargetCaptureStop(callback: String?) {
+//        cAreaTargetCaptureStop();
+        ARManager.shared.stopAreaTargetCapture(successCallback: { success, errorMessage in
+            let successString = success ? "true" : "false"
+            self.delegate?.callJavaScriptCallback(callback: callback, arguments: [successString, self.stringifyArg(errorMessage)])
+        });
     }
     func areaTargetCaptureGenerate() {
         cAreaTargetCaptureGenerate();

@@ -510,11 +510,26 @@ typedef struct StatusCallback
     void(*callback)(void *, const char*, const char*);
 }StatusCallback;
 
+typedef struct ProgressCallback
+{
+    void * classPtr;
+    void(*callback)(void *, float);
+}ProgressCallback;
+
+
+typedef struct SuccessOrErrorCallback
+{
+    void * classPtr;
+    void(*callback)(void *, bool, const char*);
+}SuccessOrErrorCallback;
+
 //can be inited in some method. Must also be released somewhere. Or can be used with shared_ptr
 static Callbacks * cameraCallbacks = new Callbacks();
 static MarkerCallbacks * visibleMarkersCallbacks = new MarkerCallbacks();
 static Callbacks * projectionCallbacks = new Callbacks();
 static StatusCallback * areaTargetStatusCallback = new StatusCallback();
+static ProgressCallback * areaTargetProgressCallback = new ProgressCallback();
+static SuccessOrErrorCallback * areaTargetSuccessOrErrorCallback = new SuccessOrErrorCallback();
 
 void setCameraMatrixCallback(void * classPtr, void(*callback)(void *, const char*))
 {
@@ -571,8 +586,14 @@ bool cAreaTargetCaptureStart(void * classPtr, void(*callback)(void *, const char
     });
 }
 
-bool cAreaTargetCaptureStop() {
-    return captureController.areaTargetCaptureStop();
+bool cAreaTargetCaptureStop(void * classPtr, void(*callback)(void *, bool, const char *))
+{
+    areaTargetSuccessOrErrorCallback->classPtr = classPtr;
+    areaTargetSuccessOrErrorCallback->callback = callback;
+
+    return captureController.areaTargetCaptureStop([&](bool success, const char* errorMessage) {
+        areaTargetSuccessOrErrorCallback->callback(areaTargetSuccessOrErrorCallback->classPtr, success, errorMessage);
+    });
 }
 
 bool cAreaTargetCaptureGenerate() {
@@ -585,4 +606,14 @@ bool cAreaTargetCaptureGenerate() {
 
 void cSetAreaTargetOutputFolder(const char* path) {
     captureController.setAreaTargetOutputFolder(path);
+}
+
+void cOnAreaTargetCaptureProgress(void * classPtr, void(*callback)(void *, float))
+{
+    areaTargetProgressCallback->classPtr = classPtr;
+    areaTargetProgressCallback->callback = callback;
+    
+    return captureController.onAreaTargetCaptureProgress([&](float progress) {
+        areaTargetProgressCallback->callback(areaTargetStatusCallback->classPtr, progress);
+    });
 }
