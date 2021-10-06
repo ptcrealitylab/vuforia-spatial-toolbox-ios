@@ -21,7 +21,7 @@ struct ProcessedObservation {
     var modelMatrix: String
     var trackingStatus: String
     var trackingStatusInfo: String
-
+    
     init(_name: String, _modelMatrix: String, _trackingStatus: String, _trackingStatusInfo: String) {
         name = _name; modelMatrix = _modelMatrix; trackingStatus = _trackingStatus; trackingStatusInfo = _trackingStatusInfo;
     }
@@ -30,7 +30,7 @@ struct ProcessedObservation {
 //MTLNewLibraryCompletionHandler = (MTLLibrary?, Error?) -> Void
 class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
     var isRecording: Bool
- 
+    
     // MARK: - Singleton Initialization
     static let shared = ARManager()
     
@@ -43,14 +43,15 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
     var areaTargetStatusCallback: StatusCompletionHandler?
     var areaTargetProgressCallback: ProgressCompletionHandler?
     var areaTargetSuccessCallback: SuccessOrErrorCompletionHandler?
-
+    var pendingAreaTargetObjectId: String?
+    
     var isExtendedTrackingEnabled = false
     
     var pathToXmlContents:[String: String] = [String: String]()
     
     var targetsAdded:[String: Bool] = [String: Bool]()
     var targetCallbacks:[String: SuccessCompletionHandler] = [String: SuccessCompletionHandler]()
-
+    
     struct Constants {
         static let QUIT_ON_ERROR = Notification.Name("QuitOnError")
     }
@@ -106,13 +107,13 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
         DispatchQueue.global(qos: .background).async {
             
             // TODO: bring back presentError
-//            let errorCallback: @convention(c) (UnsafeMutableRawPointer?, UnsafePointer<Int8>?) -> Void = {(observer, errorString) -> Void in
-//                let viewController = Unmanaged.fromOpaque(observer!).takeUnretainedValue() as MainViewController
-//                viewController.presentError(error: errorString!)
-//            };
+            //            let errorCallback: @convention(c) (UnsafeMutableRawPointer?, UnsafePointer<Int8>?) -> Void = {(observer, errorString) -> Void in
+            //                let viewController = Unmanaged.fromOpaque(observer!).takeUnretainedValue() as MainViewController
+            //                viewController.presentError(error: errorString!)
+            //            };
             
             let initDoneCallback: @convention(c) (UnsafeMutableRawPointer?) -> Void = {(observer) -> Void in
-//                let viewController = Unmanaged.fromOpaque(observer!).takeUnretainedValue() as MainViewController
+                //                let viewController = Unmanaged.fromOpaque(observer!).takeUnretainedValue() as MainViewController
                 DispatchQueue.main.async {
                     ARManager.shared.vuforiaView?.mVuforiaStarted = startAR()
                     ARManager.shared.hideLoadingAnimation()
@@ -122,11 +123,11 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
                     }
                 }
             }
-
+            
             var initConfig: VuforiaInitConfig = VuforiaInitConfig()
             initConfig.classPtr = UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque())
             // TODO: bring back errorCallback
-//            initConfig.errorCallback = errorCallback
+            //            initConfig.errorCallback = errorCallback
             initConfig.initDoneCallback = initDoneCallback
             initConfig.vbRenderBackend = VuRenderVBBackendType(VU_RENDER_VB_BACKEND_METAL)
             
@@ -191,7 +192,7 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
     
     func addNewMarkerFromImage(markerPath: String, objectID: String, targetWidthMeters: Double, completionHandler: @escaping SuccessCompletionHandler) {
         print("ARManager: addNewMarkerFromImage")
-//        return addImageTarget(markerPath, targetName)
+        //        return addImageTarget(markerPath, targetName)
         let markerXmlPath = markerPath.replacingOccurrences(of: "jpg", with: "xml")
         let path = URL.init(fileURLWithPath: markerPath)
         let xmlPath = URL.init(fileURLWithPath: markerXmlPath)
@@ -215,24 +216,24 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
                 // don't completionHandler(true) here... call that in the parse function if the target successfully gets created
             } else {
                 print("parsing failure")
-//                completionHandler(false)
+                //                completionHandler(false)
             }
         } catch {
             print("error reading xml", error)
-//            completionHandler(false)
+            //            completionHandler(false)
         }
     }
     
     private func processTrackableObservation(_ observation : TrackableObservation) -> ProcessedObservation? {
-
+        
         guard let name = observation.name,
-           let modelMatrix = observation.modelMatrix,
-           let trackingStatus = observation.trackingStatus,
-           let trackingStatusInfo = observation.trackingStatusInfo else {
+              let modelMatrix = observation.modelMatrix,
+              let trackingStatus = observation.trackingStatus,
+              let trackingStatusInfo = observation.trackingStatusInfo else {
             print("error getting fields from observation")
             return nil
         }
-            
+        
         // cast to String
         guard let sName = String(utf8String: name) else {
             print("error casting name to String")
@@ -250,7 +251,7 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
             print("error casting modelViewMatrix to String")
             return nil
         }
-
+        
         return ProcessedObservation(_name: sName, _modelMatrix: sModelMatrix, _trackingStatus: sTrackingStatus, _trackingStatusInfo: sTrackingStatusInfo)
     }
     
@@ -264,14 +265,14 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
             // Extract pointer to `self` from void pointer:
             let mySelf = Unmanaged<ARManager>.fromOpaque(observer!).takeUnretainedValue()
             // Call instance method:
-                        
+            
             if numObservations == 0 {
                 mySelf.triggerMatrixStreamCallback(observationList: [])
                 return
             }
-
+            
             var visibleMarkers : [ProcessedObservation] = [ProcessedObservation]()
-
+            
             for i in 0 ..< numObservations {
                 if let observation = trackableObservations?[Int(i)] {
                     if let processed = mySelf.processTrackableObservation(observation) {
@@ -285,7 +286,7 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
                 }
             }
             mySelf.triggerMatrixStreamCallback(observationList: visibleMarkers)
-
+            
         });
     }
     
@@ -319,12 +320,12 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
     }
     
     func triggerCallback(cameraMatrix: String?) {
-//        print("swift function callback for CameraMatrix");
-//        print(cameraMatrix ?? "(no camera matrix provided)")
+        //        print("swift function callback for CameraMatrix");
+        //        print(cameraMatrix ?? "(no camera matrix provided)")
         
         var statusInfoString = "NORMAL"
         var statusString = "NORMAL"
-
+        
         if let trackingStatusInfo = getDevicePoseStatusInfo() {
             if let sTrackingStatusInfo = String(utf8String: trackingStatusInfo) {
                 statusInfoString = sTrackingStatusInfo
@@ -356,7 +357,7 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
             if let _matString = matrixString {
                 // TODO: BEN - also get tracking status and tracking status info
                 mySelf.triggerProjectionCallback(projectionMatrix: String(cString: _matString))
-//                print("trigger projection callback")
+                //                print("trigger projection callback")
             }
         });
     }
@@ -380,15 +381,16 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
         isExtendedTrackingEnabled = true
     }
     
-    func startAreaTargetCapture(statusCallback: @escaping StatusCompletionHandler) {
+    func startAreaTargetCapture(objectId: String, statusCallback: @escaping StatusCompletionHandler) {
         areaTargetStatusCallback = statusCallback;
+        pendingAreaTargetObjectId = objectId;
         
         // set AT output path
         cSetAreaTargetOutputFolder(FileDownloadManager.shared.getTempDirectoryPath(directoryName: "areaTargets"));
         
         // Uses callback pattern from http://www.perry.cz/clanky/swift.html
         // and https://stackoverflow.com/questions/33294620/how-to-cast-self-to-unsafemutablepointervoid-type-in-swift
-        cAreaTargetCaptureStart(bridge(self), {(observer, status, statusInfo) -> Void in
+        cAreaTargetCaptureStart(objectId, bridge(self), {(observer, status, statusInfo) -> Void in
             // Extract pointer to `self` from void pointer:
             let mySelf = Unmanaged<ARManager>.fromOpaque(observer!).takeUnretainedValue()
             // Call instance method:
@@ -418,10 +420,10 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
             if let _errorMessage = errorMessage  {
                 error = String(cString: _errorMessage)
             }
-//            if let _status = status, let _statusInfo = statusInfo {
-                // TODO: BEN - also get tracking status and tracking status info
-                mySelf.handleAreaTargetCaptureSuccess(success: success, errorMessage: error)
-//            }
+            //            if let _status = status, let _statusInfo = statusInfo {
+            // TODO: BEN - also get tracking status and tracking status info
+            mySelf.handleAreaTargetCaptureSuccess(success: success, errorMessage: error)
+            //            }
         });
     }
     
@@ -431,7 +433,7 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
     
     func onAreaTargetGenerateProgress(progressCallback: @escaping ProgressCompletionHandler) {
         areaTargetProgressCallback = progressCallback;
-
+        
         // Uses callback pattern from http://www.perry.cz/clanky/swift.html
         // and https://stackoverflow.com/questions/33294620/how-to-cast-self-to-unsafemutablepointervoid-type-in-swift
         cOnAreaTargetCaptureProgress(bridge(self), {(observer, progress) -> Void in
@@ -527,6 +529,95 @@ class ARManager: NSObject, XMLParserDelegate, VideoRecordingSource {
     // TODO: remove this, we can get bounds from cameraFrameImage
     func getCurrentARViewBoundsSize() -> CGSize {
         return CGSize.zero
+    }
+
+    func generateWorldObjectFromAreaTarget(targetUploadURL: String) {
+        guard let _objectId = pendingAreaTargetObjectId else {
+            print("no pendingAreaTargetObjectId")
+            return
+        }
+        
+        let path = FileDownloadManager.shared.getTempDirectoryPath(directoryName: "areaTargets")
+        do {
+            let items = try FileManager.default.contentsOfDirectory(atPath: path)
+            
+            for item in items {
+                print("Found \(item)")
+            }
+            
+            let xmlPath = path.appending("/\(_objectId).xml")
+            let datPath = path.appending("/\(_objectId).dat")
+            
+            let doesXmlExist = FileManager.default.fileExists(atPath: xmlPath)
+            print(doesXmlExist)
+            let doesDatExist = FileManager.default.fileExists(atPath: datPath)
+            print(doesDatExist)
+            
+            if doesXmlExist && doesDatExist {
+                print("xml and dat both exist")
+                
+                let xmlLocalUrl = URL(fileURLWithPath: xmlPath)
+                let datLocalUrl = URL(fileURLWithPath: datPath)
+                
+                //                    if let _ip = objectIP,
+                //                       let _id = objectID,
+                //                       let _port = objectPort {
+                //
+                //                        if let urlEndpoint = URL(string: "http://\(_ip):\(_port)/object/\(_id)/video/\(videoID)") {
+                //                            FileDownloadManager.shared.uploadFileFromPath(_writer.outputURL, toURL: urlEndpoint)
+                //                        } else {
+                //                            print("error creating urlEndpoint for video.. http://\(_ip):\(_port)/object/\(_id)/video/\(videoID)")
+                //                        }
+                //                    }
+                
+//                let _ip = "192.168.0.12"
+//                let _port = "8080"
+//                let _id = "_WORLD_instantScan"
+                
+//                if let xmlEndpoint = URL(string: "http://\(_ip):\(_port)/content/\(_id)") {
+//                    FileDownloadManager.shared.uploadFileFromPath(xmlLocalUrl, toURL: xmlEndpoint)
+//                }
+//
+//                if let datEndpoint = URL(string: "http://\(_ip):\(_port)/content/\(_id)") {
+//                    FileDownloadManager.shared.uploadFileFromPath(datLocalUrl, toURL: datEndpoint)
+//                }
+                
+                if let url = URL(string: targetUploadURL) {
+                    // TODO: append headers: { 'type': 'targetUpload' } to network request
+//                    FileDownloadManager.shared.uploadFileFromPath(xmlLocalUrl, toURL: url)
+//                    FileDownloadManager.shared.uploadFileFromPath(datLocalUrl, toURL: url)
+                    
+                    FileDownloadManager.shared.uploadFile(named: "\(_objectId).xml", atPath: xmlLocalUrl, toURL: url, withHeaders: ["type": "targetUpload"], onComplete: { success, errorString in
+                        print("xml file uploaded? \(success)")
+                        print(errorString ?? "(no error)")
+                    })
+
+                    FileDownloadManager.shared.uploadFile(named: "\(_objectId).dat", atPath: datLocalUrl, toURL: url, withHeaders: ["type": "targetUpload"], onComplete: { success, errorString in
+                        print("dat file uploaded? \(success)")
+                        print(errorString ?? "(no error)")
+                    })
+                }
+                
+                /*
+                 
+                 const formData = new FormData();
+                 formData.append('file', blob, 'autogen-target.jpg');
+                 fetch(`/content/${objectName}`, {
+                     body: formData,
+                     headers: {
+                         'type': 'targetUpload'
+                     },
+                     method: 'post'
+                 }).then((_response) => {
+                     callback();
+                 });
+                 
+                 */
+                
+            }
+        } catch {
+            print(error)
+        }
     }
     
 }

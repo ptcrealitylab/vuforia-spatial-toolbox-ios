@@ -317,7 +317,7 @@ class VideoRecordingManager {
                let _port = objectPort {
                 
                 if let urlEndpoint = URL(string: "http://\(_ip):\(_port)/object/\(_id)/video/\(videoID)") {
-                    FileDownloadManager.shared.uploadFileFromPath(_writer.outputURL, toURL: urlEndpoint)
+                    FileDownloadManager.shared.uploadVideoFileFromPath(_writer.outputURL, toURL: urlEndpoint)
                 } else {
                     print("error creating urlEndpoint for video.. http://\(_ip):\(_port)/object/\(_id)/video/\(videoID)")
                 }

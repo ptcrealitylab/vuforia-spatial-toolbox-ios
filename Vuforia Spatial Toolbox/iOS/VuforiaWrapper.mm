@@ -576,12 +576,12 @@ void cVuforiaCleanupStateMemory() {
     controller.cleanupStateMemory();
 }
 
-bool cAreaTargetCaptureStart(void * classPtr, void(*callback)(void *, const char*, const char*))
+bool cAreaTargetCaptureStart(const char* objectId, void * classPtr, void(*callback)(void *, const char*, const char*))
 {
     areaTargetStatusCallback->classPtr = classPtr;
     areaTargetStatusCallback->callback = callback;
     
-    return captureController.areaTargetCaptureStart([&](const char* statusString, const char* statusInfoString) {
+    return captureController.areaTargetCaptureStart(objectId, [&](const char* statusString, const char* statusInfoString) {
         areaTargetStatusCallback->callback(areaTargetStatusCallback->classPtr, statusString, statusInfoString);
     });
 }

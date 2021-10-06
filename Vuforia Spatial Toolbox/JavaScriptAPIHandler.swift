@@ -118,11 +118,17 @@ class JavaScriptAPIHandler {
                 stopVideoRecording(videoId: videoId)
             }
         case "areaTargetCaptureStart":
-            areaTargetCaptureStart(callback: callback)
+            if let args = arguments {
+                let objectId = args["objectId"] as? String
+                areaTargetCaptureStart(objectId: objectId, callback: callback)
+            }
         case "areaTargetCaptureStop":
             areaTargetCaptureStop(callback: callback)
         case "areaTargetCaptureGenerate":
-            areaTargetCaptureGenerate()
+            if let args = arguments {
+                let targetUploadURL = args["targetUploadURL"] as? String
+                areaTargetCaptureGenerate(targetUploadURL: targetUploadURL)
+            }
         case "onAreaTargetGenerateProgress":
             onAreaTargetGenerateProgress(callback: callback)
         default:
@@ -391,11 +397,13 @@ class JavaScriptAPIHandler {
     func restartDeviceTracker() {
         // TODO: implement this, it's already getting called when phone tracking is bad
     }
-    func areaTargetCaptureStart(callback: String?) {
+    func areaTargetCaptureStart(objectId: String?, callback: String?) {
+        guard let _objectId = objectId else { return }
+        
         // run this on background thread so it doesn't freeze the entire app with its while-sleep loop
         DispatchQueue.global(qos: .userInitiated).async {
 //            print("This is run on a background queue")
-            ARManager.shared.startAreaTargetCapture(statusCallback: { status, statusInfo in
+            ARManager.shared.startAreaTargetCapture(objectId: _objectId, statusCallback: { status, statusInfo in
                 DispatchQueue.main.async {
 //                    print("This is run on the main queue, after the previous code in outer block")
                     self.delegate?.callJavaScriptCallback(callback: callback, arguments: self.stringifyEachArg(args: [status, statusInfo]))
@@ -415,7 +423,10 @@ class JavaScriptAPIHandler {
             self.delegate?.callJavaScriptCallback(callback: callback, arguments: [successString, self.stringifyArg(errorMessage)])
         });
     }
-    func areaTargetCaptureGenerate() {
-        cAreaTargetCaptureGenerate();
+    func areaTargetCaptureGenerate(targetUploadURL: String?) {
+        guard let _targetUploadURL = targetUploadURL else { return }
+
+//        cAreaTargetCaptureGenerate();
+        ARManager.shared.generateWorldObjectFromAreaTarget(targetUploadURL: _targetUploadURL);
     }
 }

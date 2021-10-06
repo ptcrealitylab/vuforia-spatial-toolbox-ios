@@ -7,6 +7,40 @@
 
 import Foundation
 import AFNetworking
+import MobileCoreServices
+
+extension URL {
+    func mimeType() -> String {
+        let pathExtension = self.pathExtension
+        if let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension as NSString, nil)?.takeRetainedValue() {
+            if let mimetype = UTTypeCopyPreferredTagWithClass(uti, kUTTagClassMIMEType)?.takeRetainedValue() {
+                return mimetype as String
+            }
+        }
+        return "application/octet-stream"
+    }
+    var containsImage: Bool {
+        let mimeType = self.mimeType()
+        guard let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeType as CFString, nil)?.takeRetainedValue() else {
+            return false
+        }
+        return UTTypeConformsTo(uti, kUTTypeImage)
+    }
+    var containsAudio: Bool {
+        let mimeType = self.mimeType()
+        guard let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeType as CFString, nil)?.takeRetainedValue() else {
+            return false
+        }
+        return UTTypeConformsTo(uti, kUTTypeAudio)
+    }
+    var containsVideo: Bool {
+        let mimeType = self.mimeType()
+        guard  let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeType as CFString, nil)?.takeRetainedValue() else {
+            return false
+        }
+        return UTTypeConformsTo(uti, kUTTypeMovie)
+    }
+}
 
 typealias SuccessCompletionHandler = (Bool) -> ()
 typealias ValueCompletionHandler = (String) -> ()
@@ -131,8 +165,8 @@ class FileDownloadManager {
         return nil
     }
     
-    func uploadFileFromPath(_ localPath: URL, toURL destinationURL: URL) {
-        print("begin file upload from")
+    func uploadVideoFileFromPath(_ localPath: URL, toURL destinationURL: URL) {
+        print("begin video file upload")
         print("localPath: \(localPath)")
         print("destinationURL: \(destinationURL)")
         
@@ -170,6 +204,64 @@ class FileDownloadManager {
 
         if task == nil {
             print("creation of task failed")
+        }
+        
+        print("file upload reached end")
+    }
+    
+    func uploadFile(named fileName: String, atPath localPath: URL, toURL destinationURL: URL, withHeaders headers: [String:String], onComplete: @escaping (Bool, String?) -> ()) {
+        print("begin file upload")
+        print("localPath: \(localPath)")
+        print("destinationURL: \(destinationURL)")
+        print("headers: \(headers)")
+
+        let doesFileExist = FileManager.default.fileExists(atPath: localPath.relativePath)
+        if doesFileExist {
+            print("file exists at path: \(localPath)")
+        } else {
+            onComplete(false, "file doesn't exist at path: \(localPath)")
+            return
+        }
+        
+        let manager = AFHTTPSessionManager.init()
+        manager.responseSerializer = AFHTTPResponseSerializer.init()
+        manager.requestSerializer = AFHTTPRequestSerializer.init()
+        for key in headers.keys {
+            manager.requestSerializer.setValue(headers[key], forHTTPHeaderField: key)
+            print("added header: { '\(key)': '\(headers[key] ?? "undefined")' }")
+        }
+                
+        let task = manager.post(destinationURL.absoluteString, parameters: nil) { formData in
+            do {
+//                try formData.appendPart(withFileURL: localPath, name: randomName, fileName: randomName.appending(".mp4"), mimeType: "video/mp4")
+//                try formData.appendPart(withHeaders: headers, body: T##Data)
+                let inferredMimeType = localPath.mimeType()
+                print("mimeType: \(inferredMimeType)")
+                
+                try formData.appendPart(withFileURL: localPath, name: fileName, fileName: fileName, mimeType: inferredMimeType)
+                print("succeeded in appending part to formData")
+            } catch {
+                onComplete(false, "error appending part to formData")
+                return
+            }
+        } progress: { progress in
+            print("upload progress: \(progress)")
+        } success: { task, responseObject in
+            print("upload success")
+            if let responseData = responseObject as? Data {
+                let result = String(data: responseData, encoding: .utf8)
+                print(result ?? "no result")
+            }
+            onComplete(true, nil)
+        } failure: { task, error in
+            print("upload failure")
+            print(error)
+            onComplete(false, error.localizedDescription)
+        }
+
+        if task == nil {
+            print("creation of task failed")
+            onComplete(false, "creation of task failed")
         }
         
         print("file upload reached end")
