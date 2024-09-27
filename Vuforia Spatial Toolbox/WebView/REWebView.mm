@@ -51,6 +51,7 @@
         [self.window makeKeyAndVisible];
         [self setAllowsLinkPreview:NO];
         [self setAllowsBackForwardNavigationGestures:NO];
+//        [self setInspectable:YES];
 
         // make it scrollable
         [[self scrollView] setScrollEnabled:NO];

@@ -53,7 +53,8 @@
 		43FC68EB22A5AA4B00F6D6DD /* Vuforia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43FC68EA22A5AA4B00F6D6DD /* Vuforia.framework */; };
 		43FC68EC22A5AA4B00F6D6DD /* Vuforia.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43FC68EA22A5AA4B00F6D6DD /* Vuforia.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A7EE6C762218853B00F60723 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7EE6C752218853B00F60723 /* Images.xcassets */; };
-		B9ED0143F1F7FFD5390F81D8 /* Pods_Vuforia_Spatial_Toolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C61AA94AEC19B8B5307AF63 /* Pods_Vuforia_Spatial_Toolbox.framework */; };
+		B52665C32CA6F57F0093B287 /* VSTMulticastAdded.xcent in Resources */ = {isa = PBXBuildFile; fileRef = B52665C22CA6F57F0093B287 /* VSTMulticastAdded.xcent */; };
+		BD4F266B139CD48DB32884BF /* Pods_Vuforia_Spatial_Toolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802117AF1BCB98370A21ED66 /* Pods_Vuforia_Spatial_Toolbox.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -72,7 +73,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		15D2F59CA93BAE880871DC0A /* Pods-Vuforia Spatial Toolbox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vuforia Spatial Toolbox.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Vuforia Spatial Toolbox/Pods-Vuforia Spatial Toolbox.debug.xcconfig"; sourceTree = "<group>"; };
 		4304595B20F7CDA600B54215 /* Teapot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Teapot.h; sourceTree = "<group>"; };
 		4304595D20F7CDA600B54215 /* Background.fragsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Background.fragsh; sourceTree = "<group>"; };
 		4304595E20F7CDA600B54215 /* Background.vertsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Background.vertsh; sourceTree = "<group>"; };
@@ -142,9 +142,11 @@
 		43F4A495240425D700564391 /* DeviceStateManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceStateManager.m; sourceTree = "<group>"; };
 		43F4A496240425D700564391 /* DeviceStateManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceStateManager.h; sourceTree = "<group>"; };
 		43FC68EA22A5AA4B00F6D6DD /* Vuforia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Vuforia.framework; sourceTree = "<group>"; };
-		4C61AA94AEC19B8B5307AF63 /* Pods_Vuforia_Spatial_Toolbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Vuforia_Spatial_Toolbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8F95EB11AD202237717B3485 /* Pods-Vuforia Spatial Toolbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vuforia Spatial Toolbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-Vuforia Spatial Toolbox/Pods-Vuforia Spatial Toolbox.release.xcconfig"; sourceTree = "<group>"; };
+		7546ED8FA0B411B54C790893 /* Pods-Vuforia Spatial Toolbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vuforia Spatial Toolbox.release.xcconfig"; path = "Target Support Files/Pods-Vuforia Spatial Toolbox/Pods-Vuforia Spatial Toolbox.release.xcconfig"; sourceTree = "<group>"; };
+		802117AF1BCB98370A21ED66 /* Pods_Vuforia_Spatial_Toolbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Vuforia_Spatial_Toolbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8224DE6DBE07C3EAB1B808C2 /* Pods-Vuforia Spatial Toolbox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vuforia Spatial Toolbox.debug.xcconfig"; path = "Target Support Files/Pods-Vuforia Spatial Toolbox/Pods-Vuforia Spatial Toolbox.debug.xcconfig"; sourceTree = "<group>"; };
 		A7EE6C752218853B00F60723 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		B52665C22CA6F57F0093B287 /* VSTMulticastAdded.xcent */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = VSTMulticastAdded.xcent; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,7 +160,7 @@
 				4304599420F7D01F00B54215 /* WebKit.framework in Frameworks */,
 				43ADDCE02214784900E5BB36 /* NodeMobile.framework in Frameworks */,
 				43FC68EB22A5AA4B00F6D6DD /* Vuforia.framework in Frameworks */,
-				B9ED0143F1F7FFD5390F81D8 /* Pods_Vuforia_Spatial_Toolbox.framework in Frameworks */,
+				BD4F266B139CD48DB32884BF /* Pods_Vuforia_Spatial_Toolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,7 +254,7 @@
 				43D0350B20EAC02600AA1039 /* Vuforia Spatial Toolbox */,
 				43D0350A20EAC02600AA1039 /* Products */,
 				43D0355620EAC1FD00AA1039 /* Frameworks */,
-				C63ADFA54088049FC8073EE6 /* Pods */,
+				685AC90CA5FF7A7F008301BC /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -292,6 +294,7 @@
 				430D4DAD22832FD3006E5CBF /* VideoRecordingManager.m */,
 				43D0351220EAC02600AA1039 /* Main.storyboard */,
 				43D0351720EAC02600AA1039 /* LaunchScreen.storyboard */,
+				B52665C22CA6F57F0093B287 /* VSTMulticastAdded.xcent */,
 				43D0351A20EAC02600AA1039 /* Info.plist */,
 				43D0351B20EAC02600AA1039 /* main.m */,
 			);
@@ -318,18 +321,18 @@
 				43AD9581220E172900E5BB36 /* Speech.framework */,
 				437B8AEB21025108006720F5 /* AudioToolbox.framework */,
 				43D0355720EAC1FE00AA1039 /* WebKit.framework */,
-				4C61AA94AEC19B8B5307AF63 /* Pods_Vuforia_Spatial_Toolbox.framework */,
+				802117AF1BCB98370A21ED66 /* Pods_Vuforia_Spatial_Toolbox.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		C63ADFA54088049FC8073EE6 /* Pods */ = {
+		685AC90CA5FF7A7F008301BC /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				15D2F59CA93BAE880871DC0A /* Pods-Vuforia Spatial Toolbox.debug.xcconfig */,
-				8F95EB11AD202237717B3485 /* Pods-Vuforia Spatial Toolbox.release.xcconfig */,
+				8224DE6DBE07C3EAB1B808C2 /* Pods-Vuforia Spatial Toolbox.debug.xcconfig */,
+				7546ED8FA0B411B54C790893 /* Pods-Vuforia Spatial Toolbox.release.xcconfig */,
 			);
-			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -339,13 +342,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 43D0351F20EAC02600AA1039 /* Build configuration list for PBXNativeTarget "Vuforia Spatial Toolbox" */;
 			buildPhases = (
-				3B214A985EBE26C27BE31ED4 /* [CP] Check Pods Manifest.lock */,
+				8BBE7930B24474EEC65A1F5C /* [CP] Check Pods Manifest.lock */,
 				43D0350520EAC02600AA1039 /* Sources */,
 				43D0350620EAC02600AA1039 /* Frameworks */,
 				43D0350720EAC02600AA1039 /* Resources */,
 				43D041A420EACACB00AA1039 /* ShellScript */,
 				4304599720F7D02900B54215 /* Embed Frameworks */,
-				FB5C829B10EB10A229ABCFD1 /* [CP] Embed Pods Frameworks */,
+				1AE7159A0CE0A2FC1CE758D4 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -409,6 +412,7 @@
 				A7EE6C762218853B00F60723 /* Images.xcassets in Resources */,
 				4304598220F7CDA800B54215 /* Simple.fragsh in Resources */,
 				43277B13232165FF000162C1 /* BackgroundFlipped.vertsh in Resources */,
+				B52665C32CA6F57F0093B287 /* VSTMulticastAdded.xcent in Resources */,
 				4304598420F7CDA800B54215 /* SimpleTexturedColor.fragsh in Resources */,
 				4304598320F7CDA800B54215 /* Simple.vertsh in Resources */,
 				437C3BC824104FDA00B0F977 /* vuforia-spatial-edge-server in Resources */,
@@ -423,38 +427,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3B214A985EBE26C27BE31ED4 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Vuforia Spatial Toolbox-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		43D041A420EACACB00AA1039 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "rsync -avz --exclude=\".*\" \"${SRCROOT}/bin/data/\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\n";
-		};
-		FB5C829B10EB10A229ABCFD1 /* [CP] Embed Pods Frameworks */ = {
+		1AE7159A0CE0A2FC1CE758D4 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -472,6 +445,41 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Vuforia Spatial Toolbox/Pods-Vuforia Spatial Toolbox-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		43D041A420EACACB00AA1039 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "rsync -avz --exclude=\".*\" \"${SRCROOT}/bin/data/\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\n";
+		};
+		8BBE7930B24474EEC65A1F5C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Vuforia Spatial Toolbox-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -638,15 +646,16 @@
 		};
 		43D0352020EAC02600AA1039 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 15D2F59CA93BAE880871DC0A /* Pods-Vuforia Spatial Toolbox.debug.xcconfig */;
+			baseConfigurationReference = 8224DE6DBE07C3EAB1B808C2 /* Pods-Vuforia Spatial Toolbox.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW = NO;
 				CODE_SIGN_ENTITLEMENTS = VSTMulticastAdded.xcent;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3KS9B887BK;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -655,7 +664,9 @@
 				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				INFOPLIST_FILE = "Vuforia Spatial Toolbox/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				INFOPLIST_KEY_CFBundleDisplayName = Toolbox;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -709,6 +720,7 @@
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 				);
+				MARKETING_VERSION = 1.2.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ptc.spatialtoolbox;
 				PRODUCT_NAME = "Vuforia Spatial Toolbox";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -719,16 +731,19 @@
 		};
 		43D0352120EAC02600AA1039 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8F95EB11AD202237717B3485 /* Pods-Vuforia Spatial Toolbox.release.xcconfig */;
+			baseConfigurationReference = 7546ED8FA0B411B54C790893 /* Pods-Vuforia Spatial Toolbox.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW = NO;
 				CODE_SIGN_ENTITLEMENTS = VSTMulticastAdded.xcent;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = 3KS9B887BK;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 3KS9B887BK;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -738,7 +753,9 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
 				INFOPLIST_FILE = "Vuforia Spatial Toolbox/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				INFOPLIST_KEY_CFBundleDisplayName = Toolbox;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -792,9 +809,11 @@
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 					"$(PROJECT_DIR)/Reality\\ Server/RE-server/node_modules/sharp/vendor/lib",
 				);
+				MARKETING_VERSION = 1.2.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ptc.spatialtoolbox;
 				PRODUCT_NAME = "Vuforia Spatial Toolbox";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Spatial Toolbox App Store Connect";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 arm64e";
 			};
